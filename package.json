@@ -1,0 +1,15 @@
+{
+  "private": true,
+  "scripts": {
+    "start": "cd backend && yarn start",
+    "build": "cd frontend && BUILD_PATH='../backend/build/client' yarn build",
+    "clean": "rm -rf ./backend/build",
+    "dev": "concurrently --kill-others-on-fail \"cd backend && yarn dev\" \"cd frontend && yarn start\"",
+    "fmt": "prettier --write ./backend ./frontend",
+    "postinstall": "yarn --cwd backend install && yarn --cwd frontend install"
+  },
+  "devDependencies": {
+    "concurrently": "^7.0.0",
+    "prettier": "^2.5.1"
+  }
+}
