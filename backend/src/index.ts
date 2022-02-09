@@ -4,10 +4,10 @@ import mongoose, { ConnectOptions } from "mongoose";
 import path from "path";
 import MongoStore from "connect-mongo";
 import { AddressInfo } from "net";
-
-import { mustGetConfig } from "./config";
 import { json, urlencoded } from "body-parser";
+
 import auth from "./routes/auth";
+import { mustGetConfig } from "./config";
 
 const config = mustGetConfig(process.env);
 
