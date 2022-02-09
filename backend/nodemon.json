@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "restartable": "rs",
   "ignore": [".git", "node_modules/", "build/", "coverage/", "src/"],
@@ -12,3 +13,19 @@
   },
   "ext": "js,json,ts"
 }
+=======
+{
+  "restartable": "rs",
+  "ignore": [".git", "node_modules/", "build/", "coverage/"],
+  "watch": ["src/", "config/.env.dev"],
+  "execMap": {
+    "ts": "env $(cat config/.env.dev | grep -v '#' | xargs) ts-node",
+    "js": "env $(cat config/.env.dev | grep -v '#' | xargs) ts-node",
+    "json": "env $(cat config/.env.dev | grep -v '#' | xargs) ts-node"
+  },
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "ext": "js,json,ts"
+}
+>>>>>>> c1be7e200b154f8521accb87d10818aeb124d582
