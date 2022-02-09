@@ -1,7 +1,7 @@
 {
   "restartable": "rs",
-  "ignore": [".git", "node_modules/", "build/", "coverage/", "src/"],
-  "watch": ["server/", "config/.env.dev"],
+  "ignore": [".git", "node_modules/", "build/", "coverage/"],
+  "watch": ["src/", "config/.env.dev"],
   "execMap": {
     "ts": "env $(cat config/.env.dev | grep -v '#' | xargs) ts-node",
     "js": "env $(cat config/.env.dev | grep -v '#' | xargs) ts-node",

@@ -1,6 +1,6 @@
-import { getConfigValue } from "./config";
+import { mustGet } from "./config";
 
 test("gets config", () => {
-  const env = {"HELLO": "WORLD"};
-  expect(getConfigValue(env, "HELLO")).toEqual("WORLD");
+  const env = { HELLO: "WORLD" };
+  expect(mustGet(env, "HELLO")).toEqual("WORLD");
 });
