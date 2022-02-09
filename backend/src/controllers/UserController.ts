@@ -48,13 +48,15 @@ class UserController {
     tries?: number
   ): Promise<string> {
     tries = tries || 0;
+    if (tries >= maxTries) {
+      throw new Error("Maximum tries reached to find an available username");
+    }
+
     const nextUsername =
       tries === 0 ? username : username + "-" + crypto.randomInt(1000, 9999);
     const user = await this.userModel.findOne({ username: nextUsername });
     if (user !== null) {
       return await this.findAvailableUsername(username, maxTries, tries + 1);
-    } else if (tries >= maxTries) {
-      throw new Error("Maximum tries reached to find an available username");
     } else {
       return nextUsername;
     }
