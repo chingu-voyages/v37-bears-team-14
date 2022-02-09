@@ -25,7 +25,7 @@ app.use(urlencoded({ extended: true }));
 app.use(json());
 app.use(
   session({
-    secret: (process.env && process.env["SESSION_SECRET"]) || "",
+    secret: config.sessionSecret,
     store: MongoStore.create({
       clientPromise: mongoose.connection.asPromise().then((c) => c.getClient()),
     }),
