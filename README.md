@@ -13,6 +13,11 @@ in your `readme` feel free to replace the text we've provided here.
 
 > Own it & Make it your Own!
 
+## Deployment
+
+The application is deployed onto fly.io at each push into `main` branch.
+The production deployment is accessible at https://v37-bears-team-14.fly.dev/
+
 ## Setup
 
 Requirements:

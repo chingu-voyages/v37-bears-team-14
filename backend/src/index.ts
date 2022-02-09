@@ -1,6 +1,16 @@
 import express, { Request, Response } from "express";
+import mongoose, { ConnectOptions } from "mongoose";
 import path from "path";
 import { AddressInfo } from "net";
+
+import { mustGetConfig } from "./config";
+
+const config = mustGetConfig(process.env);
+
+mongoose.connect(config.mongodbUri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+} as ConnectOptions);
 
 const app = express();
 
