@@ -1,0 +1,14 @@
+{
+  "restartable": "rs",
+  "ignore": [".git", "node_modules/", "build/", "coverage/", "src/"],
+  "watch": ["server/", "config/.env.dev"],
+  "execMap": {
+    "ts": "env $(cat config/.env.dev | grep -v '#' | xargs) ts-node",
+    "js": "env $(cat config/.env.dev | grep -v '#' | xargs) ts-node",
+    "json": "env $(cat config/.env.dev | grep -v '#' | xargs) ts-node"
+  },
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "ext": "js,json,ts"
+}

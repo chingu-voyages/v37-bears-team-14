@@ -1,0 +1,16 @@
+{
+  "private": true,
+  "scripts": {
+    "start": "yarn --cwd backend start",
+    "build": "yarn clean && BUILD_PATH='../backend/build/client' yarn --cwd frontend build",
+    "clean": "rm -rf ./backend/build",
+    "test": "yarn --cwd backend test && yarn --cwd frontend test --watchAll=false",
+    "dev": "concurrently --kill-others-on-fail \"yarn --cwd backend dev\" \"yarn --cwd frontend start\"",
+    "fmt": "prettier --write ./backend ./frontend",
+    "postinstall": "yarn --cwd backend install && yarn --cwd frontend install"
+  },
+  "devDependencies": {
+    "concurrently": "^7.0.0",
+    "prettier": "^2.5.1"
+  }
+}
