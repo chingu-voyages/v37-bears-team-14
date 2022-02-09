@@ -1,4 +1,3 @@
-
 import express, { Request, Response } from "express";
 import session from "express-session";
 import mongoose, { ConnectOptions } from "mongoose";
@@ -6,6 +5,7 @@ import path from "path";
 import MongoStore from "connect-mongo";
 import { AddressInfo } from "net";
 import { json, urlencoded } from "body-parser";
+import passport from "./auth/passport";
 
 import auth from "./routes/auth";
 import { mustGetConfig } from "./config";
@@ -39,6 +39,16 @@ app.use("/auth", auth);
 
 app.get("/api/v1/hello", (req: Request, res: Response) => {
   res.json({ name: req.query["name"] || "World" });
+});
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.get("/api/v1/current-session", (req: Request, res: Response) => {
+  res.json({
+    user: req.user,
+    isLoggedIn: !!req.user,
+  });
 });
 
 app.get("/*", (_, res) => {

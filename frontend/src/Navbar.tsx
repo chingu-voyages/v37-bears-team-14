@@ -19,7 +19,6 @@ const Navbar: FunctionComponent<NavbarProps> = ({ username, avatarURL }) => {
           <span className="text-lg no-underline text-grey-darkest hover:text-blue-dark ml-2">
             {username}
           </span>
-          <img src={avatarURL} alt="" className="h-10 inline rounded" />
           <a
             href="/projects"
             className="text-lg no-underline text-grey-darkest hover:text-blue-dark ml-2"
@@ -44,6 +43,7 @@ const Navbar: FunctionComponent<NavbarProps> = ({ username, avatarURL }) => {
           >
             Sign In
           </a>
+          <img src={avatarURL} alt="" className="h-10 inline rounded" />
         </div>
       </nav>
     </>
