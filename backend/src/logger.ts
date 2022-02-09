@@ -1,9 +1,9 @@
 import winston from "winston";
 import { Logtail } from "@logtail/node";
 import { LogtailTransport } from "winston-transport-logtail";
-import { mustGetConfig } from "./config";
+import { getOptionalConfig } from "./config";
 
-const config = mustGetConfig(process.env);
+const config = getOptionalConfig(process.env);
 
 const logger = winston.createLogger({
   level: "info",
