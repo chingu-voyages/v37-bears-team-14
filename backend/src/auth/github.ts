@@ -3,6 +3,7 @@ export interface GithubProfilePhotos {
 }
 
 export interface GithubProfile {
+  username: string;
   photos: GithubProfilePhotos[];
 }
 

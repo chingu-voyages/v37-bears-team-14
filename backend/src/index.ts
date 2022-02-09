@@ -8,6 +8,7 @@ import { json, urlencoded } from "body-parser";
 
 import auth from "./routes/auth";
 import { mustGetConfig } from "./config";
+import passport from "./auth/passport";
 
 const config = mustGetConfig(process.env);
 
@@ -33,6 +34,8 @@ app.use(
     saveUninitialized: false,
   })
 );
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use("/auth", auth);
 
