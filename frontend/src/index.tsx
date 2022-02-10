@@ -3,10 +3,12 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import TechList from "./TechList";
 
 ReactDOM.render(
   <React.StrictMode>
     <App />
+    <TechList />
   </React.StrictMode>,
   document.getElementById("root")
 );

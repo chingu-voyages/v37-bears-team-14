@@ -6,9 +6,10 @@ import MongoStore from "connect-mongo";
 import { AddressInfo } from "net";
 import { json, urlencoded } from "body-parser";
 
-import auth from "./routes/auth";
 import { mustGetConfig } from "./config";
 import passport from "./auth/passport";
+import auth from "./routes/auth";
+import api from "./routes/api";
 
 const config = mustGetConfig(process.env);
 
@@ -42,6 +43,8 @@ app.use("/auth", auth);
 app.get("/api/v1/hello", (req: Request, res: Response) => {
   res.json({ name: req.query["name"] || "World" });
 });
+
+app.use("/api", api);
 
 app.get("/*", (_, res) => {
   res.sendFile(path.resolve(__dirname, "../build/client/index.html"));
