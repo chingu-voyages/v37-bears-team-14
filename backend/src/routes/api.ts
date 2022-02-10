@@ -82,7 +82,6 @@ api.get("/v1/search/techs", async (req, res, next) => {
 
 // Error handler for API routes! Must come _after_ the other endpoints!
 api.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  console.log(err);
   if (err instanceof NotFoundError) {
     res.status(404).json({ errors: ["id_not_found"] });
   } else {
