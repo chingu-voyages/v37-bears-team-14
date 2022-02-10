@@ -55,7 +55,7 @@ api.post(
 api.get("/v1/techs", async (req, res) => {
   const gt = req.query["gt"];
   const gtString = Array.isArray(gt) ? "" + gt[0] : "" + (gt || "");
-  if (!isValidObjectId(gtString)) {
+  if ("" !== gtString && !isValidObjectId(gtString)) {
     return res.status(400).json({ errors: ["gt_invalid_id"] });
   }
 
