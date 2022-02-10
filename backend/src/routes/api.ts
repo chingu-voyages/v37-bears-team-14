@@ -15,18 +15,13 @@ const techController = new TechController(Tech);
 
 const api = Router();
 
-api.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  if (err instanceof NotFoundError) {
-    res.status(404).json({ errors: ["id_not_found"] });
-  } else {
-    logger.error("Unrecognized error " + err.message, err);
-    res.status(500).json({ errors: ["internal_server_error"] });
+api.get("/v1/techs/:id", async (req, res, next) => {
+  try {
+    const tech = await techController.getById(req.params["id"]);
+    res.json(tech);
+  } catch (err) {
+    next(err);
   }
-});
-
-api.get("/v1/techs/:id", async (req, res) => {
-  const tech = await techController.getById(req.params["id"]);
-  res.json(tech);
 });
 
 api.post(
@@ -45,14 +40,19 @@ api.post(
       res.status(403).json({ errors: ["unauthorized"] });
     }
   },
-  async (req, res) => {
+  async (req, res, next) => {
     const update = pick(req.body, ["name", "description", "imageUrl"]);
-    const tech = await techController.updateById(req.params["id"], update);
-    res.json(tech);
+
+    try {
+      const tech = await techController.updateById(req.params["id"], update);
+      res.json(tech);
+    } catch (err) {
+      next(err);
+    }
   }
 );
 
-api.get("/v1/techs", async (req, res) => {
+api.get("/v1/techs", async (req, res, next) => {
   const gt = req.query["gt"];
   const gtString = Array.isArray(gt) ? "" + gt[0] : "" + (gt || "");
   if ("" !== gtString && !isValidObjectId(gtString)) {
@@ -60,16 +60,35 @@ api.get("/v1/techs", async (req, res) => {
   }
 
   const pageSize = Math.max(50, +(req.query["pageSize"] || 50));
-  const techs = await techController.lookup(pageSize, gtString);
-  res.json(techs);
+  try {
+    const techs = await techController.lookup(pageSize, gtString);
+    res.json(techs);
+  } catch (err) {
+    next(err);
+  }
 });
 
-api.get("/v1/search/techs", async (req, res) => {
+api.get("/v1/search/techs", async (req, res, next) => {
   const q = req.query["q"];
   const qString = Array.isArray(q) ? "" + q[0] : "" + (q || "");
 
-  const techs = await techController.search(qString);
-  res.json(techs);
+  try {
+    const techs = await techController.search(qString);
+    res.json(techs);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Error handler for API routes! Must come _after_ the other endpoints!
+api.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  console.log(err);
+  if (err instanceof NotFoundError) {
+    res.status(404).json({ errors: ["id_not_found"] });
+  } else {
+    logger.error("Unrecognized error " + err.message, err);
+    res.status(500).json({ errors: ["internal_server_error"] });
+  }
 });
 
 export default api;

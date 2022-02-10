@@ -4,7 +4,7 @@
     "start": "ts-node --transpile-only ./src/index.ts",
     "dev": "env $(cat ./config/.env.dev 2>/dev/null | grep -v '^\\s*#' | xargs) nodemon src/index.ts",
     "test": "ENV_FILE='./config/.env.test' jest ./src",
-    "script": "env $(cat config/.env.dev | xargs) ts-node --transpile-only"
+    "script": "env $(cat config/.env.dev | grep -v '^\\s*#' | xargs) ts-node --transpile-only"
   },
   "dependencies": {
     "@logtail/node": "^0.1.10",

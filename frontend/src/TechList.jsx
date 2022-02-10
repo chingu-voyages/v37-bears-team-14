@@ -24,16 +24,14 @@ export default function TechList() {
     <div className="mx-12 border-2 rounded-md">
       <div className="overflow-x-scroll w-full flex p-2">
         {techs.map((tech) => (
-          <>
-            <div className="mr-1">
-              <img
-                className="min-w-[100px] w-[100px] h-[100px] bg-stone-100 "
-                src={tech.imageUrl}
-                alt={tech.name}
-              />
-              <div className="whitespace-nowrap text-xs">{tech.name}</div>
-            </div>
-          </>
+          <div className="mr-1" key={tech.id}>
+            <img
+              className="min-w-[100px] w-[100px] h-[100px] bg-stone-100 "
+              src={tech.imageUrl}
+              alt={tech.name}
+            />
+            <div className="whitespace-nowrap text-xs">{tech.name}</div>
+          </div>
         ))}
       </div>
     </div>
