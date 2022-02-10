@@ -5,8 +5,11 @@ import { Document } from "mongoose";
 import { Strategy as GithubStrategy } from "passport-github2";
 import { mustGetConfig } from "../config";
 import { parseAvatarUrl } from "./github";
+import UserController from "../controllers/UserController";
 
+/* dependencies */
 const config = mustGetConfig(process.env);
+const userController = new UserController(UserModel);
 
 export type PassportCallback = (err: null | Error, user?: Express.User) => void;
 
@@ -43,29 +46,18 @@ passport.use(
       const githubId = +profile.id;
       logger.info("github auth callback githubId=" + profile.id);
 
-      let user: Document<IUser> & IUser;
       try {
-        user = await UserModel.findOneAndUpdate(
-          { githubId },
-          {
-            githubId,
-          },
-          {
-            upsert: true,
-            new: true,
-          }
+        const user = await userController.createOrUpdateUser(githubId);
+        const updatedUser = await userController.updateDefaultsIfNeeded(
+          user,
+          profile
         );
+        done(null, updatedUser as any);
       } catch (err) {
-        logger.error("Failed to create/update user githubId=" + githubId);
-        return done(err as Error);
+        const message = "Failed to sign in github user githubId=" + githubId;
+        logger.error(message + " " + (err as Error).message);
+        done(err as Error);
       }
-
-      if (!user.avatarUrl) {
-        user.avatarUrl = parseAvatarUrl(profile);
-        await user.save();
-      }
-
-      done(null, user as any);
     }
   )
 );
