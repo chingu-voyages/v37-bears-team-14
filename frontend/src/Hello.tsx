@@ -7,7 +7,7 @@ export default function Hello() {
     fetch("/api/v1/hello")
       .then((r) => r.json())
       .then((data) => setData(data));
-  }, [data]);
+  }, [data.name]);
 
   return <div>Hello {data.name}!</div>;
 }

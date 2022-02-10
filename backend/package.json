@@ -4,7 +4,8 @@
   "scripts": {
     "start": "ts-node --transpile-only ./src/index.ts",
     "dev": "env $(cat ./config/.env.dev 2>/dev/null | grep -v '^\\s*#' | xargs) nodemon src/index.ts",
-    "test": "ENV_FILE='./config/.env.test' jest ./src"
+    "test": "ENV_FILE='./config/.env.test' jest ./src",
+    "script": "env $(cat config/.env.dev | grep -v '^\\s*#' | xargs) ts-node --transpile-only"
   },
   "dependencies": {
     "@logtail/node": "^0.1.10",
@@ -14,7 +15,9 @@
     "connect-mongo": "^4.6.0",
     "express": "^4.17.2",
     "express-session": "^1.17.2",
+    "lodash": "^4.17.21",
     "mongoose": "^6.2.1",
+    "mongoose-fuzzy-searching-v3": "^2.1.0",
     "passport": "^0.5.2",
     "passport-github2": "^0.1.12",
     "ts-node": "^10.5.0",
@@ -24,6 +27,7 @@
   },
   "devDependencies": {
     "@types/jest": "^27.4.0",
+    "@types/lodash": "^4.14.178",
     "@types/passport": "^1.0.7",
     "@types/passport-github2": "^1.2.5",
     "jest": "^27.5.1",

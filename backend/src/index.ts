@@ -5,10 +5,11 @@ import path from "path";
 import MongoStore from "connect-mongo";
 import { AddressInfo } from "net";
 import { json, urlencoded } from "body-parser";
-import passport from "./auth/passport";
 
-import auth from "./routes/auth";
 import { mustGetConfig } from "./config";
+import passport from "./auth/passport";
+import auth from "./routes/auth";
+import api from "./routes/api";
 
 const config = mustGetConfig(process.env);
 
@@ -34,6 +35,8 @@ app.use(
     saveUninitialized: false,
   })
 );
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use("/auth", auth);
 
@@ -50,6 +53,7 @@ app.get("/api/v1/current-session", (req: Request, res: Response) => {
     isLoggedIn: !!req.user,
   });
 });
+app.use("/api", api);
 
 app.get("/*", (_, res) => {
   res.sendFile(path.resolve(__dirname, "../build/client/index.html"));
