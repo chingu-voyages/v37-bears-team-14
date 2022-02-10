@@ -1,9 +1,44 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useState, useEffect } from "react";
 type NavbarProps = {
   username: string;
   avatarURL: string;
 };
-const Navbar: FunctionComponent<NavbarProps> = ({ username, avatarURL }) => {
+type sessionData = {
+  isLoggedIn: boolean;
+  user: {
+    avatarUrl: string;
+    createdAt: string;
+    githubId: string;
+    id: string;
+    isAdmin: boolean;
+    updatedAt: string;
+  };
+};
+
+// : FunctionComponent<NavbarProps> { username, avatarURL }
+
+const Navbar: FunctionComponent = () => {
+  const [currentSession, setCurrentSession] = useState<sessionData>({
+    isLoggedIn: false,
+    user: {
+      avatarUrl: "",
+      createdAt: "",
+      githubId: "",
+      id: "",
+      isAdmin: false,
+      updatedAt: "",
+    },
+  });
+  useEffect(() => {
+    async function getAuth() {
+      const response = await fetch("/api/v1/current-session");
+      const data = await response.json();
+
+      setCurrentSession(data);
+    }
+    getAuth();
+  }, []);
+
   return (
     <>
       <nav className="font-sans flex flex-col text-center sm:flex-row sm:text-left sm:justify-between py-4 px-6 bg-white shadow sm:items-baseline w-full">
@@ -17,7 +52,7 @@ const Navbar: FunctionComponent<NavbarProps> = ({ username, avatarURL }) => {
         </div>
         <div>
           <span className="text-lg no-underline text-grey-darkest hover:text-blue-dark ml-2">
-            {username}
+            {currentSession.user.id}
           </span>
           <a
             href="/projects"
@@ -33,17 +68,25 @@ const Navbar: FunctionComponent<NavbarProps> = ({ username, avatarURL }) => {
           </a>
           <a
             href="/applications"
-            className="text-lg no-underline text-grey-darkest hover:text-blue-dark ml-2"
+            className="text-lg no-underline text-grey-darkest hover:text-blue-dark ml-2 mr-2"
           >
             Applications
           </a>
-          <a
-            href="/sign-in"
-            className="text-lg no-underline text-grey-darkest hover:text-blue-dark ml-2"
-          >
-            Sign In
-          </a>
-          <img src={avatarURL} alt="" className="h-10 inline rounded" />
+
+          {currentSession.isLoggedIn ? (
+            <img
+              src={currentSession.user.avatarUrl}
+              alt="avatar"
+              className="h-10 inline rounded"
+            />
+          ) : (
+            <a
+              href="/sign-in"
+              className="text-lg no-underline text-grey-darkest hover:text-blue-dark ml-2"
+            >
+              Sign In
+            </a>
+          )}
         </div>
       </nav>
     </>
