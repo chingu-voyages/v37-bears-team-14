@@ -1,0 +1,75 @@
+import { pick } from "lodash";
+import { NextFunction, Request, Response, Router } from "express";
+import { isValidObjectId } from "mongoose";
+import NotFoundError from "../controllers/errors/NotFoundError";
+import TechController from "../controllers/TechController";
+import logger from "../logger";
+import Tech from "../models/Tech";
+import "../types/express";
+
+/* Dependencies */
+
+const techController = new TechController(Tech);
+
+/* API routes */
+
+const api = Router();
+
+api.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  if (err instanceof NotFoundError) {
+    res.status(404).json({ errors: ["id_not_found"] });
+  } else {
+    logger.error("Unrecognized error " + err.message, err);
+    res.status(500).json({ errors: ["internal_server_error"] });
+  }
+});
+
+api.get("/v1/techs/:id", async (req, res) => {
+  const tech = await techController.getById(req.params["id"]);
+  res.json(tech);
+});
+
+api.post(
+  "/v1/techs/:id",
+  (req, res, next) => {
+    if (req.user) {
+      next();
+    } else {
+      res.status(401).json({ errors: ["unauthenticated"] });
+    }
+  },
+  (req, res, next) => {
+    if (req.user && req.user.isAdmin) {
+      next();
+    } else {
+      res.status(403).json({ errors: ["unauthorized"] });
+    }
+  },
+  async (req, res) => {
+    const update = pick(req.body, ["name", "description", "imageUrl"]);
+    const tech = await techController.updateById(req.params["id"], update);
+    res.json(tech);
+  }
+);
+
+api.get("/v1/techs", async (req, res) => {
+  const gt = req.query["gt"];
+  const gtString = Array.isArray(gt) ? "" + gt[0] : "" + (gt || "");
+  if (!isValidObjectId(gtString)) {
+    return res.status(400).json({ errors: ["gt_invalid_id"] });
+  }
+
+  const pageSize = Math.max(50, +(req.query["pageSize"] || 50));
+  const techs = await techController.lookup(pageSize, gtString);
+  res.json(techs);
+});
+
+api.get("/v1/search/techs", async (req, res) => {
+  const q = req.query["q"];
+  const qString = Array.isArray(q) ? "" + q[0] : "" + (q || "");
+
+  const techs = await techController.search(qString);
+  res.json(techs);
+});
+
+export default api;

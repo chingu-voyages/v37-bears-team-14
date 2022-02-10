@@ -1,0 +1,623 @@
+[
+  {
+    "name": "Git",
+    "description": "Fast, scalable, distributed revision control system"
+  },
+  {
+    "name": "Node.js",
+    "description": "A platform built on Chrome's JavaScript runtime for easily building fast, scalable network applications"
+  },
+  {
+    "name": "Docker",
+    "description": "Enterprise Container Platform for High-Velocity Innovation."
+  },
+  {
+    "name": "NGINX",
+    "description": "A high performance free open source web server powering busiest sites on the Internet."
+  },
+  {
+    "name": "Slack",
+    "description": "Bring all your communication together in one place"
+  },
+  {
+    "name": "MySQL",
+    "description": "The world's most popular open source database"
+  },
+  {
+    "name": "PostgreSQL",
+    "description": "A powerful, open source object-relational database system"
+  },
+  {
+    "name": "Ubuntu",
+    "description": "The leading OS for PC, tablet, phone and cloud"
+  },
+  {
+    "name": "Bootstrap",
+    "description": "Simple and flexible HTML, CSS, and JS for popular UI components and interactions"
+  },
+  {
+    "name": "AngularJS",
+    "description": "Superheroic JavaScript MVW Framework"
+  },
+  {
+    "name": "Jenkins",
+    "description": "An extendable open source continuous integration server"
+  },
+  {
+    "name": "Redis",
+    "description": "An in-memory database that persists on disk"
+  },
+  {
+    "name": "Bitbucket",
+    "description": "One place to plan projects, collaborate on code, test and deploy, all with free private repositories"
+  },
+  {
+    "name": "Webpack",
+    "description": "A bundler for javascript and friends"
+  },
+  {
+    "name": "G Suite",
+    "description": "Collaboration and productivity apps for Business"
+  },
+  {
+    "name": "Sublime Text",
+    "description": "A sophisticated text editor for code, markup and prose."
+  },
+  {
+    "name": "Elasticsearch",
+    "description": "Open Source, Distributed, RESTful Search Engine"
+  },
+  {
+    "name": "Ruby",
+    "description": "A dynamic, interpreted, open source programming language with a focus on simplicity and productivity"
+  },
+  {
+    "name": "VirtualBox",
+    "description": "Run nearly any operating system on a single machine and to freely switch between OS instances running simultaneously"
+  },
+  {
+    "name": "ExpressJS",
+    "description": "Sinatra inspired web development framework for node.js -- insanely fast, flexible, and simple"
+  },
+  {
+    "name": "Rails",
+    "description": "Web development that doesn't hurt"
+  },
+  {
+    "name": "Docker Compose",
+    "description": "Define and run multi-container applications with Docker"
+  },
+  {
+    "name": "Ansible",
+    "description": "Radically simple configuration-management, application deployment, task-execution, and multi-node orchestration engine"
+  },
+  {
+    "name": "ESLint",
+    "description": "The fully pluggable JavaScript code quality tool"
+  },
+  {
+    "name": "Yarn",
+    "description": "A new package manager for JavaScript"
+  },
+  {
+    "name": "Babel",
+    "description": "Use next generation JavaScript, today."
+  },
+  {
+    "name": "gulp",
+    "description": "The streaming build system"
+  },
+  {
+    "name": "Socket.IO",
+    "description": "Realtime application framework (Node.JS server)"
+  },
+  {
+    "name": "Material Design for Angular",
+    "description": "Material Design for AngularJS Apps"
+  },
+  {
+    "name": "Vagrant",
+    "description": "A tool for building and distributing development environments"
+  },
+  {
+    "name": "Asana",
+    "description": "Enabling the teams to work together effortlessly"
+  },
+  {
+    "name": "Jest",
+    "description": "Painless JavaScript Unit Testing"
+  },
+  {
+    "name": "Neo4j",
+    "description": "The worldâs leading Graph Database"
+  },
+  {
+    "name": "Docker Swarm",
+    "description": "Native clustering for Docker. Turn a pool of Docker hosts into a single, virtual host."
+  },
+  {
+    "name": "PhantomJS",
+    "description": "Scriptable Headless WebKit"
+  },
+  {
+    "name": "ngrok",
+    "description": "Securely expose a local web server to the internet and capture all traffic for detailed inspection and replay"
+  },
+  {
+    "name": "BrowserSync",
+    "description": "Reload all your browsers, every time you hit save"
+  },
+  {
+    "name": "EditorConfig",
+    "description": "A file format and collection of text editor plugins for maintaining consistent coding styles "
+  },
+  {
+    "name": "Prerender",
+    "description": "Allow your javascript apps to be crawled perfectly by search engines. Works for AngularJS, BackboneJS, EmberJS and more"
+  },
+  {
+    "name": "GitHub",
+    "description": "Powerful collaboration, review, and code management for open source and private development projects"
+  },
+  {
+    "name": "Git",
+    "description": "Fast, scalable, distributed revision control system"
+  },
+  {
+    "name": "React",
+    "description": "A JavaScript library for building user interfaces"
+  },
+  {
+    "name": "Docker",
+    "description": "Enterprise Container Platform for High-Velocity Innovation."
+  },
+  {
+    "name": "Google Analytics",
+    "description": "Enterprise-class web analytics."
+  },
+  {
+    "name": "NGINX",
+    "description": "A high performance free open source web server powering busiest sites on the Internet."
+  },
+  {
+    "name": "Slack",
+    "description": "Bring all your communication together in one place"
+  },
+  {
+    "name": "PostgreSQL",
+    "description": "A powerful, open source object-relational database system"
+  },
+  {
+    "name": "MongoDB",
+    "description": "The database for giant ideas"
+  },
+  {
+    "name": "Ubuntu",
+    "description": "The leading OS for PC, tablet, phone and cloud"
+  },
+  {
+    "name": "TypeScript",
+    "description": "A superset of JavaScript that compiles to clean JavaScript output"
+  },
+  {
+    "name": "Stack Overflow",
+    "description": "Question and answer site for professional and enthusiast programmers"
+  },
+  {
+    "name": "Jira",
+    "description": "The #1 software development tool used by agile teams to plan, track, and release great software."
+  },
+  {
+    "name": "Redis",
+    "description": "An in-memory database that persists on disk"
+  },
+  {
+    "name": "Kubernetes",
+    "description": "Manage a cluster of Linux containers as a single system to accelerate Dev and simplify Ops"
+  },
+  {
+    "name": "Amazon EC2",
+    "description": "Scalable, pay-as-you-go compute capacity in the cloud"
+  },
+  {
+    "name": "Bitbucket",
+    "description": "One place to plan projects, collaborate on code, test and deploy, all with free private repositories"
+  },
+  {
+    "name": "G Suite",
+    "description": "Collaboration and productivity apps for Business"
+  },
+  {
+    "name": "Elasticsearch",
+    "description": "Open Source, Distributed, RESTful Search Engine"
+  },
+  {
+    "name": "GraphQL",
+    "description": "A data query language and runtime"
+  },
+  {
+    "name": "Vim",
+    "description": "Highly configurable text editor built to enable efficient text editing"
+  },
+  {
+    "name": "Amazon CloudFront",
+    "description": "Content delivery with low latency and high data transfer speeds"
+  },
+  {
+    "name": "AWS Lambda",
+    "description": "Automatically run code in response to modifications to objects in Amazon S3 buckets, messages in Kinesis streams, or updates in DynamoDB"
+  },
+  {
+    "name": "Docker Compose",
+    "description": "Define and run multi-container applications with Docker"
+  },
+  {
+    "name": "RabbitMQ",
+    "description": "Open source multiprotocol messaging broker"
+  },
+  {
+    "name": "GitHub Pages",
+    "description": "Public webpages freely hosted and easily published."
+  },
+  {
+    "name": "Stripe",
+    "description": "Payments for developers"
+  },
+  {
+    "name": "Go",
+    "description": "An open source programming language that makes it easy to build simple, reliable, and efficient software"
+  },
+  {
+    "name": "Amazon RDS",
+    "description": "Set up, operate, and scale a relational database in the cloud."
+  },
+  {
+    "name": "Terraform",
+    "description": "Describe your complete infrastructure as code and build resources across providers"
+  },
+  {
+    "name": "Amazon Route 53",
+    "description": "A highly available and scalable Domain Name System (DNS) web service."
+  },
+  {
+    "name": "Google Compute Engine",
+    "description": "Run large-scale workloads on virtual machines hosted on Google's infrastructure."
+  },
+  {
+    "name": "CircleCI",
+    "description": "Automate your development process quickly, safely, and at scale"
+  },
+  {
+    "name": "Amazon SES",
+    "description": "Bulk and transactional email-sending service."
+  },
+  {
+    "name": "Datadog",
+    "description": "Unify logs, metrics, and traces from across your distributed infrastructure."
+  },
+  {
+    "name": "Mailgun",
+    "description": "The Email Service for Developers."
+  },
+  {
+    "name": "Zendesk",
+    "description": "The leading cloud-based customer service software solution. "
+  },
+  {
+    "name": "Optimizely",
+    "description": "Experimentation platform for marketing, product, and engineering teams, with feature flags and personalization"
+  },
+  {
+    "name": "Jest",
+    "description": "Painless JavaScript Unit Testing"
+  },
+  {
+    "name": "Next.js",
+    "description": "A small framework for server-rendered universal JavaScript apps "
+  },
+  {
+    "name": "Segment",
+    "description": "A single hub to collect, translate and send your data with the flip of a switch."
+  },
+  {
+    "name": "Salesforce Sales Cloud",
+    "description": "The worldâs #1 CRM sales app"
+  },
+  {
+    "name": "Apollo",
+    "description": "GraphQL server for Express, Connect, Hapi, Koa and more"
+  },
+  {
+    "name": "Marketo",
+    "description": "Helping marketers master the art and science of digital marketing"
+  },
+  {
+    "name": "Rollbar",
+    "description": "Proactively discover, predict, and remediate errors."
+  },
+  {
+    "name": "Zoom",
+    "description": "Video Conferencing, Web Conferencing, Webinars, Screen Sharing"
+  },
+  {
+    "name": "Cypress",
+    "description": "When testing is easy, developers build better things faster and with confidence."
+  },
+  {
+    "name": "Clojure",
+    "description": "A dynamic programming language that targets the Java Virtual Machine"
+  },
+  {
+    "name": "Helm",
+    "description": "The Kubernetes Package Manager"
+  },
+  {
+    "name": "Amplitude",
+    "description": "User analytics to fuel explosive user growth"
+  },
+  {
+    "name": "Metabase",
+    "description": "An open-source business intelligence tool"
+  },
+  {
+    "name": "VMware vSphere",
+    "description": "Free bare-metal hypervisor that virtualizes servers so you can consolidate your applications on less hardware"
+  },
+  {
+    "name": "Graylog",
+    "description": "Open source log management that actually works"
+  },
+  {
+    "name": "Looker",
+    "description": "Pioneering the next generation of BI, data discovery & data analytics"
+  },
+  {
+    "name": "StatusPage.io",
+    "description": "Build trust with every incident: Real-time status and incident communication."
+  },
+  {
+    "name": "Alpine Linux",
+    "description": "Security-oriented, lightweight Linux distribution based on musl libc and busybox"
+  },
+  {
+    "name": "Hubot",
+    "description": "A customizable life embetterment robot"
+  },
+  {
+    "name": "Nomad",
+    "description": "A cluster manager and scheduler"
+  },
+  {
+    "name": "Emotion",
+    "description": "The Next Generation of CSS in JS"
+  },
+  {
+    "name": "Percy",
+    "description": "Add visual reviews to your GitHub pull requests, helping your team spot UI bugs quickly and review visual changes easily"
+  },
+  {
+    "name": "Honeycomb",
+    "description": "Observability for a distributed world--designed for high cardinality data and collaborative problem solving ðð"
+  },
+  {
+    "name": "JavaScript",
+    "description": "Lightweight, interpreted, object-oriented language with first-class functions"
+  },
+  {
+    "name": "GitHub",
+    "description": "Powerful collaboration, review, and code management for open source and private development projects"
+  },
+  {
+    "name": "React",
+    "description": "A JavaScript library for building user interfaces"
+  },
+  {
+    "name": "Google Analytics",
+    "description": "Enterprise-class web analytics."
+  },
+  {
+    "name": "NGINX",
+    "description": "A high performance free open source web server powering busiest sites on the Internet."
+  },
+  {
+    "name": "Java",
+    "description": "A concurrent, class-based, object-oriented, language specifically designed to have as few implementation dependencies as possible"
+  },
+  {
+    "name": "Slack",
+    "description": "Bring all your communication together in one place"
+  },
+  {
+    "name": "MySQL",
+    "description": "The world's most popular open source database"
+  },
+  {
+    "name": "Redis",
+    "description": "An in-memory database that persists on disk"
+  },
+  {
+    "name": "Amazon S3",
+    "description": "Store and retrieve any amount of data, at any time, from anywhere on the web"
+  },
+  {
+    "name": "Amazon EC2",
+    "description": "Scalable, pay-as-you-go compute capacity in the cloud"
+  },
+  {
+    "name": "Sass",
+    "description": "Syntactically Awesome Style Sheets"
+  },
+  {
+    "name": "Webpack",
+    "description": "A bundler for javascript and friends"
+  },
+  {
+    "name": "G Suite",
+    "description": "Collaboration and productivity apps for Business"
+  },
+  {
+    "name": "Ruby",
+    "description": "A dynamic, interpreted, open source programming language with a focus on simplicity and productivity"
+  },
+  {
+    "name": "New Relic",
+    "description": "New Relic is the industry’s largest and most comprehensive cloud-based observability platform."
+  },
+  {
+    "name": "Amazon CloudFront",
+    "description": "Content delivery with low latency and high data transfer speeds"
+  },
+  {
+    "name": "Rails",
+    "description": "Web development that doesn't hurt"
+  },
+  {
+    "name": "Kibana",
+    "description": "Visualize your Elasticsearch data and navigate the Elastic Stack"
+  },
+  {
+    "name": "Amazon RDS",
+    "description": "Set up, operate, and scale a relational database in the cloud."
+  },
+  {
+    "name": "Amazon Route 53",
+    "description": "A highly available and scalable Domain Name System (DNS) web service."
+  },
+  {
+    "name": "Sentry",
+    "description": "See performance issues, fix errors faster, and optimize code health. "
+  },
+  {
+    "name": "Amazon CloudWatch",
+    "description": "Monitor AWS resources and custom metrics generated by your applications and services"
+  },
+  {
+    "name": "Vagrant",
+    "description": "A tool for building and distributing development environments"
+  },
+  {
+    "name": "Logstash",
+    "description": "Collect, Parse, & Enrich Data"
+  },
+  {
+    "name": "Twilio SendGrid",
+    "description": "Email Delivery. Simplified."
+  },
+  {
+    "name": "Twilio",
+    "description": "Bring voice and messaging to your web and mobile applications."
+  },
+  {
+    "name": "Asana",
+    "description": "Enabling the teams to work together effortlessly"
+  },
+  {
+    "name": "InVision",
+    "description": "Prototyping & Collaboration For Design Teams"
+  },
+  {
+    "name": "Datadog",
+    "description": "Unify logs, metrics, and traces from across your distributed infrastructure."
+  },
+  {
+    "name": "Mixpanel",
+    "description": "Powerful, self-serve product analytics to help you convert, engage, and retain more users"
+  },
+  {
+    "name": "Jest",
+    "description": "Painless JavaScript Unit Testing"
+  },
+  {
+    "name": "Hadoop",
+    "description": "Open-source software for reliable, scalable, distributed computing"
+  },
+  {
+    "name": "Visual Website Optimizer",
+    "description": "A/B Testing with In-Built Heatmaps"
+  },
+  {
+    "name": "Airflow",
+    "description": "A platform to programmaticaly author, schedule and monitor data pipelines, by Airbnb"
+  },
+  {
+    "name": "Amazon ElastiCache",
+    "description": "Deploy, operate, and scale an in-memory cache in the cloud"
+  },
+  {
+    "name": "Chef",
+    "description": "Build, destroy and rebuild servers on any public or private cloud"
+  },
+  {
+    "name": "Amazon EBS",
+    "description": "Block level storage volumes for use with Amazon EC2 instances. "
+  },
+  {
+    "name": "Braintree",
+    "description": "Accept payments in your app or website today"
+  },
+  {
+    "name": "Enzyme",
+    "description": "JavaScript Testing utilities for React, by Airbnb"
+  },
+  {
+    "name": "Presto",
+    "description": "Distributed SQL Query Engine for Big Data"
+  },
+  {
+    "name": "Druid",
+    "description": "Fast column-oriented distributed data store"
+  },
+  {
+    "name": "Apache Mesos",
+    "description": "Develop and run resource-efficient distributed systems"
+  },
+  {
+    "name": "Superset",
+    "description": "Data exploration and visualization platform, by Airbnb"
+  },
+  {
+    "name": "Lottie",
+    "description": "Easily add high-quality animation to any native app (by Airbnb)"
+  },
+  {
+    "name": "Nexmo",
+    "description": "API for SMS, Voice and Phone Verification"
+  },
+  {
+    "name": "Campaign Monitor",
+    "description": "Send beautiful email newsletters"
+  },
+  {
+    "name": "Native Navigation",
+    "description": "Native navigation library for React Native application, by Airbnb"
+  },
+  {
+    "name": "React Sketch.app",
+    "description": "Render React components to Sketch ⚛️💎"
+  },
+  {
+    "name": "Urban Airship",
+    "description": "Improve customer engagement with push notifications, location-based marketing and analytics."
+  },
+  {
+    "name": "Aerosolve",
+    "description": "A machine learning package built for humans (created by Airbnb)"
+  },
+  {
+    "name": "Airpal",
+    "description": "Web UI for PrestoDB, by Airbnb"
+  },
+  {
+    "name": "Assemblage",
+    "description": "Powerful visual collaboration tool"
+  },
+  {
+    "name": "DeepLinkDispatch",
+    "description": "A simple, annotation-based library for making deep link handling better on Android, by Airbnb"
+  },
+  {
+    "name": "SmartStack",
+    "description": "Automated service discovery and registration framework"
+  }
+]
+
