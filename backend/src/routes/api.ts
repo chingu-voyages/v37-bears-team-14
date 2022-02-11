@@ -80,6 +80,13 @@ api.get("/v1/search/techs", async (req, res, next) => {
   }
 });
 
+api.get("/v1/current-session", (req: Request, res: Response) => {
+  res.json({
+    user: req.user,
+    isLoggedIn: !!req.user,
+  });
+});
+
 // Error handler for API routes! Must come _after_ the other endpoints!
 api.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   if (err instanceof NotFoundError) {

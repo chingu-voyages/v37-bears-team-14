@@ -43,7 +43,6 @@ app.use("/auth", auth);
 app.get("/api/v1/hello", (req: Request, res: Response) => {
   res.json({ name: req.query["name"] || "World" });
 });
-
 app.use("/api", api);
 
 app.get("/*", (_, res) => {
