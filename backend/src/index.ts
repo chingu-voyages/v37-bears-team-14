@@ -43,16 +43,6 @@ app.use("/auth", auth);
 app.get("/api/v1/hello", (req: Request, res: Response) => {
   res.json({ name: req.query["name"] || "World" });
 });
-
-app.use(passport.initialize());
-app.use(passport.session());
-
-app.get("/api/v1/current-session", (req: Request, res: Response) => {
-  res.json({
-    user: req.user,
-    isLoggedIn: !!req.user,
-  });
-});
 app.use("/api", api);
 
 app.get("/*", (_, res) => {
