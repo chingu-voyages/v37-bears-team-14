@@ -89,18 +89,12 @@ const Navbar: FunctionComponent = () => {
               />
               {profileDiv && (
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-md overflow-hidden shadow-xl z-20 mr-2">
-                  <a
-                    href="/signout"
-                    className="block px-4 py-2 text-sm text-gray-800 border-b hover:bg-gray-200"
-                  >
+                  <span className="block px-4 py-2 text-sm text-gray-800 border-b hover:bg-gray-200">
                     Sign Out
-                  </a>
-                  <a
-                    href="/userprofile"
-                    className="block px-4 py-2 text-sm text-gray-800 border-b hover:bg-gray-200"
-                  >
+                  </span>
+                  <span className="block px-4 py-2 text-sm text-gray-800 border-b hover:bg-gray-200">
                     View Profile
-                  </a>
+                  </span>
                 </div>
               )}
 
