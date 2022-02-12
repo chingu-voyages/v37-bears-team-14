@@ -88,25 +88,22 @@ const Navbar: FunctionComponent = () => {
                 onClick={() => setProfileDiv(!profileDiv)}
               />
               {profileDiv && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md overflow-hidden shadow-xl z-20 mr-2">
-                  <span className="block px-4 py-2 text-sm text-gray-800 border-b hover:bg-gray-200">
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md overflow-hidden shadow-xl z-20 mr-2 cursor-pointer">
+                  <a
+                    href="/auth/signout"
+                    className="block px-4 py-2 text-sm text-gray-800 border-b hover:bg-gray-200"
+                  >
                     Sign Out
-                  </span>
+                  </a>
                   <span className="block px-4 py-2 text-sm text-gray-800 border-b hover:bg-gray-200">
                     View Profile
                   </span>
                 </div>
               )}
-
-              {/* <img
-                src={currentSession.user.avatarUrl}
-                alt="avatar"
-                className="h-10 inline rounded"
-              /> */}
             </div>
           ) : (
             <a
-              href="/sign-in"
+              href="/auth/github"
               className="text-lg no-underline text-grey-darkest hover:text-blue-dark ml-2"
             >
               Sign In
