@@ -29,6 +29,21 @@ const Navbar: FunctionComponent = () => {
     },
   });
   const [profileDiv, setProfileDiv] = useState(false);
+  async function logout() {
+    await fetch("/auth/signout");
+    setCurrentSession({
+      isLoggedIn: false,
+      user: {
+        avatarUrl: "",
+        createdAt: "",
+        githubId: "",
+        id: "",
+        isAdmin: false,
+        updatedAt: "",
+        username: "",
+      },
+    });
+  }
   useEffect(() => {
     async function getAuth() {
       const response = await fetch("/api/v1/current-session");
@@ -89,12 +104,13 @@ const Navbar: FunctionComponent = () => {
               />
               {profileDiv && (
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-md overflow-hidden shadow-xl z-20 mr-2 cursor-pointer">
-                  <a
-                    href="/auth/signout"
+                  <span
+                    onClick={() => logout()}
                     className="block px-4 py-2 text-sm text-gray-800 border-b hover:bg-gray-200"
                   >
                     Sign Out
-                  </a>
+                  </span>
+
                   <span className="block px-4 py-2 text-sm text-gray-800 border-b hover:bg-gray-200">
                     View Profile
                   </span>
@@ -102,12 +118,11 @@ const Navbar: FunctionComponent = () => {
               )}
             </div>
           ) : (
-            <a
-              href="/auth/github"
-              className="text-lg no-underline text-grey-darkest hover:text-blue-dark ml-2"
-            >
-              Sign In
-            </a>
+            <Link to="/auth/github" reloadDocument>
+              <span className="text-lg no-underline text-grey-darkest hover:text-blue-dark ml-2">
+                Sign In
+              </span>
+            </Link>
           )}
         </div>
       </nav>
