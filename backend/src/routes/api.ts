@@ -1,17 +1,11 @@
 import { pick } from "lodash";
 import { NextFunction, Request, Response, Router } from "express";
-import { isValidObjectId, startSession } from "mongoose";
+import { isValidObjectId } from "mongoose";
 import NotFoundError from "../controllers/errors/NotFoundError";
 import TechController from "../controllers/TechController";
 import logger from "../logger";
 import Tech from "../models/Tech";
 import "../types/express";
-import ProjectController, {
-  ProjectUpdateParams,
-} from "../controllers/ProjectController";
-import Project from "../models/Project";
-import User, { IUser } from "../models/User";
-import Member from "../models/Member";
 import UnexpectedError from "../controllers/errors/UnexpectedError";
 import UnauthorizedError from "../controllers/errors/UnauthorizedError";
 import FieldExistsError from '../controllers/errors/FieldExistsError'
