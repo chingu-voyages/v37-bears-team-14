@@ -1,9 +1,9 @@
 import crypto from "crypto";
-import { Document, Model } from "mongoose";
+import { Document, Model, ObjectId } from "mongoose";
 import { IUser } from "../models/User";
 import { GithubProfile, parseAvatarUrl } from "../auth/github";
 
-export type UserRecord = IUser & Document<IUser>;
+export type UserRecord = IUser & Document<ObjectId, any, IUser>;
 
 class UserController {
   constructor(private userModel: Model<IUser>) {}
