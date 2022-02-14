@@ -3,7 +3,7 @@ import { ITech } from "./Tech";
 
 export interface IProject {
   name: string;
-  description: string;
+  description: null | string;
   techs: ObjectId[] | ITech[];
 }
 
@@ -18,6 +18,7 @@ const ProjectSchema = new Schema<IProject>(
     },
     description: {
       type: Schema.Types.String,
+      default: null,
     },
     techs: {
       type: [Schema.Types.ObjectId],
