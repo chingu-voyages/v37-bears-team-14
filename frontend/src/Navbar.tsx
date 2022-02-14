@@ -1,4 +1,5 @@
 import React, { FunctionComponent, useState, useEffect } from "react";
+import StackCafeIcon from "./components/icons/StackCafeIcon";
 import { Link } from "react-router-dom";
 type sessionData = {
   isLoggedIn: boolean;
@@ -14,35 +15,25 @@ type sessionData = {
 };
 
 // : FunctionComponent<NavbarProps> { username, avatarURL }
+const blankUser = {
+  isLoggedIn: false,
+  user: {
+    avatarUrl: "",
+    createdAt: "",
+    githubId: "",
+    id: "",
+    isAdmin: false,
+    updatedAt: "",
+    username: "",
+  },
+};
 
 const Navbar: FunctionComponent = () => {
-  const [currentSession, setCurrentSession] = useState<sessionData>({
-    isLoggedIn: false,
-    user: {
-      avatarUrl: "",
-      createdAt: "",
-      githubId: "",
-      id: "",
-      isAdmin: false,
-      updatedAt: "",
-      username: "",
-    },
-  });
+  const [currentSession, setCurrentSession] = useState<sessionData>(blankUser);
   const [profileDiv, setProfileDiv] = useState(false);
   async function logout() {
     await fetch("/auth/signout");
-    setCurrentSession({
-      isLoggedIn: false,
-      user: {
-        avatarUrl: "",
-        createdAt: "",
-        githubId: "",
-        id: "",
-        isAdmin: false,
-        updatedAt: "",
-        username: "",
-      },
-    });
+    setCurrentSession(blankUser);
   }
   useEffect(() => {
     async function getAuth() {
@@ -56,18 +47,23 @@ const Navbar: FunctionComponent = () => {
 
   return (
     <>
-      <nav className="font-sans flex flex-col text-center sm:flex-row sm:text-left sm:justify-between py-4 px-6 bg-white shadow sm:items-baseline w-full">
-        <div className="mb-2 sm:mb-0">
-          <a
+      <nav className="flex text-center sm:flex-row sm:text-left sm:justify-between py-2 px-6 shadow h-[64px ]">
+        {/* <a
             href="/home"
             className="text-2xl no-underline text-grey-darkest hover:text-blue-dark"
           >
             Link Up
-          </a>
+          </a> */}
+        <div className="inline-flex items-center justify-center">
+          <div className="flex justify-between content-center">
+            <StackCafeIcon className="w-8" />
+            <span className="inline ml-2">StackCafe</span>
+          </div>
         </div>
-        <div>
+        {/* className="flex items-center justify-center" */}
+        <div className="inline-flex items-center justify-center">
           <Link to="/projects">
-            <button className="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-white focus:ring-4 focus:ring-green-200 dark:focus:ring-green-800">
+            <button className="relative inline-flex items-center mr-2 justify-center p-0.5 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-white focus:ring-4 focus:ring-green-200 dark:focus:ring-green-800">
               <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
                 Projects
               </span>
@@ -75,7 +71,7 @@ const Navbar: FunctionComponent = () => {
           </Link>
 
           <Link to="/developers">
-            <button className="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800">
+            <button className="relative inline-flex items-center mr-2 justify-center p-0.5 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800">
               <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
                 Developers
               </span>
@@ -83,7 +79,7 @@ const Navbar: FunctionComponent = () => {
           </Link>
 
           <Link to="/applications">
-            <button className="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-teal-300 to-lime-300 group-hover:from-teal-300 group-hover:to-lime-300 dark:text-white dark:hover:text-gray-900 focus:ring-4 focus:ring-lime-200 dark:focus:ring-lime-800">
+            <button className="relative inline-flex items-center justify-center mr-2 p-0.5 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-teal-300 to-lime-300 group-hover:from-teal-300 group-hover:to-lime-300 dark:text-white dark:hover:text-gray-900 focus:ring-4 focus:ring-lime-200 dark:focus:ring-lime-800">
               <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
                 Applications
               </span>
@@ -97,7 +93,7 @@ const Navbar: FunctionComponent = () => {
               </span>
 
               <img
-                className="rounded-full border border-gray-100 shadow-sm w-16 h-16 inline cursor-pointer border-transparent border-4 transition duration-900 hover:border-gray-300 "
+                className="rounded-full border-gray-100 shadow-sm w-12 h-12 inline cursor-pointer border-transparent border-4 transition duration-900 hover:border-gray-300 "
                 src={currentSession.user.avatarUrl}
                 alt="avatar"
                 onClick={() => setProfileDiv(!profileDiv)}
