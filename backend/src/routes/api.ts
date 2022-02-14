@@ -3,13 +3,16 @@ import { NextFunction, Request, Response, Router } from "express";
 import { isValidObjectId } from "mongoose";
 import NotFoundError from "../controllers/errors/NotFoundError";
 import TechController from "../controllers/TechController";
+import UserController from "../controllers/UserController";
 import logger from "../logger";
 import Tech from "../models/Tech";
+import User from "../models/User";
 import "../types/express";
 
 /* Dependencies */
 
 const techController = new TechController(Tech);
+const userController = new UserController(User);
 
 /* API routes */
 
@@ -75,6 +78,24 @@ api.get("/v1/search/techs", async (req, res, next) => {
   try {
     const techs = await techController.search(qString);
     res.json(techs);
+  } catch (err) {
+    next(err);
+  }
+});
+
+api.get("/v1/search/:username", async (req, res, next) => {
+  try {
+    const user = await userController.searchByName(req.params["username"]);
+    res.json(user);
+  } catch (err) {
+    next(err);
+  }
+});
+
+api.get("/v1/users/:id", async (req, res, next) => {
+  try {
+    const user = await userController.searchById(req.params["id"]);
+    res.json(user);
   } catch (err) {
     next(err);
   }

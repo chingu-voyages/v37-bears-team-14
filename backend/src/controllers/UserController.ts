@@ -2,6 +2,7 @@ import crypto from "crypto";
 import { Document, Model } from "mongoose";
 import { IUser } from "../models/User";
 import { GithubProfile, parseAvatarUrl } from "../auth/github";
+import NotFoundError from "./errors/NotFoundError";
 
 export type UserRecord = IUser & Document<IUser>;
 
@@ -60,6 +61,23 @@ class UserController {
     } else {
       return nextUsername;
     }
+  }
+  async searchByName(username: string) {
+    const user = await this.userModel.findOne({
+      username: { $regex: username, $options: "i" },
+    });
+    if (!user) {
+      throw new NotFoundError("user", username);
+    }
+    return user;
+  }
+
+  async searchById(id: string) {
+    const user = await this.userModel.findOne({ githubId: id });
+    if (!user) {
+      throw new NotFoundError("id", id);
+    }
+    return user;
   }
 }
 
