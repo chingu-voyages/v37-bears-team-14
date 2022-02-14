@@ -11,17 +11,6 @@ const projectController = new ProjectController(Project, User, Member, () => sta
 
 const projects = Router();
 
-// projects.post("/", async (req, res) => {
-//   const params = pick(req.body, ["name", "description", "techs"]);
-//   if (!params.name || params.name.length < 1) {
-//     return res.status(400).json({ errors: ["missing_name"] });
-//   }
-// });
-
-// projects.get("/:id", async (req, res) => {});
-
-// projects.post("/:id", async (req, res) => {});
-
 /**
  * The owner is defaulted to the session's user.
  * request parameters:
