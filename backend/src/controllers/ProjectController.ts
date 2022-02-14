@@ -98,13 +98,14 @@ class ProjectController {
           project: project.toJSON(),
           owner: owner.toJSON(),
         });
-
-        await project.populate("techs");
       });
 
       if (!project) {
         throw new UnexpectedError("Expected project to exist after creation!");
       } else {
+        session.endSession();
+        // Populate techs data after session ends.
+        await (project as ProjectDoc).populate("techs");
         return project;
       }
     } catch (err) {
