@@ -13,4 +13,9 @@ auth.get(
   })
 );
 
+auth.get("/signout", function (req, res) {
+  req.logout();
+  res.redirect("/");
+});
+
 export default auth;
