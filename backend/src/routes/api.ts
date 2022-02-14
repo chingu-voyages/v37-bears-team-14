@@ -1,11 +1,21 @@
 import { pick } from "lodash";
 import { NextFunction, Request, Response, Router } from "express";
-import { isValidObjectId } from "mongoose";
+import { isValidObjectId, startSession } from "mongoose";
 import NotFoundError from "../controllers/errors/NotFoundError";
 import TechController from "../controllers/TechController";
 import logger from "../logger";
 import Tech from "../models/Tech";
 import "../types/express";
+import ProjectController, {
+  ProjectUpdateParams,
+} from "../controllers/ProjectController";
+import Project from "../models/Project";
+import User, { IUser } from "../models/User";
+import Member from "../models/Member";
+import UnexpectedError from "../controllers/errors/UnexpectedError";
+import UnauthorizedError from "../controllers/errors/UnauthorizedError";
+import FieldExistsError from '../controllers/errors/FieldExistsError'
+import projectRouter from "./projectRouter";
 
 /* Dependencies */
 
@@ -14,6 +24,12 @@ const techController = new TechController(Tech);
 /* API routes */
 
 const api = Router();
+
+// PROJECT
+
+api.use(projectRouter);
+
+// TECH
 
 api.get("/v1/techs/:id", async (req, res, next) => {
   try {
@@ -91,6 +107,13 @@ api.get("/v1/current-session", (req: Request, res: Response) => {
 api.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   if (err instanceof NotFoundError) {
     res.status(404).json({ errors: ["id_not_found"] });
+  } else if (err instanceof UnauthorizedError) {
+    res.status(403).json({ errors: ["unauthorized"] });
+  } else if (err instanceof FieldExistsError) {
+    res.status(400).json({ errors: [`${err.field}_already_exists`] })
+  } else if (err instanceof UnexpectedError) {
+    logger.error("Unexpected error " + err.message, err);
+    res.status(500).json({ errors: ["internal_server_error"] });
   } else {
     logger.error("Unrecognized error " + err.message, err);
     res.status(500).json({ errors: ["internal_server_error"] });
