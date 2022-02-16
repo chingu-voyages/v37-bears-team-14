@@ -68,11 +68,57 @@ const NewProject: FunctionComponent = () => {
                 {errors.description && touched.description ? (
                   <div>{errors.description}</div>
                 ) : null}
+
                 <div className="flex items-center justify-between">
-                  <button
-                    type="submit"
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                  >
+                  <button type="button" className="orange-btn">
+                    Add Technology
+                  </button>
+
+                  <div className="hidden bg-white text-base z-50 list-none divide-y divide-gray-100 rounded shadow my-4">
+                    <div className="px-4 py-3">
+                      <span className="block text-sm">Bonnie Green</span>
+                      <span className="block text-sm font-medium text-gray-900 truncate">
+                        name@flowbite.com
+                      </span>
+                    </div>
+                    <ul className="py-1" aria-labelledby="dropdown">
+                      <li>
+                        <a
+                          href="#"
+                          className="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2"
+                        >
+                          Dashboard
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          href="#"
+                          className="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2"
+                        >
+                          Settings
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          href="#"
+                          className="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2"
+                        >
+                          Earnings
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          href="#"
+                          className="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2"
+                        >
+                          Sign out
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <button type="submit" className="main-btn">
                     Submit
                   </button>
                 </div>
