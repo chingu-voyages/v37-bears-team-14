@@ -9,7 +9,7 @@ const NewProjectSchema = Yup.object().shape({
 });
 
 const NewProject: FunctionComponent = () => {
-  const [isLoading, setIsLoading] = useState(true);
+  // const [isLoading, setIsLoading] = useState(true);
   const [techs, setTechs] = useState<any[]>([]);
   const [chosenTechs, setChosenTechs] = useState<any[]>([]);
 
@@ -48,15 +48,15 @@ const NewProject: FunctionComponent = () => {
             onSubmit={(values) => {
               // same shape as initial values
               console.log(values);
-              async function postProject(values: object) {
-                const response = await fetch("api/v1/projects", {
+              // const data = await response.json();
+              async function postProject(values: object): Promise<void> {
+                fetch("api/v1/projects", {
                   method: "POST",
                   headers: {
                     "Content-Type": "application/json",
                   },
                   body: JSON.stringify(values),
                 });
-                // const data = await response.json();
               }
               postProject(values);
             }}
@@ -97,13 +97,34 @@ const NewProject: FunctionComponent = () => {
                 ) : null}
                 <div className="flex justify-start">
                   {chosenTechs.map((tech) => (
-                    <img className="h-12 w-12 m-2" src={tech.imageUrl} />
+                    <div className="relative m-1">
+                      <div className="absolute top-0 right-0 bg-slate-300 border-white cursor-pointer text-white rounded-full hover:bg-blue-800 ">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="#000000"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M6 18L18 6M6 6l12 12"
+                          />
+                        </svg>
+                      </div>
+                      <img
+                        className="h-12 mx-auto flex justify-center"
+                        src={tech.imageUrl}
+                      />
+                      <div className="p-1 m-1 text-xs text-slate-700 bg-slate-300 rounded-md flex justify-center font-bold">
+                        {tech.name}
+                      </div>
+                    </div>
                   ))}
                 </div>
                 <div className="mt-2">
-                  {/* <button type="button" className="orange-btn">
-                    Add Technology
-                  </button> */}
                   <Menu>
                     <Menu.Button className="orange-btn">
                       Add Technologies
@@ -138,16 +159,6 @@ const NewProject: FunctionComponent = () => {
                             )}
                           </Menu.Item>
                         ))}
-                      {/* <Menu.Item>
-                        {({ active }) => (
-                          <a
-                            className={`block p-2 ${active && "bg-blue-500"}`}
-                            href="/account-settings"
-                          >
-                            Documentation
-                          </a>
-                        )}
-                      </Menu.Item> */}
                     </Menu.Items>
                   </Menu>
                 </div>
