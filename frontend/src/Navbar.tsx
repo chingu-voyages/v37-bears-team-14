@@ -1,4 +1,6 @@
 import React, { FunctionComponent, useState, useEffect } from "react";
+import StackCafeIcon from "./components/icons/StackCafeIcon";
+import Hamburger from "./components/icons/Hamburger";
 import { Link } from "react-router-dom";
 type sessionData = {
   isLoggedIn: boolean;
@@ -14,35 +16,26 @@ type sessionData = {
 };
 
 // : FunctionComponent<NavbarProps> { username, avatarURL }
+const blankUser = {
+  isLoggedIn: false,
+  user: {
+    avatarUrl: "",
+    createdAt: "",
+    githubId: "",
+    id: "",
+    isAdmin: false,
+    updatedAt: "",
+    username: "",
+  },
+};
 
 const Navbar: FunctionComponent = () => {
-  const [currentSession, setCurrentSession] = useState<sessionData>({
-    isLoggedIn: false,
-    user: {
-      avatarUrl: "",
-      createdAt: "",
-      githubId: "",
-      id: "",
-      isAdmin: false,
-      updatedAt: "",
-      username: "",
-    },
-  });
+  const [currentSession, setCurrentSession] = useState<sessionData>(blankUser);
   const [profileDiv, setProfileDiv] = useState(false);
+  const [mobileMenu, setMobileMenu] = useState(false);
   async function logout() {
     await fetch("/auth/signout");
-    setCurrentSession({
-      isLoggedIn: false,
-      user: {
-        avatarUrl: "",
-        createdAt: "",
-        githubId: "",
-        id: "",
-        isAdmin: false,
-        updatedAt: "",
-        username: "",
-      },
-    });
+    setCurrentSession(blankUser);
   }
   useEffect(() => {
     async function getAuth() {
@@ -56,40 +49,57 @@ const Navbar: FunctionComponent = () => {
 
   return (
     <>
-      <nav className="font-sans flex flex-col text-center sm:flex-row sm:text-left sm:justify-between py-4 px-6 bg-white shadow sm:items-baseline w-full">
-        <div className="mb-2 sm:mb-0">
-          <a
+      <nav className="flex text-center sm:flex-row sm:text-left justify-between text-emerald-200 bg-gray-700 py-2 px-6 shadow h-[64px]">
+        {/* <a
             href="/home"
             className="text-2xl no-underline text-grey-darkest hover:text-blue-dark"
           >
             Link Up
-          </a>
+          </a> */}
+        <div className="sm:hidden flex items-center">
+          <button
+            className="outline-none mobile-menu-button"
+            onClick={() => {
+              setMobileMenu(!mobileMenu);
+              setProfileDiv(false);
+            }}
+          >
+            <Hamburger />
+          </button>
         </div>
-        <div>
-          <Link to="/projects">
-            <button className="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-white focus:ring-4 focus:ring-green-200 dark:focus:ring-green-800">
-              <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-                Projects
-              </span>
-            </button>
-          </Link>
+        <div className="hidden sm:inline-flex items-center justify-center">
+          <div className="flex justify-between content-center">
+            <StackCafeIcon className="w-12" />
+            {/* <span className="inline ml-2">StackCafe</span> */}
+          </div>
+        </div>
+        {/* className="flex items-center justify-center" */}
+        <div className="inline-flex items-center justify-between content-center">
+          <div className="hidden sm:block">
+            <Link to="/projects">
+              <button className="relative inline-flex items-center mr-2 justify-center p-0.5 overflow-hidden text-sm font-medium text-emerald-200 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800">
+                <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-gray-700 dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+                  Projects
+                </span>
+              </button>
+            </Link>
 
-          <Link to="/developers">
-            <button className="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800">
-              <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-                Developers
-              </span>
-            </button>
-          </Link>
+            <Link to="/developers">
+              <button className="relative inline-flex items-center mr-2 justify-center p-0.5 overflow-hidden text-sm font-medium text-emerald-200 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800">
+                <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-gray-700 dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+                  Developers
+                </span>
+              </button>
+            </Link>
 
-          <Link to="/applications">
-            <button className="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-teal-300 to-lime-300 group-hover:from-teal-300 group-hover:to-lime-300 dark:text-white dark:hover:text-gray-900 focus:ring-4 focus:ring-lime-200 dark:focus:ring-lime-800">
-              <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-                Applications
-              </span>
-            </button>
-          </Link>
-
+            <Link to="/applications">
+              <button className="relative inline-flex items-center mr-2 justify-center p-0.5 overflow-hidden text-sm font-medium text-emerald-200 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800">
+                <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-gray-700 dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+                  Applications
+                </span>
+              </button>
+            </Link>
+          </div>
           {currentSession.isLoggedIn ? (
             <div className="inline">
               <span className="text-lg no-underline text-grey-darkest hover:text-blue-dark ml-2 mr-2">
@@ -97,23 +107,45 @@ const Navbar: FunctionComponent = () => {
               </span>
 
               <img
-                className="rounded-full border border-gray-100 shadow-sm w-16 h-16 inline cursor-pointer border-transparent border-4 transition duration-900 hover:border-gray-300 "
+                className="rounded-full border-gray-100 shadow-sm w-12 h-12 inline cursor-pointer border-transparent border-4 transition duration-900 hover:border-gray-500 "
                 src={currentSession.user.avatarUrl}
                 alt="avatar"
-                onClick={() => setProfileDiv(!profileDiv)}
+                onClick={() => {
+                  setProfileDiv(!profileDiv);
+                  setMobileMenu(false);
+                }}
               />
               {profileDiv && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md overflow-hidden shadow-xl z-20 mr-2 cursor-pointer">
+                <div className="absolute right-0 mt-2 w-48 text-center bg-darkGray rounded-bl-md overflow-hidden shadow-xl z-20 cursor-pointer">
                   <span
                     onClick={() => logout()}
-                    className="block px-4 py-2 text-sm text-gray-800 border-b hover:bg-gray-200"
+                    className="block px-4 py-2 text-sm text-mintGreen border-b-2 border-medGray hover:bg-gradient-to-br hover:from-purple-600 hover:to-blue-500 hover:text-white"
                   >
                     Sign Out
                   </span>
 
-                  <span className="block px-4 py-2 text-sm text-gray-800 border-b hover:bg-gray-200">
+                  <span className="block px-4 py-2 text-sm text-mintGreen hover:bg-gradient-to-br hover:from-purple-600 hover:to-blue-500 hover:text-white">
                     View Profile
                   </span>
+                </div>
+              )}
+              {mobileMenu && (
+                <div className="absolute left-0 sm:hidden mt-2 w-48 bg-darkGray rounded-br-md overflow-hidden shadow-xl z-20 cursor-pointer">
+                  <Link to="/projects">
+                    <span className="block px-4 py-2 text-sm text-mintGreen border-b-2 border-medGray hover:bg-gradient-to-br hover:from-purple-600 hover:to-blue-500 hover:text-white">
+                      Projects
+                    </span>
+                  </Link>
+                  <Link to="/developers">
+                    <span className="block px-4 py-2 text-sm text-mintGreen border-b-2 border-medGray hover:bg-gradient-to-br hover:from-purple-600 hover:to-blue-500 hover:text-white">
+                      Developers
+                    </span>
+                  </Link>
+                  <Link to="/applications">
+                    <span className="block px-4 py-2 text-sm text-mintGreen hover:bg-gradient-to-br hover:from-purple-600 hover:to-blue-500 hover:text-white">
+                      Applications
+                    </span>
+                  </Link>
                 </div>
               )}
             </div>
