@@ -1,5 +1,5 @@
 import logger from "../logger";
-import { ClientSession, Document, Model, Collection } from "mongoose";
+import { ClientSession, Document, Model, ObjectId } from "mongoose";
 import { MongoError } from "mongodb";
 import { IMember } from "../models/Member";
 import { IProject } from "../models/Project";
@@ -8,12 +8,17 @@ import NotFoundError from "./errors/NotFoundError";
 import UnexpectedError from "./errors/UnexpectedError";
 import UnauthorizedError from "./errors/UnauthorizedError";
 import FieldExistsError from "./errors/FieldExistsError";
-import projects from "../routes/projectRouter";
+import InvalidChangeLastOwner from "./errors/InvalidChangeLastOwner";
 
 export interface ProjectUpdateParams {
   name?: string;
   description?: string;
   techs?: string[];
+}
+
+export interface MemberUpdateParams {
+  user: string; // valid ObjectId
+  roleName: string;
 }
 
 export type ProjectDoc = IProject & Document<unknown, any, IProject>;
@@ -167,6 +172,101 @@ class ProjectController {
       } else {
         throw err;
       }
+    }
+  }
+
+  async getMembers(id: string) {
+    const members = await this.memberModel
+      .find({ project: id })
+      .populate("project")
+      .populate("user");
+    return members;
+  }
+
+  /*
+
+  {errors: ["invalid_change_last_owner"]}
+  * throws InvalidChangeLastOwner
+  */
+  async updateMember(
+    id: string,
+    updater: string,
+    params: MemberUpdateParams,
+    isAdmin?: boolean
+  ) {
+    // Updating a project requires an admin or project owner.
+    // id: project ID
+    // updater: updater's user ID
+    // params: fields to create the project with
+    // isAdmin: whether the user is an admin or not
+
+    isAdmin = isAdmin || false;
+
+    if (!isAdmin) {
+      const member = await this.memberModel.findOne({
+        project: id,
+        user: updater,
+      });
+
+      if (!member || member.roleName !== "owner") {
+        throw new UnauthorizedError("Updater must be an owner");
+      }
+    }
+
+    const project = await this.projectModel.findOne({ _id: id });
+    if (!project) {
+      throw new NotFoundError("project", id);
+    }
+
+    const user = await this.userModel.findOne({ _id: params.user });
+    if (!user) {
+      throw new NotFoundError("user", params.user);
+    }
+
+    const session = await this.createSession();
+    let member: null | Document<IMember> = null;
+
+    try {
+      await session.withTransaction(async () => {
+        member = await this.memberModel.findOneAndUpdate(
+          {
+            project: id,
+            user: params.user,
+          },
+          {
+            project: id,
+            ...params,
+          },
+          {
+            new: true,
+            upsert: true,
+            session,
+          }
+        );
+
+        const owners = await this.memberModel.find(
+          {
+            project: id,
+            roleName: "owner",
+          },
+          null,
+          { session }
+        );
+        if (owners.length < 1) {
+          throw new InvalidChangeLastOwner("Cannot remove remaining owner!");
+          // throw new Error("Cannot remove remaining owner!");
+        }
+      });
+    } finally {
+      session.endSession();
+    }
+
+    if (null !== member) {
+      await (member as Document<IMember>).populate("project");
+      await (member as Document<IMember>).populate("user");
+      return member;
+    } else {
+      throw new UnexpectedError("Expected member to be updated");
     }
   }
 }
