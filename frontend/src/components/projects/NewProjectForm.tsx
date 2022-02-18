@@ -1,9 +1,4 @@
-import React, {
-  FunctionComponent,
-  useState,
-  useEffect,
-  forwardRef,
-} from "react";
+import React, { useState, forwardRef } from "react";
 import { Menu } from "@headlessui/react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
@@ -169,6 +164,7 @@ const NewProjectForm: React.FC<Props> = ({
                   </div>
                   <img
                     className="h-12 mx-auto flex justify-center"
+                    alt={tech.name}
                     src={tech.imageUrl}
                   />
                   <div className="p-1 m-1 text-xs text-slate-600 bg-slate-300 rounded-md flex justify-center font-bold">
