@@ -43,8 +43,8 @@ const NewProject: FunctionComponent = () => {
 
   return (
     <>
-      <div className="md:container md:mx-auto px-4">
-        <div className="w-full">
+      <div className="md:container mx-auto px-4">
+        <div className="w-full max-w-3xl mx-auto">
           {loading ? (
             <LoadingSpinner />
           ) : (

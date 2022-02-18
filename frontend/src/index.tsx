@@ -10,7 +10,7 @@ ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <App />
-      {/* <TechList /> */}
+      <TechList />
     </BrowserRouter>
   </React.StrictMode>,
   document.getElementById("root")
