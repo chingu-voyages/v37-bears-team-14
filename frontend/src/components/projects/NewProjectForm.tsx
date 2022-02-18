@@ -74,7 +74,7 @@ const NewProjectForm: React.FC<Props> = ({
         validationSchema={NewProjectSchema}
         onSubmit={(values: FormValues, { resetForm }) => {
           // same shape as initial values
-          // const data = await response.json();
+
           values.techs = chosenTechs.map((t) => t.id);
           function postProject(values: FormValues) {
             // setLoading(true);
@@ -105,11 +105,6 @@ const NewProjectForm: React.FC<Props> = ({
             });
           }
           postProject(values);
-          // setProjectSubmitted(true);
-          // setTimeout(() => {
-          //   setProjectSubmitted(false);
-          // }, 4000);
-          console.log(values);
         }}
       >
         {({
@@ -121,13 +116,7 @@ const NewProjectForm: React.FC<Props> = ({
           handleBlur,
           isSubmitting,
         }) => (
-          <Form
-            onSubmit={function (e) {
-              e.preventDefault();
-              handleSubmit();
-            }}
-            className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 mt-4"
-          >
+          <Form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 mt-4">
             <h2 className="text-xl text-center font-bold">Create Project</h2>
             <div className="mb-4">
               <label
@@ -159,7 +148,7 @@ const NewProjectForm: React.FC<Props> = ({
               <div>{errors.description}</div>
             ) : null}
             <div className="flex justify-start">
-              {chosenTechs.map((tech: any, index: number) => (
+              {chosenTechs.map((tech: Tech, index: number) => (
                 <div className="relative m-1" key={index}>
                   <div
                     className="absolute top-0 right-0 cursor-pointer bg-slate-300 border-white rounded-full"
@@ -193,7 +182,7 @@ const NewProjectForm: React.FC<Props> = ({
                 {({ open }) => (
                   <>
                     <Menu.Button as={CustomMenuButton}>
-                      Add Technologies
+                      {customOpen ? "Close Techs List" : "Add Technologies"}
                     </Menu.Button>
                     {customOpen && (
                       <Menu.Items
@@ -247,7 +236,6 @@ const NewProjectForm: React.FC<Props> = ({
       </Formik>
       {projectSubmitted && (
         <>
-          <p>Hi</p>
           <Alert message={"Project Submitted"} />
         </>
       )}
