@@ -1,16 +1,16 @@
 import React from "react";
-import Hello from "./Hello";
+import { Route, Routes } from "react-router-dom";
 import Navbar from "./Navbar";
+import Projects from "./components/projects/Projects";
 
 function App() {
   return (
     <>
       <Navbar />
-      <div className="flex">
-        <div className="border-2 border-stone-500 p-8 m-12 rounded-md">
-          <Hello />
-        </div>
-      </div>
+      <Routes>
+        <Route path="/projects" element={<Projects />}></Route>
+      </Routes>
+      <div className="flex"></div>
     </>
   );
 }

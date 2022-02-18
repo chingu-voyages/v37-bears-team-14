@@ -1,5 +1,5 @@
 import logger from "../logger";
-import { ClientSession, Document, Model } from "mongoose";
+import { ClientSession, Document, Model, Collection } from "mongoose";
 import { MongoError } from "mongodb";
 import { IMember } from "../models/Member";
 import { IProject } from "../models/Project";
@@ -8,6 +8,7 @@ import NotFoundError from "./errors/NotFoundError";
 import UnexpectedError from "./errors/UnexpectedError";
 import UnauthorizedError from "./errors/UnauthorizedError";
 import FieldExistsError from "./errors/FieldExistsError";
+import projects from "../routes/projectRouter";
 
 export interface ProjectUpdateParams {
   name?: string;
@@ -109,7 +110,11 @@ class ProjectController {
         return project;
       }
     } catch (err) {
-      if (err instanceof MongoError && err.code === 11000 && (err as any).keyPattern["name"] === 1) {
+      if (
+        err instanceof MongoError &&
+        err.code === 11000 &&
+        (err as any).keyPattern["name"] === 1
+      ) {
         throw new FieldExistsError("name");
       } else {
         throw err;
@@ -145,17 +150,19 @@ class ProjectController {
     }
 
     try {
-      const project = await this.projectModel.findOneAndUpdate(
-        { _id: id },
-        params,
-        { new: true }
-      ).populate("techs");
+      const project = await this.projectModel
+        .findOneAndUpdate({ _id: id }, params, { new: true })
+        .populate("techs");
       if (!project) {
         throw new NotFoundError("project", id);
       }
       return project;
     } catch (err: any) {
-      if (err instanceof MongoError && err.code === 11000 && (err as any).keyPattern["name"] === 1) {
+      if (
+        err instanceof MongoError &&
+        err.code === 11000 &&
+        (err as any).keyPattern["name"] === 1
+      ) {
         throw new FieldExistsError("name");
       } else {
         throw err;
