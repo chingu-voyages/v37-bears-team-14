@@ -3,17 +3,20 @@ import { NextFunction, Request, Response, Router } from "express";
 import { isValidObjectId } from "mongoose";
 import NotFoundError from "../controllers/errors/NotFoundError";
 import TechController from "../controllers/TechController";
+import UserController from "../controllers/UserController";
 import logger from "../logger";
 import Tech from "../models/Tech";
+import User from "../models/User";
 import "../types/express";
 import UnexpectedError from "../controllers/errors/UnexpectedError";
 import UnauthorizedError from "../controllers/errors/UnauthorizedError";
-import FieldExistsError from '../controllers/errors/FieldExistsError'
+import FieldExistsError from "../controllers/errors/FieldExistsError";
 import projectRouter from "./projectRouter";
 
 /* Dependencies */
 
 const techController = new TechController(Tech);
+const userController = new UserController(User);
 
 /* API routes */
 
@@ -89,7 +92,23 @@ api.get("/v1/search/techs", async (req, res, next) => {
     next(err);
   }
 });
+api.get("/v1/search/:username", async (req, res, next) => {
+  try {
+    const user = await userController.searchByName(req.params["username"]);
+    res.json(user);
+  } catch (err) {
+    next(err);
+  }
+});
 
+api.get("/v1/users/:id", async (req, res, next) => {
+  try {
+    const user = await userController.searchById(req.params["id"]);
+    res.json(user);
+  } catch (err) {
+    next(err);
+  }
+});
 api.get("/v1/current-session", (req: Request, res: Response) => {
   res.json({
     user: req.user,
@@ -104,7 +123,7 @@ api.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   } else if (err instanceof UnauthorizedError) {
     res.status(403).json({ errors: ["unauthorized"] });
   } else if (err instanceof FieldExistsError) {
-    res.status(400).json({ errors: [`${err.field}_already_exists`] })
+    res.status(400).json({ errors: [`${err.field}_already_exists`] });
   } else if (err instanceof UnexpectedError) {
     logger.error("Unexpected error " + err.message, err);
     res.status(500).json({ errors: ["internal_server_error"] });
