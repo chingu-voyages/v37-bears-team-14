@@ -9,8 +9,8 @@ import "../types/express";
 import UnexpectedError from "../controllers/errors/UnexpectedError";
 import UnauthorizedError from "../controllers/errors/UnauthorizedError";
 import FieldExistsError from "../controllers/errors/FieldExistsError";
-import projectRouter from "./projectRouter";
 import InvalidChangeLastOwner from "../controllers/errors/InvalidChangeLastOwner";
+import projectRouter from "./projectRouter";
 
 /* Dependencies */
 
@@ -107,7 +107,7 @@ api.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   } else if (err instanceof FieldExistsError) {
     res.status(400).json({ errors: [`${err.field}_already_exists`] });
   } else if (err instanceof InvalidChangeLastOwner) {
-    res.status(400).json({ errors: ["invalid_change_last_owner"] })
+    res.status(400).json({ errors: ["invalid_change_last_owner"] });
   } else if (err instanceof UnexpectedError) {
     logger.error("Unexpected error " + err.message, err);
     res.status(500).json({ errors: ["internal_server_error"] });

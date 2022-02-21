@@ -130,7 +130,7 @@ class ProjectController {
     }
   }
 
-  // Updating a project involves requires an admin or project owner.
+  // Updating a project requires an admin or project owner.
   // id: project ID
   // updater: updater's user ID
   // params: fields to create the project with
@@ -183,23 +183,22 @@ class ProjectController {
     return members;
   }
 
-  /*
-
-  {errors: ["invalid_change_last_owner"]}
-  * throws InvalidChangeLastOwner
-  */
+  /**
+   * Updating a project requires an admin or project owner.
+   * id: project ID
+   * updater: updater's user ID
+   * params: fields to create the project with
+   * isAdmin: whether the user is an admin or not
+   * @throws NotFoundError {errors: ["project_not_found"]}
+   * @throws UnauthorizedError {errors: ["unauthorized"]}
+   * @throws InvalidChangeLastOwner {errors: ["invalid_change_last_owner"]}
+   */
   async updateMember(
     id: string,
     updater: string,
     params: MemberUpdateParams,
     isAdmin?: boolean
   ) {
-    // Updating a project requires an admin or project owner.
-    // id: project ID
-    // updater: updater's user ID
-    // params: fields to create the project with
-    // isAdmin: whether the user is an admin or not
-
     isAdmin = isAdmin || false;
 
     if (!isAdmin) {
@@ -252,9 +251,84 @@ class ProjectController {
           null,
           { session }
         );
+
         if (owners.length < 1) {
           throw new InvalidChangeLastOwner("Cannot remove remaining owner!");
-          // throw new Error("Cannot remove remaining owner!");
+        }
+      });
+    } finally {
+      session.endSession();
+    }
+
+    if (null !== member) {
+      await (member as Document<IMember>).populate("project");
+      await (member as Document<IMember>).populate("user");
+      return member;
+    } else {
+      throw new UnexpectedError("Expected member to be updated");
+    }
+  }
+
+  /**
+   * Updating a project requires an admin or project owner.
+   * id: project ID
+   * updater: updater's user ID
+   * user: user ID of the member to remove
+   * isAdmin: whether the user is an admin or not
+   * @throws NotFoundError {errors: ["project_not_found"]}
+   * @throws UnauthorizedError {errors: ["unauthorized"]}
+   * @throws InvalidChangeLastOwner {errors: ["invalid_change_last_owner"]}
+   */
+  async removeMember(
+    id: string,
+    updater: string,
+    user: string,
+    isAdmin?: boolean
+  ) {
+    isAdmin = isAdmin || false;
+
+    if (!isAdmin) {
+      const member = await this.memberModel.findOne({
+        project: id,
+        user: updater,
+      });
+
+      if (!member || member.roleName !== "owner") {
+        throw new UnauthorizedError("Updater must be an owner");
+      }
+    }
+
+    const project = await this.projectModel.findOne({ _id: id });
+    if (!project) {
+      throw new NotFoundError("project", id);
+    }
+
+    const userDoc = await this.userModel.findOne({ _id: user });
+    if (!userDoc) {
+      throw new NotFoundError("user", user);
+    }
+
+    const session = await this.createSession();
+    let member: null | Document<IMember> = null;
+
+    try {
+      await session.withTransaction(async () => {
+        member = await this.memberModel.findOneAndDelete(
+          { project: id, user },
+          { session }
+        );
+
+        const owners = await this.memberModel.find(
+          {
+            project: id,
+            roleName: "owner",
+          },
+          null,
+          { session }
+        );
+
+        if (owners.length < 1) {
+          throw new InvalidChangeLastOwner("Cannot remove remaining owner!");
         }
       });
     } finally {
