@@ -184,7 +184,7 @@ class ProjectController {
   }
 
   /**
-   * Updating a project requires an admin or project owner.
+   * Updating a member requires an admin or project owner.
    * id: project ID
    * updater: updater's user ID
    * params: fields to create the project with
@@ -270,7 +270,7 @@ class ProjectController {
   }
 
   /**
-   * Updating a project requires an admin or project owner.
+   * Removing a member requires an admin or project owner.
    * id: project ID
    * updater: updater's user ID
    * user: user ID of the member to remove
