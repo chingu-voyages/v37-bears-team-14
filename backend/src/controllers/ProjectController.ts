@@ -184,6 +184,46 @@ class ProjectController {
   }
 
   /**
+   * @param project ID of the project.
+   * @param user ID of the user to associate as a member of the project.
+   */
+  private async validateProjectUserExists(project: string, user: string) {
+    const projectDoc = await this.projectModel.findOne({ _id: project });
+    if (null === projectDoc) {
+      throw new NotFoundError("project", project);
+    }
+
+    const userDoc = await this.userModel.findOne({ _id: user });
+    if (null === userDoc) {
+      throw new NotFoundError("user", user);
+    }
+  }
+
+  /**
+   * @param project ID of the project.
+   * @param user ID of the user making the update.
+   * @param isAdmin Boolean of whether the user is an admin.
+   */
+  private async validateMemberUpdatePermission(
+    project: string,
+    user: string,
+    isAdmin?: boolean
+  ) {
+    isAdmin = isAdmin || false;
+
+    if (!isAdmin) {
+      const member = await this.memberModel.findOne({
+        project,
+        user,
+      });
+
+      if (!member || member.roleName !== "owner") {
+        throw new UnauthorizedError("Updater must be an owner");
+      }
+    }
+  }
+
+  /**
    * Updating a member requires an admin or project owner.
    * id: project ID
    * updater: updater's user ID
@@ -193,34 +233,14 @@ class ProjectController {
    * @throws UnauthorizedError {errors: ["unauthorized"]}
    * @throws InvalidChangeLastOwner {errors: ["invalid_change_last_owner"]}
    */
-  async updateMember(
+  public async updateMember(
     id: string,
     updater: string,
     params: MemberUpdateParams,
     isAdmin?: boolean
   ) {
-    isAdmin = isAdmin || false;
-
-    if (!isAdmin) {
-      const member = await this.memberModel.findOne({
-        project: id,
-        user: updater,
-      });
-
-      if (!member || member.roleName !== "owner") {
-        throw new UnauthorizedError("Updater must be an owner");
-      }
-    }
-
-    const project = await this.projectModel.findOne({ _id: id });
-    if (!project) {
-      throw new NotFoundError("project", id);
-    }
-
-    const user = await this.userModel.findOne({ _id: params.user });
-    if (!user) {
-      throw new NotFoundError("user", params.user);
-    }
+    await this.validateProjectUserExists(id, params.user);
+    await this.validateMemberUpdatePermission(id, updater, isAdmin);
 
     const session = await this.createSession();
     let member: null | Document<IMember> = null;
@@ -279,34 +299,14 @@ class ProjectController {
    * @throws UnauthorizedError {errors: ["unauthorized"]}
    * @throws InvalidChangeLastOwner {errors: ["invalid_change_last_owner"]}
    */
-  async removeMember(
+  public async removeMember(
     id: string,
     updater: string,
     user: string,
     isAdmin?: boolean
   ) {
-    isAdmin = isAdmin || false;
-
-    if (!isAdmin) {
-      const member = await this.memberModel.findOne({
-        project: id,
-        user: updater,
-      });
-
-      if (!member || member.roleName !== "owner") {
-        throw new UnauthorizedError("Updater must be an owner");
-      }
-    }
-
-    const project = await this.projectModel.findOne({ _id: id });
-    if (!project) {
-      throw new NotFoundError("project", id);
-    }
-
-    const userDoc = await this.userModel.findOne({ _id: user });
-    if (!userDoc) {
-      throw new NotFoundError("user", user);
-    }
+    await this.validateProjectUserExists(id, user);
+    await this.validateMemberUpdatePermission(id, updater, isAdmin);
 
     const session = await this.createSession();
     let member: null | Document<IMember> = null;

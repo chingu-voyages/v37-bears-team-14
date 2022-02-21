@@ -120,7 +120,7 @@ api.get("/v1/current-session", (req: Request, res: Response) => {
 // Error handler for API routes! Must come _after_ the other endpoints!
 api.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   if (err instanceof NotFoundError) {
-    res.status(404).json({ errors: ["id_not_found"] });
+    res.status(404).json({ errors: [`${err.resource}_not_found`] });
   } else if (err instanceof UnauthorizedError) {
     res.status(403).json({ errors: ["unauthorized"] });
   } else if (err instanceof FieldExistsError) {
