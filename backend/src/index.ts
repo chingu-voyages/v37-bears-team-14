@@ -10,6 +10,8 @@ import { mustGetConfig } from "./config";
 import passport from "./auth/passport";
 import auth from "./routes/auth";
 import api from "./routes/api";
+import { printApiEndpoints } from "./utils/endpoints";
+import logger from "./logger";
 
 const config = mustGetConfig(process.env);
 
@@ -40,9 +42,6 @@ app.use(passport.session());
 
 app.use("/auth", auth);
 
-app.get("/api/v1/hello", (req: Request, res: Response) => {
-  res.json({ name: req.query["name"] || "World" });
-});
 app.use("/api", api);
 
 app.get("/*", (_, res) => {
@@ -51,5 +50,6 @@ app.get("/*", (_, res) => {
 
 const listener = app.listen(process.env["PORT"] || "8080", () => {
   const port = (listener.address() as AddressInfo).port;
-  console.log(`Listening on ${port}`);
+  logger.info(`Listening on ${port}`);
+  printApiEndpoints("/api", api);
 });

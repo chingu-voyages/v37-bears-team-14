@@ -135,4 +135,77 @@ projects.get("/v1/project_lookup/:name", async (req, res, next) => {
   }
 });
 
+projects.get("/v1/projects/:id/members", async (req, res, next) => {
+  try {
+    const members = await projectController.getMembers(req.params["id"]);
+    res.json(members);
+  } catch (err) {
+    next(err);
+  }
+});
+
+projects.post(
+  "/v1/projects/:id/members",
+  (req: Request, res, next) => {
+    if (req.user) {
+      next();
+    } else {
+      res.status(401).json({ errors: ["unauthenticated"] });
+    }
+  },
+  async (req, res, next) => {
+    const user = req.user!;
+    const updaterUserId: string = user._id!.toString();
+
+    if (!isValidObjectId(req.body["user"])) {
+      return res.status(400).json({ errors: ["user_id_invalid"] });
+    }
+
+    try {
+      const member = await projectController.updateMember(
+        req.params["id"],
+        updaterUserId,
+        pick(req.body, ["user", "roleName"]),
+        user.isAdmin
+      );
+      res.json(member);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+// NOTE: On successful removal, the returned response
+// is the member data record BEFORE the deletion.
+projects.delete(
+  "/v1/projects/:id/members",
+  (req: Request, res, next) => {
+    if (req.user) {
+      next();
+    } else {
+      res.status(401).json({ errors: ["unauthenticated"] });
+    }
+  },
+  async (req, res, next) => {
+    const user = req.user!;
+    const updaterUserId: string = user._id!.toString();
+
+    if (!isValidObjectId(req.body["user"])) {
+      return res.status(400).json({ errors: ["user_id_invalid"] });
+    }
+
+    try {
+      const member = await projectController.removeMember(
+        req.params["id"],
+        updaterUserId,
+        req.body["user"],
+        user.isAdmin
+      );
+      res.json(member);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
 export default projects;
