@@ -4,14 +4,15 @@ import { BrowserRouter } from "react-router-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import TechList from "./TechList";
+import { SessionProvider } from "./hooks/session";
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <App />
-      <TechList />
-    </BrowserRouter>
+    <SessionProvider>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </SessionProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );
