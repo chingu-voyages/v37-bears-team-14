@@ -1,13 +1,17 @@
 import { Request, Router } from "express";
 import { pick } from "lodash";
 import { isValidObjectId, startSession } from "mongoose";
-import ProjectController, { ProjectUpdateParams } from "../controllers/ProjectController";
+import ProjectController, {
+  ProjectUpdateParams,
+} from "../controllers/ProjectController";
 import Member from "../models/Member";
 import Project from "../models/Project";
 import User from "../models/User";
 
 /* dependencies */
-const projectController = new ProjectController(Project, User, Member, () => startSession())
+const projectController = new ProjectController(Project, User, Member, () =>
+  startSession()
+);
 
 const projects = Router();
 
