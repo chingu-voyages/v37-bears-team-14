@@ -3,13 +3,7 @@ import { Menu } from "@headlessui/react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import Alert from "../alerts/Alert";
-
-interface Tech {
-  id: string;
-  name: string;
-  description: string;
-  imageUrl?: string;
-}
+import { Tech } from "../../shared/Interfaces";
 
 interface Props {
   chosenTechs: Tech[];
@@ -20,6 +14,8 @@ interface Props {
   chooseTech: (e: any, chosenTech: object) => void;
   loading: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  projectForm: boolean;
+  setProjectForm: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface FormValues {
@@ -42,6 +38,8 @@ const NewProjectForm: React.FC<Props> = ({
   chooseTech,
   loading,
   setLoading,
+  projectForm,
+  setProjectForm,
 }) => {
   const [customOpen, setCustomOpen] = useState(false);
   const [projectSubmitted, setProjectSubmitted] = useState(false);
@@ -225,6 +223,13 @@ const NewProjectForm: React.FC<Props> = ({
             <div className="flex items-center justify-between">
               <button type="submit" className="main-btn">
                 Create Project
+              </button>
+              <button
+                type="button"
+                className="main-btn"
+                onClick={() => setProjectForm(() => !projectForm)}
+              >
+                Close
               </button>
             </div>
           </Form>

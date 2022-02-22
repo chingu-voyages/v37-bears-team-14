@@ -8,6 +8,7 @@ const NewProject: FunctionComponent = () => {
   const [techs, setTechs] = useState<any[]>([]);
   const [chosenTechs, setChosenTechs] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [projectForm, setProjectForm] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -41,26 +42,42 @@ const NewProject: FunctionComponent = () => {
     setTechs([...techs, chosenTech]);
   };
 
+  let content;
+  if (projectForm) {
+    content = loading ? (
+      <LoadingSpinner />
+    ) : (
+      <div className="w-full max-w-3xl mx-auto">
+        <NewProjectForm
+          chosenTechs={chosenTechs}
+          setChosenTechs={setChosenTechs}
+          removeTech={removeTech}
+          techs={techs}
+          setTechs={setTechs}
+          chooseTech={chooseTech}
+          loading={loading}
+          setLoading={setLoading}
+          projectForm={projectForm}
+          setProjectForm={setProjectForm}
+        />
+      </div>
+    );
+  } else {
+    content = (
+      <div className="flex justify-end">
+        <button
+          className="main-btn m-1"
+          onClick={() => setProjectForm(!projectForm)}
+        >
+          Create Project
+        </button>
+      </div>
+    );
+  }
+
   return (
     <>
-      <div className="md:container mx-auto px-4">
-        <div className="w-full max-w-3xl mx-auto">
-          {loading ? (
-            <LoadingSpinner />
-          ) : (
-            <NewProjectForm
-              chosenTechs={chosenTechs}
-              setChosenTechs={setChosenTechs}
-              removeTech={removeTech}
-              techs={techs}
-              setTechs={setTechs}
-              chooseTech={chooseTech}
-              loading={loading}
-              setLoading={setLoading}
-            />
-          )}
-        </div>
-      </div>
+      <div className="md:container mx-auto px-4">{content}</div>
     </>
   );
 };
