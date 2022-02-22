@@ -52,6 +52,11 @@ class ProjectController {
     return project;
   }
 
+  async lookup(pageSize: number): Promise<ProjectDoc[]> {
+    const projects = await this.projectModel.find().sort("_id").limit(pageSize);
+    return projects;
+  }
+
   // Creating a project involves associating its creator.
   // params: fields to create the project with
   // firstOwnerId: user ID of the project's first owner
