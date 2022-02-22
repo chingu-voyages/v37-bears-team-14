@@ -53,7 +53,12 @@ class ProjectController {
   }
 
   async lookup(pageSize: number): Promise<ProjectDoc[]> {
-    const projects = await this.projectModel.find().sort("_id").limit(pageSize);
+    const projects = await this.projectModel
+      .find()
+      .sort("_id")
+      .limit(pageSize)
+      .populate("techs");
+
     return projects;
   }
 
