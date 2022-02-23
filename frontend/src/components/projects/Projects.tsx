@@ -1,6 +1,7 @@
 import React, { useEffect, useState, FunctionComponent } from "react";
 import NewProject from "./NewProject";
 import ProjectPreview from "./ProjectPreview";
+import ProjectSearch from "./ProjectSearch";
 import isEqual from "react-fast-compare";
 import { Project } from "../../shared/Interfaces";
 import LoadingSpinner from "../Spinners/LoadingSpinner";
@@ -31,6 +32,7 @@ const Projects: FunctionComponent = () => {
           <section className="w-full">
             <div className="block md:hidden">
               <NewProject />
+              <ProjectSearch />
             </div>
             <div className="grid md:grid-cols-12">
               <main className="md:col-span-9 p-1">
@@ -38,6 +40,7 @@ const Projects: FunctionComponent = () => {
               </main>
               <aside className="hidden md:block md:col-span-3 md:pt-0">
                 <NewProject />
+                <ProjectSearch />
               </aside>
             </div>
           </section>
