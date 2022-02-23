@@ -47,37 +47,50 @@ const NewProject: FunctionComponent = () => {
     content = loading ? (
       <LoadingSpinner />
     ) : (
-      <div className="w-full max-w-3xl mx-auto">
-        <NewProjectForm
-          chosenTechs={chosenTechs}
-          setChosenTechs={setChosenTechs}
-          removeTech={removeTech}
-          techs={techs}
-          setTechs={setTechs}
-          chooseTech={chooseTech}
-          loading={loading}
-          setLoading={setLoading}
-          projectForm={projectForm}
-          setProjectForm={setProjectForm}
-        />
-      </div>
+      //w-full max-w-3xl
+      //fixed inset-x-0 mx-auto max-w-3xl
+      <>
+        <div className="fixed top-0 left-0 h-screen w-screen backdrop-blur-sm"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 width-3xl">
+          <NewProjectForm
+            chosenTechs={chosenTechs}
+            setChosenTechs={setChosenTechs}
+            removeTech={removeTech}
+            techs={techs}
+            setTechs={setTechs}
+            chooseTech={chooseTech}
+            loading={loading}
+            setLoading={setLoading}
+            projectForm={projectForm}
+            setProjectForm={setProjectForm}
+          />
+        </div>
+      </>
     );
   } else {
     content = (
-      <div className="flex justify-end">
-        <button
+      <div className="w-full bg-medGray">
+        {/* flex justify-end */}
+        {/* <button
           className="main-btn m-1"
           onClick={() => setProjectForm(!projectForm)}
         >
           Create Project
-        </button>
+        </button> */}
+        <div
+          className="bg-main-gradient p-1 cursor-pointer"
+          onClick={() => setProjectForm(!projectForm)}
+        >
+          <span className="p-2 text-mintGreen">Create Project</span>
+        </div>
       </div>
     );
   }
 
   return (
     <>
-      <div className="md:container mx-auto px-4">{content}</div>
+      {/* <div className="md:container mx-auto px-4"></div> */}
+      {content}
     </>
   );
 };

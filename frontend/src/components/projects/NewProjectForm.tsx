@@ -109,7 +109,7 @@ const NewProjectForm: React.FC<Props> = ({
           handleBlur,
           isSubmitting,
         }) => (
-          <Form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 mt-4">
+          <Form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 mt-4 max-h-screen">
             <h2 className="text-xl text-center font-bold">Create Project</h2>
             <div className="mb-4">
               <label
@@ -181,7 +181,7 @@ const NewProjectForm: React.FC<Props> = ({
                     {customOpen && (
                       <Menu.Items
                         static
-                        className="bg-white max-w-lg text-base z-50 list-none divide-y divide-gray-100 rounded shadow my-4 max-h-[300px] overflow-y-scroll"
+                        className="bg-white max-w-lg text-base z-50 list-none divide-y divide-gray-100 rounded shadow my-4 max-h-48 overflow-y-scroll"
                       >
                         {techs
                           .sort((a: Tech, b: Tech) =>

@@ -7,12 +7,17 @@ interface Props {
 
 const ProjectPreview: FunctionComponent<Props> = ({ projects }) => {
   return (
-    <div className="md:container mx-auto px-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {projects.map((p, index) => (
-          <div className="bg-neutral-400 rounded-md p-4" key={index}>
-            <p className="text-center text-2xl text-darkGray">{p.name}</p>
-            <p className="mb-2 text-md text-darkGray">{p.description}</p>
+    // <div className="md:container mx-auto px-4"></div>
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      {projects.map((p, index) => (
+        <div className="bg-neutral-400 rounded-md" key={index}>
+          <div className="bg-darkGray rounded-t-md border-b-4 border-lightGray">
+            <p className="text-center sm:text-md lg:text-xl text-lightGray pb-2 pt-1">
+              {p.name}
+            </p>
+          </div>
+          <div className="pt-1">
+            <p className="mb-2 text-md text-darkGray pl-2">{p.description}</p>
             <div className="flex justify-start">
               {p.techs.map((t: Tech, index) => (
                 <div className="relative m-1" key={index}>
@@ -28,8 +33,8 @@ const ProjectPreview: FunctionComponent<Props> = ({ projects }) => {
               ))}
             </div>
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
     </div>
   );
 };
