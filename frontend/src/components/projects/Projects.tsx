@@ -30,15 +30,11 @@ const Projects: FunctionComponent = () => {
         <>
           {/* max-w-6xl mx-auto */}
           <section className="w-full">
-            {/* <div className="block md:hidden">
-              <NewProject />
-              <ProjectSearch />
-            </div> */}
-            <div className="grid md:grid-cols-12">
-              <main className="md:col-span-9 p-1">
+            <div className="flex flex-col-reverse md:flex-row">
+              <main className="basis-3/4">
                 <ProjectPreview projects={projects} />
               </main>
-              <aside className="hidden md:block md:col-span-3 md:pt-0">
+              <aside className="basis-1/4">
                 <NewProject />
                 <ProjectSearch />
               </aside>
