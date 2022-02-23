@@ -30,10 +30,10 @@ const Projects: FunctionComponent = () => {
         <>
           {/* max-w-6xl mx-auto */}
           <section className="w-full">
-            <div className="block md:hidden">
+            {/* <div className="block md:hidden">
               <NewProject />
               <ProjectSearch />
-            </div>
+            </div> */}
             <div className="grid md:grid-cols-12">
               <main className="md:col-span-9 p-1">
                 <ProjectPreview projects={projects} />
