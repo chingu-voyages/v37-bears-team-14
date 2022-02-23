@@ -10,8 +10,8 @@ const ProjectPreview: FunctionComponent<Props> = ({ projects }) => {
     // <div className="md:container mx-auto px-4"></div>
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
       {projects.map((p, index) => (
-        <div className="bg-neutral-400 rounded-md" key={index}>
-          <div className="bg-darkGray rounded-t-md border-b-4 border-lightGray">
+        <div className="bg-neutral-400" key={index}>
+          <div className="bg-darkGray border-b-4 border-lightGray">
             <p className="text-center sm:text-md lg:text-xl text-lightGray pb-2 pt-1">
               {p.name}
             </p>
