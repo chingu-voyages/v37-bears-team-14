@@ -193,6 +193,17 @@ class ProjectController {
     return members;
   }
 
+  async getMemberByUserId(project: string, user: string) {
+    const member = await this.memberModel
+      .findOne({ project, user })
+      .populate("project")
+      .populate("user");
+    if (null === member) {
+      throw new NotFoundError("member", user);
+    }
+    return member;
+  }
+
   /**
    * @param project ID of the project.
    * @param user ID of the user to associate as a member of the project.

@@ -11,11 +11,11 @@ const ProjectLanding: FunctionComponent<ProjectLandingProps> = ({
   project,
 }) => {
   return (
-    <div className="m-8">
-      <div className="my-4">
+    <div className="m-3 md:mx-8">
+      {/* <div className="my-4">
         <div className="text-2xl">{project.name}</div>
         <div className="text-slate-700">{project.description}</div>
-      </div>
+      </div> */}
 
       <div className="my-4">
         <div className="font-bold my-1">Team</div>

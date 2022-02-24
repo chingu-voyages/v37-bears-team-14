@@ -5,6 +5,8 @@ import Projects from "./components/projects/Projects";
 import AdminOutlet from "./components/routing/AdminOutlet";
 import TechListPage from "./components/admin/techs/TechListPage";
 import ProjectPage from "./components/project_page/ProjectPage";
+import ProjectLandingPage from "./components/project_page/ProjectLandingPage";
+import ProjectSettingsPage from "./components/project_page/ProjectSettingsPage";
 
 function App() {
   return (
@@ -13,7 +15,13 @@ function App() {
       <Routes>
         <Route path="/projects">
           <Route path="" element={<Projects />} />
-          <Route path=":projectId" element={<ProjectPage />} />
+          <Route path=":projectId" element={<ProjectPage />}>
+            <Route path="" element={<ProjectLandingPage />} />
+            <Route path="settings" element={<ProjectSettingsPage />} />
+          </Route>
+
+          {/* <Route path=":projectId" element={<ProjectPage />} />
+          <Route path=":projectId/settings" element={<ProjectPage />} /> */}
         </Route>
         <Route path="admin" element={<AdminOutlet />}>
           <Route path="" element={<Navigate to="techs" />} />

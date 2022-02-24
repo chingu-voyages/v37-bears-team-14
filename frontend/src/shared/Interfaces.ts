@@ -21,4 +21,5 @@ export interface User {
 export interface Member {
   id: string;
   user: User;
+  roleName: string;
 }

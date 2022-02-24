@@ -144,6 +144,36 @@ projects.get("/v1/projects/:id/members", async (req, res, next) => {
   }
 });
 
+/**
+ * Returns the session user's membership with the project.
+ */
+projects.get(
+  "/v1/projects/:id/members/@me",
+  (req, res, next) => {
+    if (req.user) {
+      next();
+    } else {
+      res.status(401).json({ errors: ["unauthenticated"] });
+    }
+  },
+  async (req, res, next) => {
+    const projectId = req.params["id"];
+    const userId = req.user!._id!.toString();
+    if (!isValidObjectId(projectId)) {
+      return res.status(400).json({ errors: ["project_id_invalid"] });
+    }
+    try {
+      const member = await projectController.getMemberByUserId(
+        projectId,
+        userId
+      );
+      res.json(member);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
 projects.get("/v1/projects", async (req, res, next) => {
   const pageSize = Math.max(50, +(req.query["pageSize"] || 50));
   const projects = await projectController.lookup(pageSize);

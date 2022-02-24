@@ -1,9 +1,11 @@
 import React, { useEffect, useState, FunctionComponent } from "react";
-import { useParams } from "react-router-dom";
+import { Outlet, Route, Routes, useParams } from "react-router-dom";
 import { Project } from "../../shared/Interfaces";
 import LoadingSpinner from "../Spinners/LoadingSpinner";
 import ProjectNotFound from "./ProjectNotFound";
 import ProjectLanding from "./ProjectLanding";
+import ProjectTabs from "./ProjectTabs";
+import ProjectHeader from "./ProjectHeader";
 
 const ProjectPage: FunctionComponent = () => {
   const { projectId } = useParams();
@@ -52,11 +54,18 @@ const ProjectPage: FunctionComponent = () => {
 
   return (
     <section className="w-full">
-      <div className="flex flex-col-reverse md:flex-row">
-        <main className="basis-3/4">
-          <ProjectLanding project={project} />
-        </main>
-        <aside className="basis-1/4"></aside>
+      <div className="py-2 mx-3 md:py-3 md:mx-8">
+        <ProjectHeader project={project} />
+      </div>
+
+      <div className="_bg-white _slate-100">
+        <div className="pb-2 mt-2 mx-3 md:mt-3 md:mx-8">
+          <ProjectTabs projectId={projectId || project.id} />
+        </div>
+      </div>
+
+      <div className="bg-white">
+        <Outlet context={{ project }} />
       </div>
     </section>
   );
