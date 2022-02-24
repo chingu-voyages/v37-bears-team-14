@@ -44,7 +44,6 @@ export function SessionProvider(props: any) {
 
       try {
         const session = await getSession();
-        console.log(session);
         setSession({
           loading: false,
           ...session,

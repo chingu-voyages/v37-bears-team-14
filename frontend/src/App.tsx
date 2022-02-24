@@ -4,13 +4,23 @@ import Navbar from "./Navbar";
 import Projects from "./components/projects/Projects";
 import AdminOutlet from "./components/routing/AdminOutlet";
 import TechListPage from "./components/admin/techs/TechListPage";
+import ProjectPageLayout from "./components/project_page/ProjectPageLayout";
+import ProjectLandingPage from "./components/project_page/pages/ProjectLandingPage";
+import ProjectSettingsPage from "./components/project_page/pages/ProjectSettingsPage";
 
 function App() {
   return (
     <>
       <Navbar />
       <Routes>
-        <Route path="/projects" element={<Projects />}></Route>
+        <Route path="/projects">
+          <Route path="" element={<Projects />} />
+          <Route path=":projectId" element={<ProjectPageLayout />}>
+            <Route path="" element={<ProjectLandingPage />} />
+            <Route path="settings" element={<ProjectSettingsPage />} />
+            <Route path="*" element={<Navigate to=".." />} />
+          </Route>
+        </Route>
         <Route path="admin" element={<AdminOutlet />}>
           <Route path="" element={<Navigate to="techs" />} />
           <Route path="techs" element={<TechListPage />} />
