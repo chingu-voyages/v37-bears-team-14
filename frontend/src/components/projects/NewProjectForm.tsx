@@ -3,13 +3,7 @@ import { Menu } from "@headlessui/react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import Alert from "../alerts/Alert";
-
-interface Tech {
-  id: string;
-  name: string;
-  description: string;
-  imageUrl?: string;
-}
+import { Tech } from "../../shared/Interfaces";
 
 interface Props {
   chosenTechs: Tech[];
@@ -20,6 +14,8 @@ interface Props {
   chooseTech: (e: any, chosenTech: object) => void;
   loading: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  projectForm: boolean;
+  setProjectForm: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface FormValues {
@@ -42,6 +38,8 @@ const NewProjectForm: React.FC<Props> = ({
   chooseTech,
   loading,
   setLoading,
+  projectForm,
+  setProjectForm,
 }) => {
   const [customOpen, setCustomOpen] = useState(false);
   const [projectSubmitted, setProjectSubmitted] = useState(false);
@@ -111,7 +109,7 @@ const NewProjectForm: React.FC<Props> = ({
           handleBlur,
           isSubmitting,
         }) => (
-          <Form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 mt-4">
+          <Form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 mt-4 max-h-screen">
             <h2 className="text-xl text-center font-bold">Create Project</h2>
             <div className="mb-4">
               <label
@@ -183,7 +181,7 @@ const NewProjectForm: React.FC<Props> = ({
                     {customOpen && (
                       <Menu.Items
                         static
-                        className="bg-white max-w-lg text-base z-50 list-none divide-y divide-gray-100 rounded shadow my-4 max-h-[300px] overflow-y-scroll"
+                        className="bg-white max-w-lg text-base z-50 list-none divide-y divide-gray-100 rounded shadow my-4 max-h-48 overflow-y-scroll"
                       >
                         {techs
                           .sort((a: Tech, b: Tech) =>
@@ -225,6 +223,13 @@ const NewProjectForm: React.FC<Props> = ({
             <div className="flex items-center justify-between">
               <button type="submit" className="main-btn">
                 Create Project
+              </button>
+              <button
+                type="button"
+                className="main-btn"
+                onClick={() => setProjectForm(() => !projectForm)}
+              >
+                Close
               </button>
             </div>
           </Form>

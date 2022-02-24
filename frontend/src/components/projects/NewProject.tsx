@@ -8,6 +8,7 @@ const NewProject: FunctionComponent = () => {
   const [techs, setTechs] = useState<any[]>([]);
   const [chosenTechs, setChosenTechs] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [projectForm, setProjectForm] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -41,24 +42,41 @@ const NewProject: FunctionComponent = () => {
     setTechs([...techs, chosenTech]);
   };
 
+  let content;
+  if (projectForm) {
+    content = loading ? (
+      <LoadingSpinner />
+    ) : (
+      <>
+        <div className="fixed top-0 left-0 h-screen w-screen backdrop-blur-sm"></div>
+        <div className="fixed z-10 inset-0 overflow-y-auto max-w-3xl mx-auto">
+          {/* fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 */}
+          <NewProjectForm
+            chosenTechs={chosenTechs}
+            setChosenTechs={setChosenTechs}
+            removeTech={removeTech}
+            techs={techs}
+            setTechs={setTechs}
+            chooseTech={chooseTech}
+            loading={loading}
+            setLoading={setLoading}
+            projectForm={projectForm}
+            setProjectForm={setProjectForm}
+          />
+        </div>
+      </>
+    );
+  }
+
   return (
     <>
-      <div className="md:container mx-auto px-4">
-        <div className="w-full max-w-3xl mx-auto">
-          {loading ? (
-            <LoadingSpinner />
-          ) : (
-            <NewProjectForm
-              chosenTechs={chosenTechs}
-              setChosenTechs={setChosenTechs}
-              removeTech={removeTech}
-              techs={techs}
-              setTechs={setTechs}
-              chooseTech={chooseTech}
-              loading={loading}
-              setLoading={setLoading}
-            />
-          )}
+      {content}
+      <div className="w-full bg-medGray">
+        <div
+          className="bg-main-gradient p-1 cursor-pointer"
+          onClick={() => setProjectForm(!projectForm)}
+        >
+          <span className="p-2 text-mintGreen">Create Project</span>
         </div>
       </div>
     </>

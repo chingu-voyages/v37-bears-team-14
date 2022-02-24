@@ -144,6 +144,12 @@ projects.get("/v1/projects/:id/members", async (req, res, next) => {
   }
 });
 
+projects.get("/v1/projects", async (req, res, next) => {
+  const pageSize = Math.max(50, +(req.query["pageSize"] || 50));
+  const projects = await projectController.lookup(pageSize);
+  res.json(projects);
+});
+
 projects.post(
   "/v1/projects/:id/members",
   (req: Request, res, next) => {
