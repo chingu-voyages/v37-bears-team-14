@@ -1,13 +1,23 @@
-import React, { useEffect, useState, FunctionComponent } from "react";
-import { Outlet, Route, Routes, useParams } from "react-router-dom";
+import React, {
+  useEffect,
+  useState,
+  FunctionComponent,
+  Dispatch,
+  SetStateAction,
+} from "react";
+import { Outlet, useParams } from "react-router-dom";
 import { Project } from "../../shared/Interfaces";
 import LoadingSpinner from "../Spinners/LoadingSpinner";
-import ProjectNotFound from "./ProjectNotFound";
-import ProjectLanding from "./ProjectLanding";
-import ProjectTabs from "./ProjectTabs";
-import ProjectHeader from "./ProjectHeader";
+import ProjectNotFound from "./components/ProjectNotFound";
+import ProjectTabs from "./components/ProjectTabs";
+import ProjectHeader from "./components/ProjectHeader";
 
-const ProjectPage: FunctionComponent = () => {
+export interface ProjectPageContext {
+  project: Project;
+  setProject: Dispatch<SetStateAction<Project>>;
+}
+
+const ProjectPageLayout: FunctionComponent = () => {
   const { projectId } = useParams();
   // Initial state is loading.
   const [loading, setLoading] = useState(true);
@@ -65,10 +75,10 @@ const ProjectPage: FunctionComponent = () => {
       </div>
 
       <div className="bg-white">
-        <Outlet context={{ project }} />
+        <Outlet context={{ project, setProject }} />
       </div>
     </section>
   );
 };
 
-export default ProjectPage;
+export default ProjectPageLayout;

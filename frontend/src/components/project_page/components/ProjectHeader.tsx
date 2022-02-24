@@ -1,5 +1,6 @@
 import { FunctionComponent } from "react";
-import { Project } from "../../shared/Interfaces";
+import { Link } from "react-router-dom";
+import { Project } from "../../../shared/Interfaces";
 
 export interface ProjectHeaderProps {
   project: Project;
@@ -8,7 +9,9 @@ export interface ProjectHeaderProps {
 const ProjectHeader: FunctionComponent<ProjectHeaderProps> = ({ project }) => {
   return (
     <div className="">
-      <div className="text-2xl">{project.name}</div>
+      <Link to={"/projects/" + project.id} className="text-2xl hover:underline">
+        {project.name}
+      </Link>
       <div className="text-slate-700">{project.description}</div>
     </div>
   );

@@ -1,5 +1,5 @@
 import { useOutletContext } from "react-router-dom";
-import { Project } from "../../shared/Interfaces";
+import { Project } from "../../../../shared/Interfaces";
 import ProjectLanding from "./ProjectLanding";
 
 const ProjectLandingPage = () => {

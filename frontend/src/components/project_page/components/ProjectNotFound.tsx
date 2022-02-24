@@ -1,7 +1,7 @@
 const ProjectNotFound = () => {
   return (
     <>
-      <div className="">Project not found.</div>
+      <div className="m-3 md:m-8">Project not found.</div>
     </>
   );
 };
