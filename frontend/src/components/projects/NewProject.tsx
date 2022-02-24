@@ -11,13 +11,16 @@ const NewProject: FunctionComponent = () => {
   const [projectForm, setProjectForm] = useState(false);
 
   useEffect(() => {
+    let isMounted = true;
     setLoading(true);
     fetch("/api/v1/techs").then(async (response) => {
       if (response.status === 200) {
-        const data = await response.json();
+        if (isMounted) {
+          const data = await response.json();
 
-        setTechs(data);
-        setLoading(false);
+          setTechs(data);
+          setLoading(false);
+        }
       } else {
         console.error(
           "failed to load techs",
@@ -26,6 +29,9 @@ const NewProject: FunctionComponent = () => {
         );
       }
     });
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const chooseTech = (e: any, chosenTech: object) => {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Formik } from "formik";
 
 function ProjectSearch() {
@@ -6,10 +6,20 @@ function ProjectSearch() {
     <Formik
       initialValues={{ search: "" }}
       onSubmit={(values, { setSubmitting }) => {
-        setTimeout(() => {
-          alert(JSON.stringify(values, null, 2));
-          setSubmitting(false);
-        }, 400);
+        fetch(`api/v1/project_search/${values.search}`).then(
+          async (response) => {
+            if (response.status === 200) {
+              const data = await response.json();
+              console.log(data);
+            } else {
+              console.error(
+                "failed to exicute search",
+                response.status,
+                await response.json()
+              );
+            }
+          }
+        );
       }}
     >
       {({

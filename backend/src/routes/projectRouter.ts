@@ -125,10 +125,21 @@ projects.get("/v1/projects/:id", async (req, res, next) => {
     next(err);
   }
 });
-
+//Get single project by name
 projects.get("/v1/project_lookup/:name", async (req, res, next) => {
   try {
     const project = await projectController.getByName(req.params["name"]);
+    res.json(project);
+  } catch (err) {
+    next(err);
+  }
+});
+//search projects by name and description
+projects.get("/v1/project_search/:search", async (req, res, next) => {
+  try {
+    const project = await projectController.searchProjects(
+      req.params["search"]
+    );
     res.json(project);
   } catch (err) {
     next(err);
@@ -173,7 +184,7 @@ projects.get(
     }
   }
 );
-
+//Return x number of recent projects
 projects.get("/v1/projects", async (req, res, next) => {
   const pageSize = Math.max(50, +(req.query["pageSize"] || 50));
   const projects = await projectController.lookup(pageSize);
