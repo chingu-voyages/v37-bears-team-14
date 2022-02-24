@@ -4,13 +4,17 @@ import Navbar from "./Navbar";
 import Projects from "./components/projects/Projects";
 import AdminOutlet from "./components/routing/AdminOutlet";
 import TechListPage from "./components/admin/techs/TechListPage";
+import ProjectPage from "./components/project_page/ProjectPage";
 
 function App() {
   return (
     <>
       <Navbar />
       <Routes>
-        <Route path="/projects" element={<Projects />}></Route>
+        <Route path="/projects">
+          <Route path="" element={<Projects />} />
+          <Route path=":projectId" element={<ProjectPage />} />
+        </Route>
         <Route path="admin" element={<AdminOutlet />}>
           <Route path="" element={<Navigate to="techs" />} />
           <Route path="techs" element={<TechListPage />} />

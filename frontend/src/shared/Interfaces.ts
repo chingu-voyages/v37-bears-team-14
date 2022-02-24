@@ -11,3 +11,14 @@ export interface Tech {
   description: string;
   imageUrl?: string;
 }
+
+export interface User {
+  id: string;
+  username: string;
+  avatarUrl: string;
+}
+
+export interface Member {
+  id: string;
+  user: User;
+}
