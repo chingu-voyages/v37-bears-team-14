@@ -14,16 +14,16 @@ const ProjectLanding: FunctionComponent<ProjectLandingProps> = ({
     <div className="m-8">
       <div className="my-4">
         <div className="text-2xl">{project.name}</div>
-        <div className="">{project.description}</div>
+        <div className="text-slate-700">{project.description}</div>
       </div>
 
       <div className="my-4">
-        <div className="text-lg">Team</div>
+        <div className="font-bold my-1">Team</div>
         <MemberList projectId={project.id} />
       </div>
 
       <div className="my-4">
-        <div className="text-lg">Tech Stack</div>
+        <div className="font-bold my-1">Tech Stack</div>
         <div className="flex">
           {project.techs.map((tech) => (
             <div className="" key={tech.id}>

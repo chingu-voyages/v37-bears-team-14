@@ -20,7 +20,6 @@ const MemberList: FunctionComponent<MemberListProps> = ({ projectId }) => {
 
       if (resp.status === 200 || resp.status === 304) {
         const members = await resp.json();
-        console.log(members);
         setMembers(members);
       } else {
         console.error("Failed to get members");

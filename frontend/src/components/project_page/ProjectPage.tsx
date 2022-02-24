@@ -7,7 +7,8 @@ import ProjectLanding from "./ProjectLanding";
 
 const ProjectPage: FunctionComponent = () => {
   const { projectId } = useParams();
-  const [loading, setLoading] = useState(false);
+  // Initial state is loading.
+  const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [project, setProject] = useState<null | Project>(null);
 
@@ -45,7 +46,7 @@ const ProjectPage: FunctionComponent = () => {
 
   if (!project) {
     // Something went wrong!
-    console.error("Missing project!", projectId, project);
+    console.error("Missing project!", loading, notFound, projectId, project);
     return <ProjectNotFound />;
   }
 
