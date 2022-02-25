@@ -6,11 +6,11 @@ import React, {
   SetStateAction,
 } from "react";
 import { Outlet, useParams } from "react-router-dom";
-import { Project } from "../../shared/Interfaces";
-import LoadingSpinner from "../Spinners/LoadingSpinner";
-import ProjectNotFound from "./components/ProjectNotFound";
-import ProjectTabs from "./components/ProjectTabs";
-import ProjectHeader from "./components/ProjectHeader";
+import { Project } from "../../../shared/Interfaces";
+import LoadingSpinner from "../../Spinners/LoadingSpinner";
+import ProjectNotFound from "../components/ProjectNotFound";
+import ProjectTabs from "../components/ProjectTabs";
+import ProjectHeader from "../components/ProjectHeader";
 
 export interface ProjectPageContext {
   project: Project;

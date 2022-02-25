@@ -4,9 +4,11 @@ import Navbar from "./Navbar";
 import Projects from "./components/projects/Projects";
 import AdminOutlet from "./components/routing/AdminOutlet";
 import TechListPage from "./components/admin/techs/TechListPage";
-import ProjectPageLayout from "./components/project_page/ProjectPageLayout";
+import ProjectPageLayout from "./components/project_page/layouts/ProjectPageLayout";
 import ProjectLandingPage from "./components/project_page/pages/ProjectLandingPage";
 import ProjectSettingsPage from "./components/project_page/pages/ProjectSettingsPage";
+import ProjectSettingsLayout from "./components/project_page/layouts/ProjectSettingsLayout";
+import ProjectSettingsTeamPage from "./components/project_page/pages/ProjectSettingsTeamPage";
 
 function App() {
   return (
@@ -17,7 +19,12 @@ function App() {
           <Route path="" element={<Projects />} />
           <Route path=":projectId" element={<ProjectPageLayout />}>
             <Route path="" element={<ProjectLandingPage />} />
-            <Route path="settings" element={<ProjectSettingsPage />} />
+            <Route path="settings" element={<ProjectSettingsLayout />}>
+              <Route path="" element={<Navigate to="project" />} />
+              <Route path="project" element={<ProjectSettingsPage />} />
+              <Route path="team" element={<ProjectSettingsTeamPage />} />
+              <Route path="*" element={null} />
+            </Route>
             <Route path="*" element={<Navigate to=".." />} />
           </Route>
         </Route>
