@@ -26,60 +26,58 @@ const RoleSelector: FunctionComponent<RoleSelectorProps> = ({
   hoverBackgroundColor = hoverBackgroundColor || "hover:bg-slate-700";
 
   return (
-    <>
-      <div
-        className={
-          "inline-block" + (loading ? " opacity-50 cursor-not-allowed" : "")
-        }
-        ref={container}
-      >
-        <div className=" flex flex-col">
-          <div
-            onClick={() => !loading && setIsOpen(!isOpen)}
-            className={
-              "rounded relative inline text-white font-semibold cursor-pointer text-xs py-1 pl-2 px-1 " +
-              backgroundColor
-            }
-          >
-            {value}
+    <div
+      className={
+        "inline-block" + (loading ? " opacity-50 cursor-not-allowed" : "")
+      }
+      ref={container}
+    >
+      <div className=" flex flex-col">
+        <div
+          onClick={() => !loading && setIsOpen(!isOpen)}
+          className={
+            "rounded relative inline text-white font-semibold cursor-pointer text-xs py-1 pl-2 px-1 " +
+            backgroundColor
+          }
+        >
+          {value}
 
-            <ChevronDownIcon className="h-4 inline-block " />
-          </div>
+          <ChevronDownIcon className="h-4 inline-block " />
+        </div>
 
-          <div className="relative inline h-1">
-            {isOpen && (
-              <div
-                className={
-                  "z-10 my-1 absolute _bg-white rounded min-w-full " +
-                  backgroundColor
-                }
-              >
-                {options.map((option, i) => (
-                  <div
-                    onClick={async () => {
-                      if (loading) return;
-                      setIsOpen(false);
-                      if (onChange) {
-                        setLoading(true);
-                        await onChange(option);
-                        setLoading(false);
-                      }
-                    }}
-                    key={i}
-                    className={
-                      "my-[1px] rounded cursor-pointer text-white text-xs font-semibold px-2 py-1 " +
-                      hoverBackgroundColor
+        <div className="relative inline h-1">
+          {isOpen && (
+            <div
+              className={
+                "z-10 my-1 absolute _bg-white rounded min-w-full " +
+                backgroundColor
+              }
+            >
+              {options.map((option, i) => (
+                <div
+                  onClick={async () => {
+                    if (loading) return;
+                    setIsOpen(false);
+                    if (onChange) {
+                      setLoading(true);
+                      await onChange(option);
+                      setLoading(false);
                     }
-                  >
-                    {option}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+                  }}
+                  key={i}
+                  className={
+                    "my-[1px] rounded cursor-pointer text-white text-xs font-semibold px-2 py-1 " +
+                    hoverBackgroundColor
+                  }
+                >
+                  {option}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

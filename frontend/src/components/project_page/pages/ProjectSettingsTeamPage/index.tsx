@@ -1,6 +1,6 @@
 import { useOutletContext } from "react-router-dom";
 import { ProjectPageContext } from "../../layouts/ProjectPageLayout";
-import MemberTable from "./MemberTable";
+import MemberTable from "./components/MemberTable";
 import ActionButton from "../../../controls/ActionButton";
 import { useState } from "react";
 

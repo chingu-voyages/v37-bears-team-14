@@ -5,11 +5,11 @@ import {
   useEffect,
   useState,
 } from "react";
-import { User } from "../../../../shared/Interfaces";
-import ActionButton from "../../../controls/ActionButton";
-import XIcon from "../../../icons/XIcon";
-import RoleSelector from "../../../controls/RoleSelector";
-import roleNames from "./roleNames.json";
+import { User } from "../../../../../shared/Interfaces";
+import ActionButton from "../../../../controls/ActionButton";
+import XIcon from "../../../../icons/XIcon";
+import RoleSelector from "../../../../controls/RoleSelector";
+import roleNames from "../roleNames.json";
 
 export interface AddUserModalProps {
   onClose?: EventHandler<MouseEvent>;

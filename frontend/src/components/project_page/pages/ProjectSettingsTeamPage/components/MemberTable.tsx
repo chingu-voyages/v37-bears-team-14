@@ -1,11 +1,9 @@
 import { Dispatch, FunctionComponent, SetStateAction, useState } from "react";
 import { useEffect } from "react";
-import { Member, User } from "../../../../shared/Interfaces";
-import LoadingSpinner from "../../../Spinners/LoadingSpinner";
-import TrashIcon from "../../../icons/TrashIcon";
+import { Member, User } from "../../../../../shared/Interfaces";
+import LoadingSpinner from "../../../../Spinners/LoadingSpinner";
 import AddUserModal from "./AddUserModal";
-import RoleSelector from "../../../controls/RoleSelector";
-import roleNames from "./roleNames.json";
+import MemberTableRow from "./MemberTableRow";
 
 export interface MemberListProps {
   projectId: string;
@@ -76,7 +74,7 @@ const MemberTable: FunctionComponent<MemberListProps> = ({
   }
 
   return (
-    <div className="flex">
+    <>
       {showAddUserModal && (
         <AddUserModal
           onSelectUser={onSelectUser}
@@ -86,58 +84,42 @@ const MemberTable: FunctionComponent<MemberListProps> = ({
       <table className="">
         <tbody>
           {members.map((member) => (
-            <tr key={member.id} className="my-3 block">
-              <td className="">
-                <span className="mr-2">{member.user.username}</span>{" "}
-                <span className="mr-2">
-                  <RoleSelector
-                    value={member.roleName}
-                    options={roleNames}
-                    onChange={async (roleName) => {
-                      const resp = await fetch(
-                        "/api/v1/projects/" + projectId + "/members",
-                        {
-                          method: "POST",
-                          headers: { "content-type": "application/json" },
-                          body: JSON.stringify({
-                            user: member.user.id,
-                            roleName,
-                          }),
-                        }
-                      );
+            <MemberTableRow
+              member={member}
+              onRoleUpdate={async (member, roleName) => {
+                const resp = await fetch(
+                  "/api/v1/projects/" + projectId + "/members",
+                  {
+                    method: "POST",
+                    headers: { "content-type": "application/json" },
+                    body: JSON.stringify({
+                      user: member.user.id,
+                      roleName,
+                    }),
+                  }
+                );
 
-                      if (resp.status === 200) {
-                        const member = await resp.json();
-                        setMembers(
-                          members.map((m) => {
-                            if (m.id === member.id) {
-                              return member;
-                            } else {
-                              return m;
-                            }
-                          })
-                        );
+                if (resp.status === 200) {
+                  const member = await resp.json();
+                  setMembers(
+                    members.map((m) => {
+                      if (m.id === member.id) {
+                        return member;
+                      } else {
+                        return m;
                       }
-                    }}
-                  />
-                </span>
-                {/* <span className="text-xs bg-emerald-600 text-white rounded pl-2 pr-1 cursor-pointer">
-                  {member.roleName} <ChevronDownIcon className="h-3 inline" />
-                </span> */}
-                <span
-                  className="cursor-pointer hover:text-slate-800 text-slate-500"
-                  onClick={(e) => {
-                    removeUser(member.user.id);
-                  }}
-                >
-                  <TrashIcon className="h-5 inline" />
-                </span>
-              </td>
-            </tr>
+                    })
+                  );
+                } else {
+                  console.error("Failed to update member", resp);
+                }
+              }}
+              onRemoveUser={(userId) => removeUser(userId)}
+            />
           ))}
         </tbody>
       </table>
-    </div>
+    </>
   );
 };
 
