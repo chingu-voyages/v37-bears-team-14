@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
+import ProjectContext from "../../store/project-context";
 import { Formik } from "formik";
 
 function ProjectSearch() {
+  const projectCtx = useContext(ProjectContext);
   return (
     <Formik
       initialValues={{ search: "" }}
@@ -10,7 +12,9 @@ function ProjectSearch() {
           async (response) => {
             if (response.status === 200) {
               const data = await response.json();
-              console.log(data);
+              projectCtx.updateSearchResults(data);
+              // console.log(projectCtx.searchResults);
+              // console.log(data);
             } else {
               console.error(
                 "failed to exicute search",

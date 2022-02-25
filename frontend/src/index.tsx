@@ -5,12 +5,15 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { SessionProvider } from "./hooks/session";
+import ProjectProvider from "./store/projectProvider";
 
 ReactDOM.render(
   <React.StrictMode>
     <SessionProvider>
       <BrowserRouter>
-        <App />
+        <ProjectProvider>
+          <App />
+        </ProjectProvider>
       </BrowserRouter>
     </SessionProvider>
   </React.StrictMode>,

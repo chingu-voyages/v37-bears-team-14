@@ -1,5 +1,11 @@
-import React, { useEffect, useState, FunctionComponent } from "react";
+import React, {
+  useEffect,
+  useState,
+  FunctionComponent,
+  useContext,
+} from "react";
 import NewProject from "./NewProject";
+import ProjectContext from "../../store/project-context";
 import ProjectPreview from "./ProjectPreview";
 import ProjectSearch from "./ProjectSearch";
 import isEqual from "react-fast-compare";
@@ -9,13 +15,17 @@ import LoadingSpinner from "../Spinners/LoadingSpinner";
 const Projects: FunctionComponent = () => {
   const [projects, setProjects] = useState<Project[] | []>([]);
   const [loading, setLoading] = useState(false);
+  const projectCtx = useContext(ProjectContext);
   useEffect(() => {
     setLoading(true);
     fetch("api/v1/projects").then(async (response) => {
       if (response.status === 200) {
         setLoading(false);
         const data = await response.json();
-        if (!isEqual(projects, data)) setProjects(data);
+        if (!isEqual(projects, data)) {
+          setProjects(data);
+          projectCtx.updateProjects(data);
+        }
 
         return response;
       }
