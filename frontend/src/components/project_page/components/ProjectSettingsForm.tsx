@@ -1,7 +1,7 @@
 import { FunctionComponent } from "react";
 import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
-import { ProjectPageContext } from "../ProjectPageLayout";
+import { ProjectPageContext } from "../layouts/ProjectPageLayout";
 
 interface ProjectSettingsFormValues {
   name: string;
