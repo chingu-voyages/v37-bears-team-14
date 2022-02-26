@@ -6,9 +6,11 @@ import AdminOutlet from "./components/routing/AdminOutlet";
 import TechListPage from "./components/admin/techs/TechListPage";
 import ProjectPageLayout from "./components/project_page/layouts/ProjectPageLayout";
 import ProjectLandingPage from "./components/project_page/pages/ProjectLandingPage";
+import ProjectApplicationsListPage from "./components/project_page/pages/ProjectApplicationsListPage";
 import ProjectSettingsPage from "./components/project_page/pages/ProjectSettingsPage";
 import ProjectSettingsLayout from "./components/project_page/layouts/ProjectSettingsLayout";
 import ProjectSettingsTeamPage from "./components/project_page/pages/ProjectSettingsTeamPage";
+import ProjectApplicationPage from "./components/project_page/pages/ProjectApplicationPage/index";
 
 function App() {
   return (
@@ -19,6 +21,14 @@ function App() {
           <Route path="" element={<Projects />} />
           <Route path=":projectId" element={<ProjectPageLayout />}>
             <Route path="" element={<ProjectLandingPage />} />
+            <Route
+              path="applications/:applicationId"
+              element={<ProjectApplicationPage />}
+            />
+            <Route
+              path="applications"
+              element={<ProjectApplicationsListPage />}
+            />
             <Route path="settings" element={<ProjectSettingsLayout />}>
               <Route path="" element={<Navigate to="project" />} />
               <Route path="project" element={<ProjectSettingsPage />} />

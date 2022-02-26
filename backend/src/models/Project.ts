@@ -24,6 +24,10 @@ const ProjectSchema = new Schema<IProject>(
       type: [Schema.Types.ObjectId],
       ref: "tech",
     },
+    // settingOpenRoles: {
+    //   type: [Schema.Types.String],
+    //   default: ["developer", "designer"]
+    // },
   },
   {
     timestamps: true,

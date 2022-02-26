@@ -33,6 +33,24 @@ const ProjectTabs: FunctionComponent<ProjectTabsProps> = ({ projectId }) => {
               : "text-slate-700") +
             " px-3 pb-2 hover:text-slate-900 hover:border-b-2 border-emerald-400 "
           }
+          to="applications"
+        >
+          Applications
+        </NavLink>
+      ) : (
+        <div className="px-3 pb-2 text-slate-700 inline cursor-not-allowed opacity-60">
+          Applications
+        </div>
+      )}
+
+      {isOwner ? (
+        <NavLink
+          className={({ isActive }) =>
+            (isActive
+              ? "border-b-2 font-bold text-slate-900"
+              : "text-slate-700") +
+            " px-3 pb-2 hover:text-slate-900 hover:border-b-2 border-emerald-400 "
+          }
           to="settings"
         >
           Settings

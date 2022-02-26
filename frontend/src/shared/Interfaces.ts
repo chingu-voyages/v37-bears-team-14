@@ -24,3 +24,21 @@ export interface Member {
   roleName: string;
   project: Project;
 }
+
+export interface Application {
+  id: string;
+  createdAt: Date;
+  project: {
+    id: string;
+    name: string;
+    description: string;
+  };
+  user: {
+    id: string;
+    username: string;
+    avatarUrl: string;
+  };
+  status: string;
+  content: string | null;
+  requestedRole: string | null;
+}
