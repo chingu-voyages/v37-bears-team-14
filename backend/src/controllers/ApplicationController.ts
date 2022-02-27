@@ -1,4 +1,3 @@
-import { application } from "express";
 import { pick } from "lodash";
 import { Document, Model } from "mongoose";
 import { IApplication } from "../models/Application";
@@ -9,7 +8,6 @@ import MemberAlreadyExistsError from "./errors/MemberAlreadyExistsError";
 import NotFoundError from "./errors/NotFoundError";
 import PendingApplicationExistsError from "./errors/PendingApplicationExistsError";
 import UnauthorizedError from "./errors/UnauthorizedError";
-import ProjectController from "./ProjectController";
 
 export type ApplicationDoc = IApplication &
   Document<unknown, any, IApplication>;
@@ -25,14 +23,6 @@ export interface UpdateApplicationParams {
   status?: string;
   content?: string;
   requestedRole?: string;
-}
-
-export interface UpdateApplicationStatusParams {
-  status: string;
-}
-
-export interface UpdateApplicationContentParams {
-  content: string;
 }
 
 export interface LookupProjectApplicationsParams {
@@ -141,58 +131,6 @@ class ApplicationController {
     return application;
   }
 
-  async updateApplicationStatus(
-    id: string,
-    userId: string,
-    params: UpdateApplicationStatusParams
-  ) {
-    const application = await this.applicationModel.findOne({ _id: id });
-
-    if (!application) {
-      throw new NotFoundError("application", id);
-    }
-
-    // check is user owner of project
-    const member = await this.memberModel.findOne({
-      project: application.project,
-      user: userId,
-    });
-    if (!member || member.roleName !== "owner") {
-      throw new UnauthorizedError("User is not a project owner");
-    }
-
-    application.status = params.status;
-    await application.save();
-
-    await application.populate("project");
-    await application.populate("user");
-    return application;
-  }
-
-  async updateApplicationContent(
-    id: string,
-    userId: string,
-    params: UpdateApplicationContentParams
-  ) {
-    const application = await this.applicationModel.findOne({ _id: id });
-
-    if (!application) {
-      throw new NotFoundError("application", id);
-    }
-
-    // check is user submitter of application
-    if (application.user.toString() !== userId) {
-      throw new UnauthorizedError("User is not submitter");
-    }
-
-    application.content = params.content;
-    await application.save();
-
-    await application.populate("project");
-    await application.populate("user");
-    return application;
-  }
-
   async getById(id: string): Promise<ApplicationDoc> {
     const application = await this.applicationModel.findOne({ _id: id });
     if (!application) {
@@ -222,7 +160,7 @@ class ApplicationController {
       };
     }
 
-    // TODO: check lookup parameters
+    // TODO: check lookup parameters for permissions against viewerUserId
 
     const applications = await this.applicationModel
       .find(query)
