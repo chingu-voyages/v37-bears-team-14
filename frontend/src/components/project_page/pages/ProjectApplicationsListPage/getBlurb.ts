@@ -11,20 +11,20 @@ const getBlurb = (content: string | null, maxLength?: number): Blurb => {
   const lines = content.split("\n");
 
   for (let i = 0; i < lines.length; i++) {
-    if (/[a-z]/i.test(lines[i])) {
+    if (/[a-z0-9]/i.test(lines[i])) {
+      const firstLine = lines[i].replace(/[#*_~]*/g, "").trim();
+      const summary = firstLine.slice(0, maxLength);
       return {
-        summary: lines[i]
-          .replace(/[#*_~]*/g, "")
-          .trim()
-          .slice(0, maxLength),
-        hasMore: i < lines.length - 1,
+        summary,
+        hasMore: summary.length < firstLine.length || i < lines.length - 1,
       };
     }
   }
 
+  const summary = content.slice(0, maxLength).replace("\n", " ");
   return {
-    summary: content.slice(0, maxLength).replace("\n", " "),
-    hasMore: true,
+    summary,
+    hasMore: summary.length < content.length,
   };
 };
 

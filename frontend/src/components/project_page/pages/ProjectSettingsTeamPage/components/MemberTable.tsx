@@ -85,6 +85,7 @@ const MemberTable: FunctionComponent<MemberListProps> = ({
         <tbody>
           {members.map((member) => (
             <MemberTableRow
+              key={member.id}
               member={member}
               onRoleUpdate={async (member, roleName) => {
                 const resp = await fetch(

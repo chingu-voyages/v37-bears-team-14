@@ -25,7 +25,7 @@ applications.post("/", isLoggedIn, async (req, res, next) => {
   try {
     const application = await applicationController.createApplication(
       req.user!._id!.toString(),
-      pick(req.body, ["project", "user", "content"])
+      pick(req.body, ["project", "user", "content", "requestedRole"])
     );
     res.json(application);
   } catch (err) {

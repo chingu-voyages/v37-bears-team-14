@@ -3,6 +3,7 @@ export interface Project {
   name: string;
   description: string;
   techs: Tech[];
+  settingOpenRoles: string[];
 }
 
 export interface Tech {
