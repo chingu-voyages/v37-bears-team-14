@@ -6,6 +6,7 @@ import useMember from "../../hooks/useMember";
 import ApplyButton from "./ApplyButton";
 import useApplication from "../../hooks/useApplication";
 import ApplicationSummary from "./ApplicationSummary";
+import { Link } from "react-router-dom";
 
 interface ApplyButtonContainerProps {
   projectId: string;
@@ -23,7 +24,15 @@ const ApplyButtonContainer: FC<ApplyButtonContainerProps> = ({ projectId }) => {
   }
 
   if (!isLoggedIn) {
-    return <ActionButton>Sign In to Join the Team</ActionButton>;
+    return (
+      <Link
+        to="/auth/github"
+        reloadDocument
+        className="main-btn whitespace-nowrap w-full inline-block"
+      >
+        Sign In to Join the Team
+      </Link>
+    );
   }
 
   if (isMember || !user) {
