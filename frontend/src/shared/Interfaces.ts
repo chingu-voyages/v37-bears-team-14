@@ -22,4 +22,5 @@ export interface Member {
   id: string;
   user: User;
   roleName: string;
+  project: Project;
 }
