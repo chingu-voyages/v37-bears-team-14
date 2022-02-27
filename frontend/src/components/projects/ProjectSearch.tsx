@@ -1,17 +1,9 @@
-import React, {
-  useEffect,
-  useState,
-  useContext,
-  FunctionComponent,
-} from "react";
-import ProjectContext from "../../store/project-context";
+import React, { useState, FunctionComponent } from "react";
+
 import { Formik } from "formik";
 import { Project } from "../../shared/Interfaces";
 import ProjectPreview from "./ProjectPreview";
 
-interface Props {
-  getResults: (searchResults: object[]) => void;
-}
 const ProjectSearch: FunctionComponent = () => {
   const [searchResults, setSearchResults] = useState<Project[] | []>([]);
   return (

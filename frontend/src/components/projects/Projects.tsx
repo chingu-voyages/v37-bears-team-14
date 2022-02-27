@@ -1,12 +1,7 @@
-import React, {
-  useEffect,
-  useState,
-  FunctionComponent,
-  useContext,
-} from "react";
+import React, { useEffect, useState, FunctionComponent } from "react";
 import { Link } from "react-router-dom";
 import NewProject from "./NewProject";
-import ProjectContext from "../../store/project-context";
+
 import ProjectPreview from "./ProjectPreview";
 
 import isEqual from "react-fast-compare";
@@ -17,7 +12,6 @@ const Projects: FunctionComponent = () => {
   const [projects, setProjects] = useState<Project[] | []>([]);
   const [loading, setLoading] = useState(false);
 
-  const projectCtx = useContext(ProjectContext);
   useEffect(() => {
     setLoading(true);
     fetch("api/v1/projects").then(async (response) => {
@@ -26,7 +20,6 @@ const Projects: FunctionComponent = () => {
         const data = await response.json();
         if (!isEqual(projects, data)) {
           setProjects(data);
-          projectCtx.updateProjects(data);
         }
 
         return response;
