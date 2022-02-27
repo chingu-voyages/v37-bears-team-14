@@ -13,7 +13,6 @@ const projectReducer = (state: any, action: any) => {
     };
   }
   if (action.type === "STORE_SEARCH_RESULTS") {
-    console.log(action.searchResults);
     return {
       projects: state.projects,
       searchResults: action.searchResults,

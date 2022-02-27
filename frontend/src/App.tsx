@@ -7,6 +7,7 @@ import TechListPage from "./components/admin/techs/TechListPage";
 import ProjectPageLayout from "./components/project_page/ProjectPageLayout";
 import ProjectLandingPage from "./components/project_page/pages/ProjectLandingPage";
 import ProjectSettingsPage from "./components/project_page/pages/ProjectSettingsPage";
+import ProjectSearch from "./components/projects/ProjectSearch";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <Routes>
         <Route path="/projects">
           <Route path="" element={<Projects />} />
+          <Route path="search" element={<ProjectSearch />} />
           <Route path=":projectId" element={<ProjectPageLayout />}>
             <Route path="" element={<ProjectLandingPage />} />
             <Route path="settings" element={<ProjectSettingsPage />} />

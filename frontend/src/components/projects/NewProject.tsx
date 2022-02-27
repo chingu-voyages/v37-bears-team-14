@@ -79,7 +79,7 @@ const NewProject: FunctionComponent = () => {
       {content}
       <div className="w-full bg-medGray">
         <div
-          className="bg-main-gradient p-1 cursor-pointer"
+          className="p-1 cursor-pointer"
           onClick={() => setProjectForm(!projectForm)}
         >
           <span className="p-2 text-mintGreen">Create Project</span>

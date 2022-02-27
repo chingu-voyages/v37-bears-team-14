@@ -26,7 +26,7 @@ interface FormValues {
 
 const NewProjectSchema = Yup.object().shape({
   name: Yup.string().min(2, "Too Short!").max(50, "Too Long!"),
-  description: Yup.string().min(2, "Too Short!").max(50, "Too Long!"),
+  description: Yup.string().min(2, "Too Short!").max(1000, "Too Long!"),
 });
 
 const NewProjectForm: React.FC<Props> = ({
@@ -132,7 +132,7 @@ const NewProjectForm: React.FC<Props> = ({
                 Description
               </label>
               <Field
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline max-h-48"
                 name="description"
                 as="textarea"
               />

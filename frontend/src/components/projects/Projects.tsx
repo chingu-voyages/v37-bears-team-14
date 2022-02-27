@@ -4,10 +4,11 @@ import React, {
   FunctionComponent,
   useContext,
 } from "react";
+import { Link } from "react-router-dom";
 import NewProject from "./NewProject";
 import ProjectContext from "../../store/project-context";
 import ProjectPreview from "./ProjectPreview";
-import ProjectSearch from "./ProjectSearch";
+
 import isEqual from "react-fast-compare";
 import { Project } from "../../shared/Interfaces";
 import LoadingSpinner from "../Spinners/LoadingSpinner";
@@ -15,6 +16,7 @@ import LoadingSpinner from "../Spinners/LoadingSpinner";
 const Projects: FunctionComponent = () => {
   const [projects, setProjects] = useState<Project[] | []>([]);
   const [loading, setLoading] = useState(false);
+
   const projectCtx = useContext(ProjectContext);
   useEffect(() => {
     setLoading(true);
@@ -38,7 +40,6 @@ const Projects: FunctionComponent = () => {
         <LoadingSpinner />
       ) : (
         <>
-          {/* max-w-6xl mx-auto */}
           <section className="w-full">
             <div className="flex flex-col-reverse md:flex-row">
               <main className="basis-3/4">
@@ -46,7 +47,15 @@ const Projects: FunctionComponent = () => {
               </main>
               <aside className="basis-1/4">
                 <NewProject />
-                <ProjectSearch />
+                <Link to={"search"}>
+                  <div className="w-full bg-medGray border-t-[1px] border-mintGreen">
+                    <div className="p-1">
+                      <span className="p-2 text-mintGreen">
+                        Search Projects
+                      </span>
+                    </div>
+                  </div>
+                </Link>
               </aside>
             </div>
           </section>
