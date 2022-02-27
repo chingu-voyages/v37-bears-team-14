@@ -16,7 +16,6 @@ function truncateString(str: string) {
 
 const ProjectPreview: FunctionComponent<Props> = ({ projects }) => {
   return (
-    // <div className="md:container mx-auto px-4"></div>
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 m-1">
       {projects.map((p, index) => (
         <Link to={`/projects/${p.id}`} key={index}>
