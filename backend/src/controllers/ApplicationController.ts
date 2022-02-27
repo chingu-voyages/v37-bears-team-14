@@ -21,6 +21,12 @@ export interface CreateApplicationParams {
   requestedRole?: string;
 }
 
+export interface UpdateApplicationParams {
+  status?: string;
+  content?: string;
+  requestedRole?: string;
+}
+
 export interface UpdateApplicationStatusParams {
   status: string;
 }
@@ -85,10 +91,55 @@ class ApplicationController {
     return application;
   }
 
-  // async acceptApplication(id: string, userId: string) {
-  //   await this.updateApplicationStatus(id, userId, {status: "accepted"});
-  //   await (this.projectController as ProjectController).updateMember(application.project, userId, {user: application.user})
-  // }
+  async updateApplication(
+    id: string,
+    updaterUserId: string,
+    params: UpdateApplicationParams
+  ) {
+    const application = await this.applicationModel.findOne({ _id: id });
+    if (!application) {
+      throw new NotFoundError("application", id);
+    }
+
+    let isChanged = false;
+
+    if (params.status) {
+      // check is user owner of project
+      const member = await this.memberModel.findOne({
+        project: application.project,
+        user: updaterUserId,
+      });
+      if (!member || member.roleName !== "owner") {
+        throw new UnauthorizedError("User is not a project owner");
+      }
+      application.status = params.status;
+      isChanged = true;
+    }
+
+    if (params.content) {
+      if (updaterUserId !== application.user.toString()) {
+        throw new UnauthorizedError("User is not submitter");
+      }
+      application.content = params.content;
+      isChanged = true;
+    }
+
+    if (params.requestedRole) {
+      if (updaterUserId !== application.user.toString()) {
+        throw new UnauthorizedError("User is not submitter");
+      }
+      application.requestedRole = params.requestedRole;
+      isChanged = true;
+    }
+
+    if (isChanged) {
+      await application.save();
+    }
+
+    await application.populate("project");
+    await application.populate("user");
+    return application;
+  }
 
   async updateApplicationStatus(
     id: string,

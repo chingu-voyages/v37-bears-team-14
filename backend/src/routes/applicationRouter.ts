@@ -87,9 +87,28 @@ applications.get("/:id", isLoggedIn, async (req, res, next) => {
   }
 });
 
-// Status change to accept is special in that
-// the backend will automatically add the application user to the project.
-// applications.post("/:id/accept", isLoggedIn, async (req, res, next) => {
-// });
+applications.post("/:id", isLoggedIn, async (req, res, next) => {
+  if (!isValidObjectId(req.params["id"])) {
+    return res.status(400).json({ errors: ["application_id_invalid"] });
+  }
+
+  if (
+    req.body.status &&
+    !["pending", "accepted", "closed"].includes(req.body.status)
+  ) {
+    return res.status(400).json({ errors: ["invalid_status"] });
+  }
+
+  try {
+    const application = await applicationController.updateApplication(
+      req.params["id"],
+      req.user!._id!.toString(),
+      pick(req.body, ["status", "content", "requestedRole"])
+    );
+    res.json(application);
+  } catch (err) {
+    next(err);
+  }
+});
 
 export default applications;
