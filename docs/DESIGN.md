@@ -4,11 +4,13 @@ This is a living document that keeps a (best effort) record of the design decisi
 
 ## Architecture
 
+## Data Model
+
 Projects are associated to users via a "member" resource.
 The member object allows users to be associated with multiple projects and
 vice versa (projects can be associated with multiple users).
 
-## Data Model
+Applications represent a User's request to be added as a Member to a Project.
 
 ```
 User {
@@ -26,6 +28,7 @@ Project {
   name: string
   description: string // short description
   techs: ObjectId[] // ref to Tech
+  settingOpenRoles: string[] // default ["developer", "designer"]
 }
 
 Member {
@@ -39,5 +42,14 @@ Tech {
   name: string, indexed
   description: string
   imageUrl: string
+}
+
+Application {
+  id: ObjectId
+  project: ObjectId // ref to Project
+  user: ObjectId // ref to User
+  content: string // markdown
+  status: string // pending, accepted, closed
+  requestedRole: string
 }
 ```
