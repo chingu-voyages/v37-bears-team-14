@@ -1,6 +1,5 @@
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import { useSession } from "../../../../hooks/session";
-import ActionButton from "../../../controls/ActionButton";
 import LoadingSpinner from "../../../Spinners/LoadingSpinner";
 import useMember from "../../hooks/useMember";
 import ApplyButton from "./ApplyButton";
@@ -16,8 +15,6 @@ const ApplyButtonContainer: FC<ApplyButtonContainerProps> = ({ projectId }) => {
   const { loading: loadingMember, isMember } = useMember(projectId);
   const { loading: loadingSession, isLoggedIn, user } = useSession();
   const { application, setApplication } = useApplication(projectId);
-
-  useEffect(() => {}, []);
 
   if (loadingMember || loadingSession) {
     return <LoadingSpinner />;

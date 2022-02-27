@@ -52,7 +52,6 @@ const ApplyButton: FC<ApplyButtonProps> = ({
       {modalOpen && (
         <Modal onClose={() => setModalOpen(false)}>
           <div className="font-xl font-semibold">Apply</div>
-
           {project ? (
             <ApplyForm
               project={project}
