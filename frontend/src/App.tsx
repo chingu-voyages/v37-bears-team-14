@@ -8,6 +8,7 @@ import ProjectPageLayout from "./components/project_page/layouts/ProjectPageLayo
 import ProjectLandingPage from "./components/project_page/pages/ProjectLandingPage";
 import ProjectApplicationsListPage from "./components/project_page/pages/ProjectApplicationsListPage";
 import ProjectSettingsPage from "./components/project_page/pages/ProjectSettingsPage";
+import ProjectSearch from "./components/projects/ProjectSearch";
 import ProjectSettingsLayout from "./components/project_page/layouts/ProjectSettingsLayout";
 import ProjectSettingsTeamPage from "./components/project_page/pages/ProjectSettingsTeamPage";
 import ProjectApplicationPage from "./components/project_page/pages/ProjectApplicationPage/index";
@@ -19,6 +20,7 @@ function App() {
       <Routes>
         <Route path="/projects">
           <Route path="" element={<Projects />} />
+          <Route path="search" element={<ProjectSearch />} />
           <Route path=":projectId" element={<ProjectPageLayout />}>
             <Route path="" element={<ProjectLandingPage />} />
             <Route
