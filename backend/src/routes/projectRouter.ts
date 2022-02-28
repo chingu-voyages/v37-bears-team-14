@@ -135,15 +135,16 @@ projects.get("/v1/project_lookup/:name", async (req, res, next) => {
   }
 });
 //search projects by name and description
-projects.get("/v1/project_search/:search", async (req, res, next) => {
-  try {
-    const project = await projectController.searchProjects(
-      req.params["search"]
-    );
-    res.json(project);
-  } catch (err) {
-    next(err);
-  }
+projects.get("/v1/project_search", async (req, res, next) => {
+  if (req.query["search"])
+    try {
+      const project = await projectController.searchProjects(
+        req.query["search"].toString()
+      );
+      res.json(project);
+    } catch (err) {
+      next(err);
+    }
 });
 
 projects.get("/v1/projects/:id/members", async (req, res, next) => {

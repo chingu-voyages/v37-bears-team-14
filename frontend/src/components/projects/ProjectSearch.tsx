@@ -11,21 +11,23 @@ const ProjectSearch: FunctionComponent = () => {
       <Formik
         initialValues={{ search: "" }}
         onSubmit={(values, { setSubmitting }) => {
-          fetch(`/api/v1/project_search/${values.search}`).then(
-            async (response) => {
-              if (response.status === 200) {
-                const data = await response.json();
+          if (values.search)
+            fetch(`/api/v1/project_search?search=${values.search}`).then(
+              async (response) => {
+                if (response.status === 200) {
+                  const data = await response.json();
 
-                setSearchResults(data);
-              } else {
-                console.error(
-                  "failed to exicute search",
-                  response.status,
-                  await response.json()
-                );
+                  setSearchResults(data);
+                  setSubmitting(false);
+                } else {
+                  console.error(
+                    "failed to exicute search",
+                    response.status,
+                    await response.json()
+                  );
+                }
               }
-            }
-          );
+            );
         }}
       >
         {({
