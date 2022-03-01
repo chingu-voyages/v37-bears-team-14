@@ -30,6 +30,11 @@ const ProjectSchema = new Schema<IProject>(
   }
 );
 
+ProjectSchema.index(
+  { name: "text", description: "text" },
+  { weights: { name: 5, description: 2 } }
+);
+
 ProjectSchema.set("toJSON", {
   transform: (_, ret, __) => {
     ret.id = ret._id;

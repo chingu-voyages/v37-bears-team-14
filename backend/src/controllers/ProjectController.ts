@@ -53,17 +53,30 @@ class ProjectController {
   }
 
   async searchProjects(search: string): Promise<ProjectDoc[]> {
-    const query = {
-      $or: [
-        { name: { $regex: search, $options: "i" } },
-        { description: { $regex: search, $options: "i" } },
-      ],
-    };
-    const project = await this.projectModel.find(query).populate("techs");
-    if (!project) {
+    // const query =
+    // $or: [
+    //   { name: { $regex: search, $options: "i" } },
+    //   { description: { $regex: search, $options: "i" } },
+    // ],
+    //   { $text: { $search : search } },
+    //   { score : { $meta: 'textScore' }
+    //   }
+    // ;
+    // const project = await this.projectModel
+    //   .find({ $text: { $search: search } })
+    //   .sort({ score: { $meta: "textScore" } })
+    //   .populate("techs");
+    const names = await this.projectModel
+      .find({ name: { $regex: search, $options: "i" } })
+      .populate("techs");
+    const descriptions = await this.projectModel
+      .find({ description: { $regex: search, $options: "i" } })
+      .populate("techs");
+    const projects = [...names, ...descriptions];
+    if (!projects) {
       throw new NotFoundError("project", search);
     }
-    return project;
+    return projects;
   }
 
   async lookup(pageSize: number): Promise<ProjectDoc[]> {
