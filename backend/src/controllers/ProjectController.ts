@@ -1,9 +1,11 @@
 import logger from "../logger";
 import { ClientSession, Document, Model, ObjectId } from "mongoose";
 import { MongoError } from "mongodb";
+import _ from "lodash";
 import { IMember } from "../models/Member";
 import { IProject } from "../models/Project";
 import { IUser } from "../models/User";
+import { ITech } from "../models/Tech";
 import NotFoundError from "./errors/NotFoundError";
 import UnexpectedError from "./errors/UnexpectedError";
 import UnauthorizedError from "./errors/UnauthorizedError";
@@ -22,12 +24,14 @@ export interface MemberUpdateParams {
 }
 
 export type ProjectDoc = IProject & Document<unknown, any, IProject>;
+export type TechDoc = ITech & Document<unknown, any, IProject>;
 
 class ProjectController {
   constructor(
     private projectModel: Model<IProject>,
     private userModel: Model<IUser>,
     private memberModel: Model<IMember>,
+    private techModel: Model<ITech>,
     private createSession: () => Promise<ClientSession>
   ) {}
 
@@ -66,13 +70,28 @@ class ProjectController {
     //   .find({ $text: { $search: search } })
     //   .sort({ score: { $meta: "textScore" } })
     //   .populate("techs");
+
+    const techs = await this.techModel.find();
+    const matchedTechs: TechDoc[] = [];
+    techs.forEach((t) => {
+      if (new RegExp(search, "i").test(t.name)) {
+        matchedTechs.push(t);
+      }
+    });
+    console.log(matchedTechs.map((t) => t._id));
     const names = await this.projectModel
       .find({ name: { $regex: search, $options: "i" } })
       .populate("techs");
     const descriptions = await this.projectModel
       .find({ description: { $regex: search, $options: "i" } })
       .populate("techs");
-    const projects = [...names, ...descriptions];
+    const techMatches = await this.projectModel
+      .find()
+      .where("techs")
+      .in(matchedTechs.map((t) => t._id))
+      .populate("techs");
+    const projects = [...names, ...descriptions, ...techMatches];
+    _.uniqBy(projects, (project: ProjectDoc) => project._id);
     if (!projects) {
       throw new NotFoundError("project", search);
     }

@@ -7,10 +7,15 @@ import ProjectController, {
 import Member from "../models/Member";
 import Project from "../models/Project";
 import User from "../models/User";
+import Tech from "../models/Tech";
 
 /* dependencies */
-const projectController = new ProjectController(Project, User, Member, () =>
-  startSession()
+const projectController = new ProjectController(
+  Project,
+  User,
+  Member,
+  Tech,
+  () => startSession()
 );
 
 const projects = Router();
