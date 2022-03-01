@@ -1,17 +1,10 @@
 import React, { FunctionComponent } from "react";
 import { Link } from "react-router-dom";
 import { Project, Tech } from "../../shared/Interfaces";
+import { truncateString } from "../../shared/Utils";
 
 interface Props {
   projects: Project[] | [];
-}
-
-function truncateString(str: string) {
-  if (str.length > 200) {
-    return str.slice(0, 200) + "...";
-  } else {
-    return str;
-  }
 }
 
 const ProjectPreview: FunctionComponent<Props> = ({ projects }) => {
