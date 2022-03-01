@@ -1,23 +1,21 @@
-import Tech from "../src/models/Tech";
 import mongoose, { ConnectOptions } from "mongoose";
-import TechController from "../src/controllers/TechController";
-import fs from "fs";
-import Member from "../src/models/Member";
 import Project from "../src/models/Project";
 
 // Moves data from Member collection into Project.members field.
 //
 // Usage:
 // From backend directory,
-// run `yarn script scripts/migrateProjectMembers.ts`
+// run `yarn script scripts/testProjectAggregation.ts`
 (async () => {
   mongoose.connect((process.env && process.env["MONGODB_URI"]) || "", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   } as ConnectOptions);
 
-  // user 62041c51a00bb005822d8388
-  const search = "test"
+  // dev env user ID: 62041c51a00bb005822d8388
+  const start = Date.now();
+  const search = "test";
+
   const projects = await Project.aggregate([
     {
       $match: {
@@ -25,51 +23,87 @@ import Project from "../src/models/Project";
           { name: { $regex: search, $options: "i" } },
           { description: { $regex: search, $options: "i" } },
         ],
-      }
+      },
     },
-    // {
-    //   $project: {
-    //     _id: 1,
-    //     createdAt: 1,
-    //     name: 1,
-    //     description: 1,
-    //     techs: 1,
-    //   }
-    // },
     {
       $lookup: {
         from: "teches",
         localField: "techs",
         foreignField: "_id",
-        as: "techs"
-      }
+        as: "techs",
+        pipeline: [
+          {
+            $project: {
+              _id: 0,
+              id: "$_id",
+              name: 1,
+              description: 1,
+            },
+          },
+        ],
+      },
     },
     {
       $lookup: {
         from: "members",
         localField: "_id",
         foreignField: "project",
-        as: "refs.members"
-      }
+        as: "members",
+        pipeline: [
+          {
+            $lookup: {
+              from: "users",
+              localField: "user",
+              foreignField: "_id",
+              as: "user",
+              pipeline: [
+                {
+                  $project: {
+                    _id: 0,
+                    id: "$_id",
+                    username: 1,
+                    avatarUrl: 1,
+                    createdAt: 1,
+                    updatedAt: 1,
+                  },
+                },
+              ],
+            },
+          },
+          {
+            $unwind: "$user",
+          },
+          {
+            $project: {
+              _id: 0,
+              id: "$_id",
+              user: 1,
+              project: 1,
+              roleName: 1,
+              createdAt: 1,
+              updatedAt: 1,
+            },
+          },
+        ],
+      },
     },
-    // {
-    //   $unwind:"$members"
-    // },
     {
-      $lookup: {
-        from: "users",
-        localField: "refs.members.user",
-        foreignField: "_id",
-        as: "refs.users"
-      }
+      $project: {
+        _id: 0,
+        id: "$_id",
+        createdAt: 1,
+        updatedAt: 1,
+        name: 1,
+        description: 1,
+        techs: 1,
+        members: 1,
+      },
     },
-    // {
-    //   $unwind:"$users"
-    // },
   ]);
-  // await Project.populate(projects, "techs")
 
-  console.log(JSON.stringify(projects, null, 2))
+  console.log(JSON.stringify(projects, null, 2));
+  const diff = Date.now() - start;
+  console.log("time", diff);
 
   process.exit(0);
 })();

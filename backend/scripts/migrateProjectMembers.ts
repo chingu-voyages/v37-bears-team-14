@@ -19,18 +19,16 @@ import Project from "../src/models/Project";
   const members = await Member.find();
   for (const member of members) {
     {
-      await member.populate("project")
-      await member.populate("user")
+      await member.populate("project");
+      await member.populate("user");
 
       if (!member.project || !member.user) {
-        await member.delete()
+        await member.delete();
         continue;
       }
     }
-    
+
     const project = await Project.findOne({ _id: member.project });
-
-
   }
 
   // const dataFilename = process.argv[2];

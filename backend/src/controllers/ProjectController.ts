@@ -1,5 +1,12 @@
 import logger from "../logger";
-import { ClientSession, Document, Model, ObjectId } from "mongoose";
+import {
+  ClientSession,
+  Document,
+  FilterQuery,
+  Model,
+  ObjectId,
+  PipelineStage,
+} from "mongoose";
 import { MongoError } from "mongodb";
 import { IMember } from "../models/Member";
 import { IProject } from "../models/Project";
@@ -9,6 +16,12 @@ import UnexpectedError from "./errors/UnexpectedError";
 import UnauthorizedError from "./errors/UnauthorizedError";
 import FieldExistsError from "./errors/FieldExistsError";
 import InvalidChangeLastOwner from "./errors/InvalidChangeLastOwner";
+import { ITech } from "../models/Tech";
+import {
+  createJoins,
+  createProjection,
+  createQuery,
+} from "./projects/searchHelpers";
 
 export interface ProjectUpdateParams {
   name?: string;
@@ -22,6 +35,17 @@ export interface MemberUpdateParams {
 }
 
 export type ProjectDoc = IProject & Document<unknown, any, IProject>;
+
+export type ProjectSearchResultItem = {
+  id: ObjectId;
+  createdAt: Date;
+  updatedAt: Date;
+  name: string;
+  description: string;
+  techs: (ITech & { id: ObjectId })[];
+  members: (IMember & { id: ObjectId })[];
+  matchType: null | string;
+};
 
 class ProjectController {
   constructor(
@@ -52,18 +76,19 @@ class ProjectController {
     return project;
   }
 
-  async searchProjects(search: string): Promise<ProjectDoc[]> {
-    const query = {
-      $or: [
-        { name: { $regex: search, $options: "i" } },
-        { description: { $regex: search, $options: "i" } },
-      ],
-    };
-    const project = await this.projectModel.find(query).populate("techs");
-    if (!project) {
-      throw new NotFoundError("project", search);
-    }
-    return project;
+  async searchProjects(search: string): Promise<ProjectSearchResultItem[]> {
+    const projects: ProjectSearchResultItem[] =
+      await this.projectModel.aggregate([
+        createQuery({
+          $or: [
+            { name: { $regex: search, $options: "i" } },
+            { description: { $regex: search, $options: "i" } },
+          ],
+        }),
+        ...createJoins(),
+        createProjection(),
+      ]);
+    return projects;
   }
 
   async lookup(pageSize: number): Promise<ProjectDoc[]> {
