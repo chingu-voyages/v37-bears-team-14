@@ -39,8 +39,6 @@ const ProjectSettingsForm: FunctionComponent<ProjectPageContext> = ({
           }
         };
 
-        console.log("save", values);
-
         saveProject().catch(console.error);
       }}
     >

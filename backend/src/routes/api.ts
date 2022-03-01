@@ -13,6 +13,9 @@ import UnauthorizedError from "../controllers/errors/UnauthorizedError";
 import FieldExistsError from "../controllers/errors/FieldExistsError";
 import InvalidChangeLastOwner from "../controllers/errors/InvalidChangeLastOwner";
 import projectRouter from "./projectRouter";
+import applicationRouter from "./applicationRouter";
+import MemberAlreadyExistsError from "../controllers/errors/MemberAlreadyExistsError";
+import PendingApplicationExistsError from "../controllers/errors/PendingApplicationExistsError";
 
 /* Dependencies */
 
@@ -26,6 +29,10 @@ const api = Router();
 // PROJECT
 
 api.use(projectRouter);
+
+// APPLICATION
+
+api.use("/v1/applications", applicationRouter);
 
 // TECH
 
@@ -127,6 +134,10 @@ api.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     res.status(400).json({ errors: [`${err.field}_already_exists`] });
   } else if (err instanceof InvalidChangeLastOwner) {
     res.status(400).json({ errors: ["invalid_change_last_owner"] });
+  } else if (err instanceof MemberAlreadyExistsError) {
+    res.status(400).json({ errors: ["member_already_exists"] });
+  } else if (err instanceof PendingApplicationExistsError) {
+    res.status(400).json({ errors: ["pending_application_already_exists"] });
   } else if (err instanceof UnexpectedError) {
     logger.error("Unexpected error " + err.message, err);
     res.status(500).json({ errors: ["internal_server_error"] });
