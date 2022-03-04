@@ -125,9 +125,11 @@ class ProjectController {
       }
       n.matchType.techs = true;
     });
-    projects = [...names, ...descriptions, ...techMatches];
 
-    _.uniqBy(projects, (project: MatchedProject) => project._id.toString());
+    projects = _.uniqBy(
+      [...names, ...descriptions, ...techMatches],
+      (project: MatchedProject) => project._id.toString()
+    );
 
     if (!projects) {
       throw new NotFoundError("project", search);

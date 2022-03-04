@@ -2,7 +2,7 @@ import React, { useState, FunctionComponent } from "react";
 
 import { Formik } from "formik";
 import { Project } from "../../shared/Interfaces";
-import ProjectPreview from "./ProjectPreview";
+import ProjectPreviewSearch from "./ProjectPreviewSearch";
 
 const ProjectSearch: FunctionComponent = () => {
   const [searchResults, setSearchResults] = useState<Project[] | []>([]);
@@ -71,7 +71,7 @@ const ProjectSearch: FunctionComponent = () => {
           </form>
         )}
       </Formik>
-      <ProjectPreview projects={searchResults}></ProjectPreview>
+      <ProjectPreviewSearch projects={searchResults}></ProjectPreviewSearch>
     </>
   );
 };
