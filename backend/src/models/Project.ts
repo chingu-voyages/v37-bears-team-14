@@ -5,11 +5,12 @@ export interface IProject {
   name: string;
   description: null | string;
   techs: ObjectId[] | ITech[];
-  matchType: {
-    name: boolean;
-    description: boolean;
-    techs: boolean;
-  };
+  // matchType: {
+  //   name: boolean;
+  //   description: boolean;
+  //   techs: boolean;
+  // };
+  settingOpenRoles: string[];
 }
 
 const ProjectSchema = new Schema<IProject>(
@@ -28,6 +29,10 @@ const ProjectSchema = new Schema<IProject>(
     techs: {
       type: [Schema.Types.ObjectId],
       ref: "tech",
+    },
+    settingOpenRoles: {
+      type: [Schema.Types.String],
+      default: ["developer", "designer"],
     },
   },
   {
