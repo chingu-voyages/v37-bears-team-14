@@ -23,12 +23,26 @@ export interface MemberUpdateParams {
   roleName: string;
 }
 
+interface MatchedProject {
+  _id: object;
+  name: string;
+  description: string | null;
+  techs: ITech[] | ObjectId[];
+  matchType: {
+    name: boolean;
+    description: boolean;
+    techs: boolean;
+  };
+}
+
 export type ProjectDoc = IProject & Document<unknown, any, IProject>;
+// export type ProjectMatchDoc = IProjectMatch & Document<unknown, any, IProject>;
 export type TechDoc = ITech & Document<unknown, any, IProject>;
 
 class ProjectController {
   constructor(
     private projectModel: Model<IProject>,
+    // private projectMatchModel: Model<IProjectMatch>,
     private userModel: Model<IUser>,
     private memberModel: Model<IMember>,
     private techModel: Model<ITech>,
@@ -56,21 +70,7 @@ class ProjectController {
     return project;
   }
 
-  async searchProjects(search: string): Promise<ProjectDoc[]> {
-    // const query =
-    // $or: [
-    //   { name: { $regex: search, $options: "i" } },
-    //   { description: { $regex: search, $options: "i" } },
-    // ],
-    //   { $text: { $search : search } },
-    //   { score : { $meta: 'textScore' }
-    //   }
-    // ;
-    // const project = await this.projectModel
-    //   .find({ $text: { $search: search } })
-    //   .sort({ score: { $meta: "textScore" } })
-    //   .populate("techs");
-
+  async searchProjects(search: string): Promise<MatchedProject[]> {
     const techs = await this.techModel.find();
     const matchedTechs: TechDoc[] = [];
     techs.forEach((t) => {
@@ -78,20 +78,57 @@ class ProjectController {
         matchedTechs.push(t);
       }
     });
-    console.log(matchedTechs.map((t) => t._id));
+
     const names = await this.projectModel
       .find({ name: { $regex: search, $options: "i" } })
-      .populate("techs");
+      .populate("techs")
+      .lean();
+
     const descriptions = await this.projectModel
       .find({ description: { $regex: search, $options: "i" } })
-      .populate("techs");
+      .populate("techs")
+      .lean();
     const techMatches = await this.projectModel
       .find()
       .where("techs")
       .in(matchedTechs.map((t) => t._id))
-      .populate("techs");
-    const projects = [...names, ...descriptions, ...techMatches];
-    _.uniqBy(projects, (project: ProjectDoc) => project._id);
+      .populate("techs")
+      .lean();
+    let projects: MatchedProject[] = [];
+
+    names.map((n) => {
+      n.matchType = {
+        name: true,
+        description: false,
+        techs: false,
+      };
+    });
+
+    descriptions.map((n) => {
+      if (!n.matchType) {
+        n.matchType = {
+          name: false,
+          description: true,
+          techs: false,
+        };
+      } else {
+        n.matchType.description = true;
+      }
+    });
+    techMatches.map((n) => {
+      if (!n.matchType) {
+        n.matchType = {
+          name: false,
+          description: false,
+          techs: true,
+        };
+      }
+      n.matchType.techs = true;
+    });
+    projects = [...names, ...descriptions, ...techMatches];
+
+    _.uniqBy(projects, (project: MatchedProject) => project._id.toString());
+
     if (!projects) {
       throw new NotFoundError("project", search);
     }

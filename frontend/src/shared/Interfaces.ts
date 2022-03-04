@@ -2,6 +2,11 @@ export interface Project {
   id: string;
   name: string;
   description: string;
+  matchType: {
+    name: boolean;
+    description: boolean;
+    techs: boolean;
+  };
   techs: Tech[];
 }
 

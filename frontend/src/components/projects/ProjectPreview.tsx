@@ -14,15 +14,27 @@ const ProjectPreview: FunctionComponent<Props> = ({ projects }) => {
         <Link to={`/projects/${p.id}`} key={index}>
           <div className="bg-neutral-400" key={index}>
             <div className="bg-darkGray border-b-4 border-lightGray">
-              <p className="text-center sm:text-md lg:text-xl text-lightGray pb-2 pt-1">
+              <p
+                className={`text-center sm:text-md lg:text-xl text-lightGray pb-2 pt-1 ${
+                  p.matchType.name && "bg-red-400"
+                }`}
+              >
                 {p.name}
               </p>
             </div>
             <div className="pt-1">
-              <p className="mb-2 text-sm text-darkGray pl-2 pr-2 leading-tight">
+              <p
+                className={`mb-2 text-sm text-darkGray pl-2 pr-2 leading-tight ${
+                  p.matchType.description && "bg-red-400"
+                }`}
+              >
                 {truncateString(p.description)}
               </p>
-              <div className="flex justify-start">
+              <div
+                className={`flex justify-start ${
+                  p.matchType.techs && "bg-red-400"
+                }`}
+              >
                 {p.techs.slice(0, 4).map((t: Tech, index) => (
                   <div className="relative m-1" key={index}>
                     <img
