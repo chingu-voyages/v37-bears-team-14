@@ -11,8 +11,7 @@ const ProjectPreview: FunctionComponent<Props> = ({ projects }) => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 m-1">
       {projects.map((p, index) => (
-        <Link to={`/projects/${p._id}`} key={index}>
-          {console.log(p)}
+        <Link to={`/projects/${p.id}`} key={index}>
           <div className="bg-neutral-400" key={index}>
             <div
               className={`bg-darkGray border-b-4 border-lightGray ${

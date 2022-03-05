@@ -7,7 +7,7 @@ export interface Project {
 }
 
 export interface ProjectResult {
-  _id: string;
+  id: string;
   name: string;
   description: string;
   matchType: {
