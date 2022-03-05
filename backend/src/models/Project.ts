@@ -5,10 +5,10 @@ export interface IProject {
   name: string;
   description: null | string;
   techs: ObjectId[] | ITech[];
-  matchType: {
-    name: boolean;
-    description: boolean;
-    techs: boolean;
+  matchType?: {
+    name?: boolean;
+    description?: boolean;
+    techs?: boolean;
   };
   settingOpenRoles: string[];
 }

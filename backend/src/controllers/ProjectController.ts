@@ -28,10 +28,10 @@ interface MatchedProject {
   name: string;
   description: string | null;
   techs: ITech[] | ObjectId[];
-  matchType: {
-    name: boolean;
-    description: boolean;
-    techs: boolean;
+  matchType?: {
+    name?: boolean;
+    description?: boolean;
+    techs?: boolean;
   };
 }
 
