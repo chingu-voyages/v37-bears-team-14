@@ -1,9 +1,11 @@
 import logger from "../logger";
 import { ClientSession, Document, Model, ObjectId } from "mongoose";
 import { MongoError } from "mongodb";
+import _ from "lodash";
 import { IMember } from "../models/Member";
 import { IProject } from "../models/Project";
 import { IUser } from "../models/User";
+import { ITech } from "../models/Tech";
 import NotFoundError from "./errors/NotFoundError";
 import UnexpectedError from "./errors/UnexpectedError";
 import UnauthorizedError from "./errors/UnauthorizedError";
@@ -21,13 +23,29 @@ export interface MemberUpdateParams {
   roleName: string;
 }
 
+interface MatchedProject {
+  _id: object;
+  name: string;
+  description: string | null;
+  techs: ITech[] | ObjectId[];
+  matchType?: {
+    name?: boolean;
+    description?: boolean;
+    techs?: boolean;
+  };
+}
+
 export type ProjectDoc = IProject & Document<unknown, any, IProject>;
+// export type ProjectMatchDoc = IProjectMatch & Document<unknown, any, IProject>;
+export type TechDoc = ITech & Document<unknown, any, IProject>;
 
 class ProjectController {
   constructor(
     private projectModel: Model<IProject>,
+    // private projectMatchModel: Model<IProjectMatch>,
     private userModel: Model<IUser>,
     private memberModel: Model<IMember>,
+    private techModel: Model<ITech>,
     private createSession: () => Promise<ClientSession>
   ) {}
 
@@ -52,18 +70,71 @@ class ProjectController {
     return project;
   }
 
-  async searchProjects(search: string): Promise<ProjectDoc[]> {
-    const query = {
-      $or: [
-        { name: { $regex: search, $options: "i" } },
-        { description: { $regex: search, $options: "i" } },
-      ],
-    };
-    const project = await this.projectModel.find(query).populate("techs");
-    if (!project) {
+  async searchProjects(search: string): Promise<MatchedProject[]> {
+    const techs = await this.techModel.find();
+    const matchedTechs: TechDoc[] = [];
+    techs.forEach((t) => {
+      if (new RegExp(search, "i").test(t.name)) {
+        matchedTechs.push(t);
+      }
+    });
+
+    const names = await this.projectModel
+      .find({ name: { $regex: search, $options: "i" } })
+      .populate("techs")
+      .lean();
+
+    const descriptions = await this.projectModel
+      .find({ description: { $regex: search, $options: "i" } })
+      .populate("techs")
+      .lean();
+    const techMatches = await this.projectModel
+      .find()
+      .where("techs")
+      .in(matchedTechs.map((t) => t._id))
+      .populate("techs")
+      .lean();
+    let projects: MatchedProject[] = [];
+
+    names.map((n) => {
+      n.matchType = {
+        name: true,
+        description: false,
+        techs: false,
+      };
+    });
+
+    descriptions.map((n) => {
+      if (!n.matchType) {
+        n.matchType = {
+          name: false,
+          description: true,
+          techs: false,
+        };
+      } else {
+        n.matchType.description = true;
+      }
+    });
+    techMatches.map((n) => {
+      if (!n.matchType) {
+        n.matchType = {
+          name: false,
+          description: false,
+          techs: true,
+        };
+      }
+      n.matchType.techs = true;
+    });
+
+    projects = _.uniqBy(
+      [...names, ...descriptions, ...techMatches],
+      (project: MatchedProject) => project._id.toString()
+    );
+
+    if (!projects) {
       throw new NotFoundError("project", search);
     }
-    return project;
+    return projects;
   }
 
   async lookup(pageSize: number): Promise<ProjectDoc[]> {

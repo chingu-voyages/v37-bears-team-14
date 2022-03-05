@@ -6,11 +6,17 @@ import ProjectController, {
 } from "../controllers/ProjectController";
 import Member from "../models/Member";
 import Project from "../models/Project";
+
 import User from "../models/User";
+import Tech from "../models/Tech";
 
 /* dependencies */
-const projectController = new ProjectController(Project, User, Member, () =>
-  startSession()
+const projectController = new ProjectController(
+  Project,
+  User,
+  Member,
+  Tech,
+  () => startSession()
 );
 
 const projects = Router();
@@ -135,14 +141,19 @@ projects.get("/v1/project_lookup/:name", async (req, res, next) => {
   }
 });
 //search projects by name and description
-projects.get("/v1/project_search/:search", async (req, res, next) => {
-  try {
-    const project = await projectController.searchProjects(
-      req.params["search"]
-    );
-    res.json(project);
-  } catch (err) {
-    next(err);
+projects.get("/v1/project_search", async (req, res, next) => {
+  if (req.query["search"]) {
+    try {
+      const project = await projectController.searchProjects(
+        req.query["search"].toString()
+      );
+
+      res.json(project);
+    } catch (err) {
+      next(err);
+    }
+  } else {
+    res.status(400).json({ errors: ["missing_search"] });
   }
 });
 

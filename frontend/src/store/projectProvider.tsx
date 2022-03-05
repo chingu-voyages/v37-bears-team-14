@@ -1,3 +1,5 @@
+// ProjectContext is not currently being used, but is kept here for future reference incase it is useful.
+
 import { useReducer } from "react";
 import ProjectContext from "./project-context";
 
