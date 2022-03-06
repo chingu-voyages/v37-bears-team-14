@@ -1,5 +1,6 @@
 import React, { FunctionComponent } from "react";
 import { Link } from "react-router-dom";
+import ReactMarkdown from "react-markdown";
 import { Project, Tech } from "../../shared/Interfaces";
 import { truncateString } from "../../shared/Utils";
 
@@ -28,7 +29,7 @@ const ProjectPreview: FunctionComponent<Props> = ({ projects }) => {
                   p.matchType.description && "bg-red-400"
                 }`}
               >
-                {truncateString(p.description)}
+                <ReactMarkdown>{truncateString(p.description)}</ReactMarkdown>
               </p>
               <div
                 className={`flex justify-start ${
