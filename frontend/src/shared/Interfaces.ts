@@ -17,6 +17,8 @@ export interface User {
   id: string;
   username: string;
   avatarUrl: string;
+  displayName: string;
+  techs: Array<String>;
 }
 
 export interface Member {

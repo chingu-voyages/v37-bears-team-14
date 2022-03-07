@@ -63,17 +63,30 @@ class UserController {
     }
   }
   async searchByName(username: string) {
-    const user = await this.userModel.findOne({
-      username: { $regex: username, $options: "i" },
-    });
+    const user = await this.userModel
+      .findOne({
+        username: { $regex: "^" + username + "$", $options: "i" },
+      })
+      .populate("techs");
     if (!user) {
       throw new NotFoundError("user", username);
     }
     return user;
   }
+  async findDuplicate(username: string) {
+    const user = await this.userModel.findOne({
+      username: { $regex: "^" + username + "$", $options: "i" },
+    });
+    if (!user) {
+      return false;
+    }
+    return true;
+  }
 
   async searchById(id: string) {
-    const user = await this.userModel.findOne({ githubId: id });
+    const user = await this.userModel
+      .findOne({ githubId: id })
+      .populate("techs");
     if (!user) {
       throw new NotFoundError("id", id);
     }

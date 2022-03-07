@@ -12,6 +12,8 @@ import ProjectSearch from "./components/projects/ProjectSearch";
 import ProjectSettingsLayout from "./components/project_page/layouts/ProjectSettingsLayout";
 import ProjectSettingsTeamPage from "./components/project_page/pages/ProjectSettingsTeamPage";
 import ProjectApplicationPage from "./components/project_page/pages/ProjectApplicationPage/index";
+import UserPageLayout from "./components/user_page/UserPageLayout";
+import UserSettingsPage from "./components/user_page/UserSettingsPage";
 
 function App() {
   return (
@@ -45,8 +47,16 @@ function App() {
           <Route path="techs" element={<TechListPage />} />
           <Route path="*" element={<div className="m-8">Page not found</div>} />
         </Route>
+        <Route path="/user">
+          <Route path=":username" element={<UserPageLayout />} />
+          <Route path="settings" element={<UserSettingsPage />} />
+        </Route>
+
+        <Route path="/" element={null} />
+
         <Route path="/" element={null} />
       </Routes>
+
       <div className="flex"></div>
     </>
   );

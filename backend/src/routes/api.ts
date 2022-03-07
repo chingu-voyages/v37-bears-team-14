@@ -1,9 +1,12 @@
 import { pick } from "lodash";
 import { NextFunction, Request, Response, Router } from "express";
-import { isValidObjectId } from "mongoose";
+import { isValidObjectId, startSession } from "mongoose";
 import NotFoundError from "../controllers/errors/NotFoundError";
 import TechController from "../controllers/TechController";
 import UserController from "../controllers/UserController";
+import ProfileController, {
+  ProfileUpdateParams,
+} from "../controllers/ProfileController";
 import logger from "../logger";
 import Tech from "../models/Tech";
 import User from "../models/User";
@@ -21,7 +24,7 @@ import PendingApplicationExistsError from "../controllers/errors/PendingApplicat
 
 const techController = new TechController(Tech);
 const userController = new UserController(User);
-
+const profileController = new ProfileController(User, () => startSession());
 /* API routes */
 
 const api = Router();
@@ -117,6 +120,69 @@ api.get("/v1/users/:id", async (req, res, next) => {
     next(err);
   }
 });
+api.get("/v1/users/", async (req, res, next) => {
+  try {
+    const user = req.user;
+    res.json(user);
+  } catch (err) {
+    next(err);
+  }
+});
+api.post(
+  "/v1/users/",
+  async (req: Request, res, next) => {
+    if (req.user) {
+      next();
+    } else {
+      res.status(401).json({ errors: ["unauthenticated"] });
+    }
+  },
+  async (req: Request, res, next) => {
+    const userId: string = req.user!._id!.toString();
+    const params: ProfileUpdateParams = pick(req.body, [
+      "username",
+      "displayName",
+      "techs",
+    ]);
+
+    const errors = [];
+    if (!params.username && !params.techs && !params.displayName) {
+      errors.push("username_missing_and_techs_missing_and_displayname_missing");
+    } else if (params.username && params.username.length < 1) {
+      errors.push("usernamename_too_short");
+    }
+
+    if (undefined !== params.techs) {
+      if (!Array.isArray(params.techs)) {
+        errors.push("techs_not_array");
+      } else if (params.techs.some((t) => !isValidObjectId(t))) {
+        errors.push("techs_id_invalid");
+      }
+    }
+
+    if (params.username) {
+      try {
+        const checkName = await userController.findDuplicate(params.username);
+        if (checkName) {
+          errors.push("Username already taken");
+        }
+      } catch (err) {
+        next(err);
+      }
+    }
+    if (errors.length > 0) {
+      return res.status(400).json({ errors });
+    }
+
+    try {
+      const profile = await profileController.updateProfile(userId, params);
+      res.json(profile);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
 api.get("/v1/current-session", (req: Request, res: Response) => {
   res.json({
     user: req.user,
