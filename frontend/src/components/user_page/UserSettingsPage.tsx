@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState, useEffect } from "react";
-//import LoadingSpinner from "../Spinners/LoadingSpinner";
+import LoadingSpinner from "../Spinners/LoadingSpinner";
 import UserSettingsLayout from "./UserSettingsLayout";
 //import UpdateUserForm from "./UpdateUserForm";
 
@@ -18,7 +18,6 @@ const UserSettingsPage: FunctionComponent = () => {
           const data = await response.json();
 
           setUser(data);
-          console.log("USER FROM FRONTEND!: " + JSON.stringify(data));
           setLoading(false);
         }
       } else {
@@ -37,7 +36,11 @@ const UserSettingsPage: FunctionComponent = () => {
   return (
     <>
       <div className="w-full bg-medGray">
-        <UserSettingsLayout />
+        {!loading ? (
+          <UserSettingsLayout userProps={user} />
+        ) : (
+          <LoadingSpinner />
+        )}
       </div>
     </>
   );

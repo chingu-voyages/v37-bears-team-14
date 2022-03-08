@@ -14,19 +14,19 @@ interface Props {
   chooseTech: (e: any, chosenTech: object) => void;
   loading: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  projectForm: boolean;
-  setProjectForm: React.Dispatch<React.SetStateAction<boolean>>;
+  userForm: boolean;
+  setuserForm: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface FormValues {
-  name: string;
-  description: string;
+  username: string;
+  displayName: string;
   techs: string[];
 }
 
 const UpdateUserSchema = Yup.object().shape({
-  name: Yup.string().min(2, "Too Short!").max(50, "Too Long!"),
-  description: Yup.string().min(2, "Too Short!").max(1000, "Too Long!"),
+  username: Yup.string().min(2, "Too Short!").max(50, "Too Long!"),
+  displayName: Yup.string().min(2, "Too Short!").max(50, "Too Long!"),
 });
 
 const UpdateUserForm: React.FC<Props> = ({
@@ -38,11 +38,11 @@ const UpdateUserForm: React.FC<Props> = ({
   chooseTech,
   loading,
   setLoading,
-  projectForm,
-  setProjectForm,
+  userForm,
+  setuserForm,
 }) => {
   const [customOpen, setCustomOpen] = useState(false);
-  const [projectSubmitted, setProjectSubmitted] = useState(false);
+  const [userUpdated, setuserUpdated] = useState(false);
 
   const CustomMenuButton = forwardRef<HTMLButtonElement>(
     ({ children }, ref) => (
@@ -60,18 +60,17 @@ const UpdateUserForm: React.FC<Props> = ({
     <>
       <Formik
         initialValues={{
-          name: "",
-          description: "",
+          username: "",
+          displayName: "",
           techs: [],
         }}
         validationSchema={UpdateUserSchema}
         onSubmit={(values: FormValues, { resetForm }) => {
           // same shape as initial values
-
           values.techs = chosenTechs.map((t) => t.id);
-          function postProject(values: FormValues) {
+          function updateUser(values: FormValues) {
             // setLoading(true);
-            fetch("api/v1/users", {
+            fetch("http://localhost:3000/api/v1/users/", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
@@ -84,20 +83,20 @@ const UpdateUserForm: React.FC<Props> = ({
                 setTechs([...techs, ...chosenTechs]);
                 techs.sort((a: Tech, b: Tech) => (a.name > b.name ? 1 : -1));
                 setChosenTechs([]);
-                setProjectSubmitted(true);
+                setuserUpdated(true);
                 setTimeout(() => {
-                  setProjectSubmitted(false);
+                  setuserUpdated(false);
                 }, 2000);
               } else {
                 console.error(
-                  "failed to post project",
+                  "failed to update user",
                   response.status,
                   response.json()
                 );
               }
             });
           }
-          postProject(values);
+          updateUser(values);
         }}
       >
         {({
@@ -119,26 +118,27 @@ const UpdateUserForm: React.FC<Props> = ({
                 Name
               </label>
               <Field
-                name="name"
+                name="username"
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
             </div>
-            {errors.name && touched.name ? <div>{errors.name}</div> : null}
+            {errors.username && touched.username ? (
+              <div>{errors.username}</div>
+            ) : null}
             <div className="mb-6">
               <label
-                htmlFor="description"
+                htmlFor="displayName"
                 className="block text-gray-700 text-sm font-bold mb-2"
               >
-                Description
+                Display Name
               </label>
               <Field
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline max-h-48"
-                name="description"
-                as="textarea"
+                name="displayName"
               />
             </div>
-            {errors.description && touched.description ? (
-              <div>{errors.description}</div>
+            {errors.displayName && touched.displayName ? (
+              <div>{errors.displayName}</div>
             ) : null}
             <div className="flex justify-start">
               {chosenTechs.map((tech: Tech, index: number) => (
@@ -222,12 +222,12 @@ const UpdateUserForm: React.FC<Props> = ({
             </div>
             <div className="flex items-center justify-between">
               <button type="submit" className="main-btn">
-                Create Project
+                Update User
               </button>
               <button
                 type="button"
                 className="main-btn"
-                onClick={() => setProjectForm(() => !projectForm)}
+                onClick={() => setuserForm(() => !userForm)}
               >
                 Close
               </button>
@@ -235,9 +235,9 @@ const UpdateUserForm: React.FC<Props> = ({
           </Form>
         )}
       </Formik>
-      {projectSubmitted && (
+      {userUpdated && (
         <>
-          <Alert message={"Project Submitted"} />
+          <Alert message={"User updated"} />
         </>
       )}
     </>

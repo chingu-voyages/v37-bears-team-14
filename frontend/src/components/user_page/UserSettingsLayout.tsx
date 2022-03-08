@@ -1,15 +1,19 @@
 import React, { FunctionComponent, useState, useEffect } from "react";
 import LoadingSpinner from "../Spinners/LoadingSpinner";
+import { User } from "../../shared/Interfaces";
 
 import UpdateUserForm from "./UpdateUserForm";
 
-const UserSettingsLayout: FunctionComponent = (props) => {
+interface Props {
+  userProps: User;
+}
+
+const UserSettingsLayout: FunctionComponent<Props> = ({ userProps }) => {
   // const [isLoading, setIsLoading] = useState(true);
   const [techs, setTechs] = useState<any[]>([]);
-  const [user, setUser] = useState<any>();
   const [chosenTechs, setChosenTechs] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
-  const [projectForm, setProjectForm] = useState(false);
+  const [userForm, setuserForm] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -50,7 +54,7 @@ const UserSettingsLayout: FunctionComponent = (props) => {
   };
 
   let content;
-  if (projectForm) {
+  if (userForm) {
     content = loading ? (
       <LoadingSpinner />
     ) : (
@@ -67,8 +71,8 @@ const UserSettingsLayout: FunctionComponent = (props) => {
             chooseTech={chooseTech}
             loading={loading}
             setLoading={setLoading}
-            projectForm={projectForm}
-            setProjectForm={setProjectForm}
+            userForm={userForm}
+            setuserForm={setuserForm}
           />
         </div>
       </>
@@ -81,7 +85,7 @@ const UserSettingsLayout: FunctionComponent = (props) => {
       <div className="w-full bg-medGray">
         <div
           className="p-1 cursor-pointer"
-          onClick={() => setProjectForm(!projectForm)}
+          onClick={() => setuserForm(!userForm)}
         >
           <span className="p-2 text-mintGreen">Change User Information</span>
         </div>
