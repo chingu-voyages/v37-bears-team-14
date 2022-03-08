@@ -1,11 +1,11 @@
 import React, { useState, FunctionComponent } from "react";
 
 import { Formik } from "formik";
-import { Project } from "../../shared/Interfaces";
+import { ProjectResult } from "../../shared/Interfaces";
 import ProjectPreviewSearch from "./ProjectPreviewSearch";
 
 const ProjectSearch: FunctionComponent = () => {
-  const [searchResults, setSearchResults] = useState<Project[] | []>([]);
+  const [searchResults, setSearchResults] = useState<ProjectResult[] | []>([]);
   return (
     <>
       <Formik

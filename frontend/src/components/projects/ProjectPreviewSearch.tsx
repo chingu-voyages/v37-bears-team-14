@@ -1,10 +1,10 @@
 import React, { FunctionComponent } from "react";
 import { Link } from "react-router-dom";
-import { Project, Tech } from "../../shared/Interfaces";
+import { ProjectResult, Tech } from "../../shared/Interfaces";
 import { truncateString } from "../../shared/Utils";
 
 interface Props {
-  projects: Project[] | [];
+  projects: ProjectResult[] | [];
 }
 
 const ProjectPreview: FunctionComponent<Props> = ({ projects }) => {
