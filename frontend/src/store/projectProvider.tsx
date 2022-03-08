@@ -1,53 +1,79 @@
 // ProjectContext is not currently being used, but is kept here for future reference incase it is useful.
+import { createContext, useReducer } from "react";
 
-import { useReducer } from "react";
 import ProjectContext from "./project-context";
+import { Project } from "../shared/Interfaces";
+
+const initialProjects: Project[] = [];
+
+enum ProjectActionKind {
+  StoreProjects = "STORE_PROJECTS",
+  AddProject = "ADD_PROJECT",
+}
+
+interface ProjectState {
+  projects: Project[] | [];
+  project: Project | {};
+}
+
+type ProjectAction =
+  | {
+      type: ProjectActionKind.StoreProjects;
+      projects: Project[] | [];
+      project: Project | object;
+    }
+  | {
+      type: ProjectActionKind.AddProject;
+      project: Project | object;
+      projects: Project[] | [];
+    };
 
 const defaultProjectState = {
   projects: [],
-  searchResults: [],
+  project: {},
 };
+
 const projectReducer = (state: any, action: any) => {
-  if (action.type === "STORE_PROJECTS") {
-    return {
-      projects: action.projects,
-      searchResults: state.searchResults,
-    };
-  }
-  if (action.type === "STORE_SEARCH_RESULTS") {
-    return {
-      projects: state.projects,
-      searchResults: action.searchResults,
-    };
+  switch (action.type) {
+    case ProjectActionKind.StoreProjects:
+      console.log(action.projects);
+      return {
+        projects: action.projects,
+        project: state.project,
+      };
+    case ProjectActionKind.AddProject:
+      return {
+        projects: [action.project, ...state.projects],
+      };
   }
 };
 
-const ProjectProvider = (props: any) => {
+export const ProjectProvider = (props: any) => {
   const [projectState, dispatchProjectAction] = useReducer(
     projectReducer,
     defaultProjectState
   );
-  const updateProjects = (projects: any) => {
+  const storeProjectsHandler = (projects: any) => {
     dispatchProjectAction({
       type: "STORE_PROJECTS",
       projects,
     });
   };
 
-  const updateSearchResults = (searchResults: any) => {
+  const addProject = (project: any) => {
     dispatchProjectAction({
-      type: "STORE_SEARCH_RESULTS",
-      searchResults,
+      type: "ADD_PROJECT",
+      project,
     });
   };
+
   const projectContext = {
-    updateProjects: updateProjects,
-    updateSearchResults: updateSearchResults,
-    //@ts-ignore
-    projects: projectState.projects,
-    //@ts-ignore
-    searchResults: projectState.searchResults,
+    storeProjects: storeProjectsHandler,
+    addProject: addProject,
+    projects: projectState?.projects,
+    project: projectState?.project,
   };
+
   return (
     <ProjectContext.Provider value={projectContext}>
       {props.children}

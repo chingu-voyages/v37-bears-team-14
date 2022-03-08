@@ -19,10 +19,9 @@ const ProjectPreview: FunctionComponent<Props> = ({ projects }) => {
                 {p.name}
               </p>
             </div>
-            <div className="pt-1">
-              <p className="mb-2 text-sm text-darkGray pl-2 pr-2 leading-tight">
-                <ReactMarkdown>{truncateString(p.description)}</ReactMarkdown>
-              </p>
+            <div className="pt-1 mb-2 text-sm text-darkGray pl-2 pr-2 leading-tight">
+              {/* <p className="mb-2 text-sm text-darkGray pl-2 pr-2 leading-tight"></p> */}
+              <ReactMarkdown>{truncateString(p.description)}</ReactMarkdown>
               <div className="flex justify-start">
                 {p.techs.slice(0, 4).map((t: Tech, index) => (
                   <div className="relative m-1" key={index}>
