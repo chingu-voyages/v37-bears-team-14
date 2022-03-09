@@ -10,6 +10,11 @@
     background-color: #cbd5e1;
     font-family: "DM Sans", sans-serif;
   }
+
+  ul,
+  ol {
+    list-style: revert;
+  }
 }
 /* body {
   margin: 0;

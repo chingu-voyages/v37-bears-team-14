@@ -16,28 +16,26 @@ import LoadingSpinner from "../Spinners/LoadingSpinner";
 const Projects: FunctionComponent = () => {
   const [projects, setProjects] = useState<Project[] | []>([]);
   const [loading, setLoading] = useState(false);
-
   const addProject = (project: Project) => {
     console.log(project);
     setProjects([project, ...projects]);
   };
-  // const projectCtx = useContext<any>(ProjectContext);
+  const projectCtx = useContext<any>(ProjectContext);
   useEffect(() => {
     setLoading(true);
     fetch("api/v1/projects").then(async (response) => {
       if (response.status === 200) {
         setLoading(false);
         const data = await response.json();
-        if (!isEqual(projects, data)) {
-          setProjects(data);
-          // projectCtx.storeProjects(data);
-          // console.log(projectCtx);
+        if (!isEqual(projectCtx.projects, data)) {
+          //setProjects(data);
+          projectCtx.storeProjects(data);
         }
 
         return response;
       }
     });
-  }, [projects]);
+  }, [projects, projectCtx.projects]);
 
   return (
     <>
@@ -48,10 +46,10 @@ const Projects: FunctionComponent = () => {
           <section className="w-full">
             <div className="flex flex-col-reverse md:flex-row">
               <main className="basis-3/4">
-                <ProjectPreview projects={projects} />
+                <ProjectPreview projects={projectCtx.projects} />
               </main>
               <aside className="basis-1/4">
-                <NewProject addProject={addProject} />
+                <NewProject />
                 <Link to={"search"}>
                   <div className="w-full bg-medGray border-t-[1px] border-mintGreen">
                     <div className="p-1">

@@ -36,7 +36,7 @@ const defaultProjectState = {
 const projectReducer = (state: any, action: any) => {
   switch (action.type) {
     case ProjectActionKind.StoreProjects:
-      console.log(action.projects);
+      //console.log(action.projects);
       return {
         projects: action.projects,
         project: state.project,
@@ -44,6 +44,7 @@ const projectReducer = (state: any, action: any) => {
     case ProjectActionKind.AddProject:
       return {
         projects: [action.project, ...state.projects],
+        project: action.project,
       };
   }
 };
@@ -53,6 +54,7 @@ export const ProjectProvider = (props: any) => {
     projectReducer,
     defaultProjectState
   );
+  console.log(projectState);
   const storeProjectsHandler = (projects: any) => {
     dispatchProjectAction({
       type: "STORE_PROJECTS",

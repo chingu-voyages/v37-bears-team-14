@@ -3,19 +3,19 @@ import LoadingSpinner from "../Spinners/LoadingSpinner";
 import { Project } from "../../shared/Interfaces";
 import NewProjectForm from "./NewProjectForm";
 
-interface Props {
-  addProject: (project: Project) => void;
-}
-const NewProject: FunctionComponent<Props> = ({ addProject }) => {
+// interface Props {
+//   addProject: (project: Project) => void;
+// }
+const NewProject: FunctionComponent = () => {
   // const [isLoading, setIsLoading] = useState(true);
   const [techs, setTechs] = useState<any[]>([]);
   const [chosenTechs, setChosenTechs] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [projectForm, setProjectForm] = useState(false);
 
-  const addNewProject = (project: Project) => {
-    addProject(project);
-  };
+  // const addNewProject = (project: Project) => {
+  //   addProject(project);
+  // };
   useEffect(() => {
     let isMounted = true;
     setLoading(true);
@@ -74,7 +74,6 @@ const NewProject: FunctionComponent<Props> = ({ addProject }) => {
             setLoading={setLoading}
             projectForm={projectForm}
             setProjectForm={setProjectForm}
-            addProject={addNewProject}
           />
         </div>
       </>

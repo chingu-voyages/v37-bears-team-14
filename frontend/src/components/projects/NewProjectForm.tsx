@@ -18,7 +18,6 @@ interface Props {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   projectForm: boolean;
   setProjectForm: React.Dispatch<React.SetStateAction<boolean>>;
-  addProject: (project: any) => void;
 }
 
 interface FormValues {
@@ -43,11 +42,10 @@ const NewProjectForm: React.FC<Props> = ({
   setLoading,
   projectForm,
   setProjectForm,
-  addProject,
 }) => {
   const [customOpen, setCustomOpen] = useState(false);
   const [projectSubmitted, setProjectSubmitted] = useState(false);
-  // const projectCtx = useContext<any>(ProjectContext);
+  const projectCtx = useContext<any>(ProjectContext);
   let navigate = useNavigate();
 
   const CustomMenuButton = forwardRef<HTMLButtonElement>(
@@ -89,13 +87,10 @@ const NewProjectForm: React.FC<Props> = ({
                 resetForm();
                 setTechs([...techs, ...chosenTechs]);
                 techs.sort((a: Tech, b: Tech) => (a.name > b.name ? 1 : -1));
+                projectCtx.addProject({ ...values, techs: chosenTechs });
                 setChosenTechs([]);
                 setProjectSubmitted(true);
-                setTimeout(() => {
-                  setProjectForm(false);
-                }, 1000);
-                addProject(values);
-                // projectCtx.addProject(values);
+                setProjectForm(false);
                 setTimeout(() => {
                   setProjectSubmitted(false);
                 }, 2000);

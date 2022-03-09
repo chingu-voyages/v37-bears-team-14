@@ -74,8 +74,10 @@ const ProjectPageLayout: FunctionComponent = () => {
         </div>
       </div>
 
-      <div className="bg-white">
-        <Outlet context={{ project, setProject }} />
+      <div className="bg-XLightGray">
+        <div className="md:mx-8 sm:mx-4">
+          <Outlet context={{ project, setProject }} />
+        </div>
       </div>
     </section>
   );

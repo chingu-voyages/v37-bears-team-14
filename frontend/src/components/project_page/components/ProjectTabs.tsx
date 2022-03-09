@@ -17,7 +17,7 @@ const ProjectTabs: FunctionComponent<ProjectTabsProps> = ({ projectId }) => {
           (isActive
             ? "border-b-2 font-bold text-slate-900"
             : "text-slate-700") +
-          " px-3 pb-2 hover:text-slate-900 hover:border-b-2 border-emerald-400 "
+          "px-3 pb-2 hover:text-slate-900 hover:border-b-2 border-emerald-400"
         }
         to=""
         end
@@ -31,7 +31,7 @@ const ProjectTabs: FunctionComponent<ProjectTabsProps> = ({ projectId }) => {
             (isActive
               ? "border-b-2 font-bold text-slate-900"
               : "text-slate-700") +
-            " px-3 pb-2 hover:text-slate-900 hover:border-b-2 border-emerald-400 "
+            " px-3 pb-2 hover:text-slate-900 hover:border-b-2 border-emerald-400"
           }
           to="applications"
         >
@@ -49,7 +49,7 @@ const ProjectTabs: FunctionComponent<ProjectTabsProps> = ({ projectId }) => {
             (isActive
               ? "border-b-2 font-bold text-slate-900"
               : "text-slate-700") +
-            " px-3 pb-2 hover:text-slate-900 hover:border-b-2 border-emerald-400 "
+            " px-3 pb-2 hover:text-slate-900 hover:border-b-2 border-emerald-400"
           }
           to="settings"
         >

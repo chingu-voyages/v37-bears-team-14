@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from "react";
 import { Link } from "react-router-dom";
-import ReactMarkdown from "react-markdown";
+import Preview from "../../components/formatting/Preview";
 import { Project, Tech } from "../../shared/Interfaces";
 import { truncateString } from "../../shared/Utils";
 
@@ -19,9 +19,9 @@ const ProjectPreview: FunctionComponent<Props> = ({ projects }) => {
                 {p.name}
               </p>
             </div>
-            <div className="pt-1 mb-2 text-sm text-darkGray pl-2 pr-2 leading-tight">
+            <div className="pt-1 mb-2 text-sm text-darkGray pl-2 pr-2 leading-tight overflow-hidden">
               {/* <p className="mb-2 text-sm text-darkGray pl-2 pr-2 leading-tight"></p> */}
-              <ReactMarkdown>{truncateString(p.description)}</ReactMarkdown>
+              <Preview>{truncateString(p.description)}</Preview>
               <div className="flex justify-start">
                 {p.techs.slice(0, 4).map((t: Tech, index) => (
                   <div className="relative m-1" key={index}>
