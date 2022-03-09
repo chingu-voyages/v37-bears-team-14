@@ -1,6 +1,5 @@
 import React, { FunctionComponent } from "react";
 import { Link } from "react-router-dom";
-import ReactMarkdown from "react-markdown";
 import { ProjectResult, Tech } from "../../shared/Interfaces";
 import { truncateString } from "../../shared/Utils";
 import Preview from "../../components/formatting/Preview";
