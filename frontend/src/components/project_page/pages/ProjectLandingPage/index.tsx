@@ -7,7 +7,7 @@ const ProjectLandingPage = () => {
   const { project, setProject } = useOutletContext<ProjectPageContext>();
 
   return (
-    <div className="flex flex-col md:flex-row">
+    <div className="flex flex-col-reverse md:flex-row">
       <main className="basis-3/4">
         <ProjectLanding project={project} setProject={setProject} />
       </main>

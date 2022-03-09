@@ -3,9 +3,6 @@ import LoadingSpinner from "../Spinners/LoadingSpinner";
 
 import NewProjectForm from "./NewProjectForm";
 
-// interface Props {
-//   addProject: (project: Project) => void;
-// }
 const NewProject: FunctionComponent = () => {
   // const [isLoading, setIsLoading] = useState(true);
   const [techs, setTechs] = useState<any[]>([]);
@@ -13,9 +10,6 @@ const NewProject: FunctionComponent = () => {
   const [loading, setLoading] = useState(false);
   const [projectForm, setProjectForm] = useState(false);
 
-  // const addNewProject = (project: Project) => {
-  //   addProject(project);
-  // };
   useEffect(() => {
     let isMounted = true;
     setLoading(true);
