@@ -36,7 +36,7 @@ const ProjectPreview: FunctionComponent<Props> = ({ projects }) => {
                 }`}
               >
                 {p.techs.slice(0, 4).map((t: Tech, index) => (
-                  <div className="relative m-1" key={index}>
+                  <div className="relative m-1 no-first-margin" key={index}>
                     <img
                       className="h-7 mx-auto flex justify-center align-middle"
                       alt={t.name}

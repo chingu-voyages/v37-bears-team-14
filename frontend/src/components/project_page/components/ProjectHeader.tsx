@@ -1,6 +1,6 @@
 import { FunctionComponent } from "react";
 import { Link } from "react-router-dom";
-import Preview from "../../formatting/Preview";
+import ProjectPageMarkdown from "../../formatting/ProjectPageMarkdown";
 import { Project } from "../../../shared/Interfaces";
 
 export interface ProjectHeaderProps {
@@ -14,7 +14,7 @@ const ProjectHeader: FunctionComponent<ProjectHeaderProps> = ({ project }) => {
         {project.name}
       </Link>
       <div className="text-slate-700">
-        <Preview>{project.description}</Preview>
+        <ProjectPageMarkdown>{project.description}</ProjectPageMarkdown>
       </div>
     </div>
   );

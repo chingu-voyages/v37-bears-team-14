@@ -3,7 +3,7 @@ import { Menu } from "@headlessui/react";
 import { Formik, Form, Field } from "formik";
 import ProjectContext from "../../store/project-context";
 import * as Yup from "yup";
-import { useNavigate } from "react-router-dom";
+
 import Alert from "../alerts/Alert";
 import { Tech } from "../../shared/Interfaces";
 
@@ -46,7 +46,6 @@ const NewProjectForm: React.FC<Props> = ({
   const [customOpen, setCustomOpen] = useState(false);
   const [projectSubmitted, setProjectSubmitted] = useState(false);
   const projectCtx = useContext<any>(ProjectContext);
-  let navigate = useNavigate();
 
   const CustomMenuButton = forwardRef<HTMLButtonElement>(
     ({ children }, ref) => (

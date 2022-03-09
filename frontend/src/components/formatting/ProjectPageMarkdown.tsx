@@ -5,17 +5,17 @@ interface ReadmeProps {
   children: string;
 }
 
-const Preview: FC<ReadmeProps> = ({ children }) => {
+const ProjectPageMarkdown: FC<ReadmeProps> = ({ children }) => {
   return (
     <ReactMarkdown
       components={{
         h1: ({ children, ...props }) => (
-          <h1 className="mt-2 font-semibold text-lg" {...props}>
+          <h1 className="mt-2 font-semibold text-2xl" {...props}>
             {children}
           </h1>
         ),
         h2: ({ children, ...props }) => (
-          <h2 className="mt-2 font-semibold text-md" {...props}>
+          <h2 className="mt-2 font-semibold text-xl" {...props}>
             {children}
           </h2>
         ),
@@ -66,4 +66,4 @@ const Preview: FC<ReadmeProps> = ({ children }) => {
   );
 };
 
-export default Preview;
+export default ProjectPageMarkdown;

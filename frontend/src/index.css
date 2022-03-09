@@ -41,6 +41,10 @@ code {
   .main-gradient {
     @apply bg-gradient-to-br from-purple-600 to-blue-500;
   }
+
+  .no-first-margin > :first-child {
+    margin-left: 0 !important;
+  }
 }
 
 .sk-folding-cube {

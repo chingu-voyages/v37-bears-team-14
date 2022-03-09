@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useState, useEffect } from "react";
 import LoadingSpinner from "../Spinners/LoadingSpinner";
-import { Project } from "../../shared/Interfaces";
+
 import NewProjectForm from "./NewProjectForm";
 
 // interface Props {

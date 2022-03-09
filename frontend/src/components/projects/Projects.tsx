@@ -10,16 +10,12 @@ import ProjectContext from "../../store/project-context";
 import ProjectPreview from "./ProjectPreview";
 
 import isEqual from "react-fast-compare";
-import { Project } from "../../shared/Interfaces";
+
 import LoadingSpinner from "../Spinners/LoadingSpinner";
 
 const Projects: FunctionComponent = () => {
-  const [projects, setProjects] = useState<Project[] | []>([]);
   const [loading, setLoading] = useState(false);
-  const addProject = (project: Project) => {
-    console.log(project);
-    setProjects([project, ...projects]);
-  };
+
   const projectCtx = useContext<any>(ProjectContext);
   useEffect(() => {
     setLoading(true);
@@ -28,14 +24,13 @@ const Projects: FunctionComponent = () => {
         setLoading(false);
         const data = await response.json();
         if (!isEqual(projectCtx.projects, data)) {
-          //setProjects(data);
           projectCtx.storeProjects(data);
         }
 
         return response;
       }
     });
-  }, [projects, projectCtx.projects]);
+  }, [projectCtx]);
 
   return (
     <>

@@ -22,7 +22,7 @@ const ProjectPreview: FunctionComponent<Props> = ({ projects }) => {
             <div className="pt-1 mb-2 text-sm text-darkGray pl-2 pr-2 leading-tight overflow-hidden">
               {/* <p className="mb-2 text-sm text-darkGray pl-2 pr-2 leading-tight"></p> */}
               <Preview>{truncateString(p.description)}</Preview>
-              <div className="flex justify-start">
+              <div className="flex justify-start no-first-margin">
                 {p.techs.slice(0, 4).map((t: Tech, index) => (
                   <div className="relative m-1" key={index}>
                     <img

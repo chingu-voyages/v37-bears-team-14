@@ -1,32 +1,32 @@
 // ProjectContext is not currently being used, but is kept here for future reference incase it is useful.
-import { createContext, useReducer } from "react";
+import { useReducer } from "react";
 
 import ProjectContext from "./project-context";
-import { Project } from "../shared/Interfaces";
+// import { Project } from "../shared/Interfaces";
 
-const initialProjects: Project[] = [];
+// const initialProjects: Project[] = [];
 
 enum ProjectActionKind {
   StoreProjects = "STORE_PROJECTS",
   AddProject = "ADD_PROJECT",
 }
 
-interface ProjectState {
-  projects: Project[] | [];
-  project: Project | {};
-}
+// interface ProjectState {
+//   projects: Project[] | [];
+//   project: Project | {};
+// }
 
-type ProjectAction =
-  | {
-      type: ProjectActionKind.StoreProjects;
-      projects: Project[] | [];
-      project: Project | object;
-    }
-  | {
-      type: ProjectActionKind.AddProject;
-      project: Project | object;
-      projects: Project[] | [];
-    };
+// type ProjectAction =
+//   | {
+//       type: ProjectActionKind.StoreProjects;
+//       projects: Project[] | [];
+//       project: Project | object;
+//     }
+//   | {
+//       type: ProjectActionKind.AddProject;
+//       project: Project | object;
+//       projects: Project[] | [];
+//     };
 
 const defaultProjectState = {
   projects: [],
@@ -36,7 +36,6 @@ const defaultProjectState = {
 const projectReducer = (state: any, action: any) => {
   switch (action.type) {
     case ProjectActionKind.StoreProjects:
-      //console.log(action.projects);
       return {
         projects: action.projects,
         project: state.project,
@@ -54,7 +53,7 @@ export const ProjectProvider = (props: any) => {
     projectReducer,
     defaultProjectState
   );
-  console.log(projectState);
+
   const storeProjectsHandler = (projects: any) => {
     dispatchProjectAction({
       type: "STORE_PROJECTS",
