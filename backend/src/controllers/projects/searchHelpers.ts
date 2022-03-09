@@ -122,6 +122,6 @@ export const createAddedFields = (matchType?: any): PipelineStage.AddFields => {
   return {
     $addFields: {
       matchType: matchType || null,
-    }
+    },
   };
 };

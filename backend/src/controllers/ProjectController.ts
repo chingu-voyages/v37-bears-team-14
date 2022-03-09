@@ -1,12 +1,5 @@
 import logger from "../logger";
-import {
-  ClientSession,
-  Document,
-  FilterQuery,
-  Model,
-  ObjectId,
-  PipelineStage,
-} from "mongoose";
+import { ClientSession, Document, Model, ObjectId } from "mongoose";
 import { MongoError } from "mongodb";
 import _ from "lodash";
 import { IMember } from "../models/Member";
@@ -93,7 +86,7 @@ class ProjectController {
           name: true,
           description: false,
           techs: false,
-        })
+        }),
       ]);
 
     const descriptionMatches: ProjectSearchResultItem[] =
@@ -107,17 +100,17 @@ class ProjectController {
           name: false,
           description: true,
           techs: false,
-        })
+        }),
       ]);
 
     const techs: TechDoc[] = await this.techModel.find({
-      name: {$regex: search, $options: "i"}
+      name: { $regex: search, $options: "i" },
     });
 
     const techMatches: ProjectSearchResultItem[] =
       await this.projectModel.aggregate([
         createQuery({
-          techs: {$in: techs.map((t) => t._id)},
+          techs: { $in: techs.map((t) => t._id) },
         }),
         ...createJoins(),
         createProjection(),
@@ -125,10 +118,13 @@ class ProjectController {
           name: false,
           description: false,
           techs: true,
-        })
+        }),
       ]);
 
-    const projects = _.uniqBy([...nameMatches, ...descriptionMatches, ...techMatches], (r) => r.id)
+    const projects = _.uniqBy(
+      [...nameMatches, ...descriptionMatches, ...techMatches],
+      (r) => r.id
+    );
     return projects;
   }
 
