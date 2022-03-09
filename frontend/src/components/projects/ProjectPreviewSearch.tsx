@@ -1,11 +1,11 @@
 import React, { FunctionComponent } from "react";
 import { Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
-import { Project, Tech } from "../../shared/Interfaces";
+import { ProjectResult, Tech } from "../../shared/Interfaces";
 import { truncateString } from "../../shared/Utils";
-
+import Preview from "../../components/formatting/Preview";
 interface Props {
-  projects: Project[] | [];
+  projects: ProjectResult[] | [];
 }
 
 const ProjectPreview: FunctionComponent<Props> = ({ projects }) => {
@@ -28,7 +28,7 @@ const ProjectPreview: FunctionComponent<Props> = ({ projects }) => {
                 p.matchType.description && "bg-red-400"
               }`}
             >
-              <ReactMarkdown>{truncateString(p.description)}</ReactMarkdown>
+              <Preview>{truncateString(p.description)}</Preview>
 
               <div
                 className={`flex justify-start ${

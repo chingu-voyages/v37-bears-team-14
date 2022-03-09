@@ -2,6 +2,14 @@ export interface Project {
   id: string;
   name: string;
   description: string;
+  techs: Tech[];
+  settingOpenRoles: string[];
+}
+
+export interface ProjectResult {
+  id: string;
+  name: string;
+  description: string;
   matchType: {
     name: boolean;
     description: boolean;

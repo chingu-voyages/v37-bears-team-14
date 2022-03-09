@@ -24,7 +24,8 @@ export interface MemberUpdateParams {
 }
 
 interface MatchedProject {
-  _id: object;
+  _id?: object;
+  id?: object;
   name: string;
   description: string | null;
   techs: ITech[] | ObjectId[];
@@ -122,18 +123,28 @@ class ProjectController {
           description: false,
           techs: true,
         };
+      } else {
+        n.matchType.techs = true;
       }
-      n.matchType.techs = true;
     });
 
     projects = _.uniqBy(
       [...names, ...descriptions, ...techMatches],
-      (project: MatchedProject) => project._id.toString()
+      (project: MatchedProject) => {
+        if (project._id) return project._id.toString();
+      }
     );
+
+    projects.map((p: MatchedProject): MatchedProject => {
+      p["_id"] = p["id"];
+      delete p["_id"];
+      return p;
+    });
 
     if (!projects) {
       throw new NotFoundError("project", search);
     }
+    console.log(projects.length);
     return projects;
   }
 
