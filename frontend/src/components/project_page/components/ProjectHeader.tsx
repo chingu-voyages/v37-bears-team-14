@@ -1,6 +1,6 @@
 import { FunctionComponent } from "react";
 import { Link } from "react-router-dom";
-import ProjectPageMarkdown from "../../formatting/ProjectPageMarkdown";
+import ProjectPageMarkdown from "./ProjectPageMarkdown";
 import { Project } from "../../../shared/Interfaces";
 
 export interface ProjectHeaderProps {
