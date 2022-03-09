@@ -1,5 +1,12 @@
 import logger from "../logger";
-import { ClientSession, Document, Model, ObjectId } from "mongoose";
+import {
+  ClientSession,
+  Document,
+  FilterQuery,
+  Model,
+  ObjectId,
+  PipelineStage,
+} from "mongoose";
 import { MongoError } from "mongodb";
 import _ from "lodash";
 import { IMember } from "../models/Member";
@@ -11,6 +18,13 @@ import UnexpectedError from "./errors/UnexpectedError";
 import UnauthorizedError from "./errors/UnauthorizedError";
 import FieldExistsError from "./errors/FieldExistsError";
 import InvalidChangeLastOwner from "./errors/InvalidChangeLastOwner";
+import {
+  createAddedFields,
+  createJoins,
+  createProjection,
+  createQuery,
+} from "./projects/searchHelpers";
+import { TechDoc } from "./TechController";
 
 export interface ProjectUpdateParams {
   name?: string;
@@ -23,22 +37,18 @@ export interface MemberUpdateParams {
   roleName: string;
 }
 
-interface MatchedProject {
-  _id?: object;
-  id?: object;
-  name: string;
-  description: string | null;
-  techs: ITech[] | ObjectId[];
-  matchType?: {
-    name?: boolean;
-    description?: boolean;
-    techs?: boolean;
-  };
-}
-
 export type ProjectDoc = IProject & Document<unknown, any, IProject>;
-// export type ProjectMatchDoc = IProjectMatch & Document<unknown, any, IProject>;
-export type TechDoc = ITech & Document<unknown, any, IProject>;
+
+export type ProjectSearchResultItem = {
+  id: ObjectId;
+  createdAt: Date;
+  updatedAt: Date;
+  name: string;
+  description: string;
+  techs: (ITech & { id: ObjectId })[];
+  members: (IMember & { id: ObjectId })[];
+  matchType: null | string;
+};
 
 class ProjectController {
   constructor(
@@ -71,80 +81,54 @@ class ProjectController {
     return project;
   }
 
-  async searchProjects(search: string): Promise<MatchedProject[]> {
-    const techs = await this.techModel.find();
-    const matchedTechs: TechDoc[] = [];
-    techs.forEach((t) => {
-      if (new RegExp(search, "i").test(t.name)) {
-        matchedTechs.push(t);
-      }
-    });
+  async searchProjects(search: string): Promise<ProjectSearchResultItem[]> {
+    const nameMatches: ProjectSearchResultItem[] =
+      await this.projectModel.aggregate([
+        createQuery({
+          description: { $regex: search, $options: "i" },
+        }),
+        ...createJoins(),
+        createProjection(),
+        createAddedFields({
+          name: true,
+          description: false,
+          techs: false,
+        })
+      ]);
 
-    const names = await this.projectModel
-      .find({ name: { $regex: search, $options: "i" } })
-      .populate("techs")
-      .lean();
-
-    const descriptions = await this.projectModel
-      .find({ description: { $regex: search, $options: "i" } })
-      .populate("techs")
-      .lean();
-    const techMatches = await this.projectModel
-      .find()
-      .where("techs")
-      .in(matchedTechs.map((t) => t._id))
-      .populate("techs")
-      .lean();
-    let projects: MatchedProject[] = [];
-
-    names.map((n) => {
-      n.matchType = {
-        name: true,
-        description: false,
-        techs: false,
-      };
-    });
-
-    descriptions.map((n) => {
-      if (!n.matchType) {
-        n.matchType = {
+    const descriptionMatches: ProjectSearchResultItem[] =
+      await this.projectModel.aggregate([
+        createQuery({
+          description: { $regex: search, $options: "i" },
+        }),
+        ...createJoins(),
+        createProjection(),
+        createAddedFields({
           name: false,
           description: true,
           techs: false,
-        };
-      } else {
-        n.matchType.description = true;
-      }
+        })
+      ]);
+
+    const techs: TechDoc[] = await this.techModel.find({
+      name: {$regex: search, $options: "i"}
     });
-    techMatches.map((n) => {
-      if (!n.matchType) {
-        n.matchType = {
+
+    const techMatches: ProjectSearchResultItem[] =
+      await this.projectModel.aggregate([
+        createQuery({
+          techs: {$in: techs.map((t) => t._id)},
+        }),
+        ...createJoins(),
+        createProjection(),
+        createAddedFields({
           name: false,
           description: false,
           techs: true,
-        };
-      } else {
-        n.matchType.techs = true;
-      }
-    });
+        })
+      ]);
 
-    projects = _.uniqBy(
-      [...names, ...descriptions, ...techMatches],
-      (project: MatchedProject) => {
-        if (project._id) return project._id.toString();
-      }
-    );
-
-    projects.map((p: MatchedProject): MatchedProject => {
-      p["_id"] = p["id"];
-      delete p["_id"];
-      return p;
-    });
-
-    if (!projects) {
-      throw new NotFoundError("project", search);
-    }
-    console.log(projects.length);
+    const projects = _.uniqBy([...nameMatches, ...descriptionMatches, ...techMatches], (r) => r.id)
     return projects;
   }
 

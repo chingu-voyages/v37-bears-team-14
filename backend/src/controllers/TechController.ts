@@ -2,7 +2,7 @@ import { Document, Model } from "mongoose";
 import { ITech } from "../models/Tech";
 import NotFoundError from "./errors/NotFoundError";
 
-export type TechDoc = ITech | Document<ITech>;
+export type TechDoc = ITech & Document<unknown, any, IProject>;
 
 export interface TechUpdateParams {
   name?: string;
