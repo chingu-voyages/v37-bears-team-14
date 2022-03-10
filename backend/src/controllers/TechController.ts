@@ -1,4 +1,5 @@
 import { Document, Model } from "mongoose";
+import { IProject } from "../models/Project";
 import { ITech } from "../models/Tech";
 import NotFoundError from "./errors/NotFoundError";
 
