@@ -82,7 +82,7 @@ class ProjectController {
     const nameMatches: ProjectSearchResultItem[] =
       await this.projectModel.aggregate([
         createQuery({
-          description: { $regex: search, $options: "i" },
+          name: { $regex: search, $options: "i" },
         }),
         ...createJoins(),
         createProjection(),
