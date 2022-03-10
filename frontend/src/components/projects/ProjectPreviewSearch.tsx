@@ -2,7 +2,7 @@ import React, { FunctionComponent } from "react";
 import { Link } from "react-router-dom";
 import { ProjectResult, Tech } from "../../shared/Interfaces";
 import { truncateString } from "../../shared/Utils";
-
+import Preview from "../../components/formatting/Preview";
 interface Props {
   projects: ProjectResult[] | [];
 }
@@ -22,21 +22,20 @@ const ProjectPreview: FunctionComponent<Props> = ({ projects }) => {
                 {p.name}
               </p>
             </div>
-            <div className="pt-1">
-              <p
-                className={`mb-2 text-sm text-darkGray pl-2 pr-2 leading-tight ${
-                  p.matchType.description && "bg-red-400"
-                }`}
-              >
-                {truncateString(p.description)}
-              </p>
+            <div
+              className={`pt-1 mb-2 text-sm text-darkGray pl-2 pr-2 leading-tight ${
+                p.matchType.description && "bg-red-400"
+              }`}
+            >
+              <Preview>{truncateString(p.description)}</Preview>
+
               <div
                 className={`flex justify-start ${
                   p.matchType.techs && "bg-red-400"
                 }`}
               >
                 {p.techs.slice(0, 4).map((t: Tech, index) => (
-                  <div className="relative m-1" key={index}>
+                  <div className="relative m-1 no-first-margin" key={index}>
                     <img
                       className="h-7 mx-auto flex justify-center align-middle"
                       alt={t.name}

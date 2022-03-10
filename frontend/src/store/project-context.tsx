@@ -3,10 +3,10 @@
 import React from "react";
 
 const ProjectContext = React.createContext({
-  updateProjects: (projects: any) => {},
-  updateSearchResults: (searchResults: any) => {},
+  storeProjects: (projects: any) => {},
+  addProject: (project: any) => {},
   projects: [],
-  searchResults: [],
+  project: {},
 });
 
 export default ProjectContext;
