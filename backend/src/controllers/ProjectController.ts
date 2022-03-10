@@ -119,6 +119,8 @@ class ProjectController {
         ...createJoins(),
         createProjection(),
         createAddedFields({
+          name: false,
+          description: false,
           techs: true,
         }),
       ]);
