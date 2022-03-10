@@ -40,7 +40,11 @@ export type ProjectSearchResultItem = {
   description: string;
   techs: (ITech & { id: ObjectId })[];
   members: (IMember & { id: ObjectId })[];
-  matchType: null | string;
+  matchType: {
+    name: boolean;
+    description: boolean;
+    techs: boolean;
+  };
 };
 
 class ProjectController {
