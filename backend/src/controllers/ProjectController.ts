@@ -119,15 +119,13 @@ class ProjectController {
         ...createJoins(),
         createProjection(),
         createAddedFields({
-          name: false,
-          description: false,
           techs: true,
         }),
       ]);
 
     const projects = _.uniqBy(
       [...nameMatches, ...descriptionMatches, ...techMatches],
-      (r) => r.id
+      (r) => r.id.toString()
     );
     return projects;
   }
