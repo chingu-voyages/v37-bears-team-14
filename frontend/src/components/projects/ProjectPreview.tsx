@@ -11,6 +11,7 @@ interface Props {
 const ProjectPreview: FunctionComponent<Props> = ({ projects }) => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 m-1">
+      {console.log(projects)}
       {projects.map((p, index) => (
         <Link to={`/projects/${p.id}`} key={index}>
           <div className="bg-neutral-400" key={index}>
@@ -20,7 +21,6 @@ const ProjectPreview: FunctionComponent<Props> = ({ projects }) => {
               </p>
             </div>
             <div className="pt-1 mb-2 text-sm text-darkGray pl-2 pr-2 leading-tight overflow-hidden">
-              {/* <p className="mb-2 text-sm text-darkGray pl-2 pr-2 leading-tight"></p> */}
               <Preview>{truncateString(p.description)}</Preview>
               <div className="flex justify-start no-first-margin">
                 {p.techs.slice(0, 4).map((t: Tech, index) => (

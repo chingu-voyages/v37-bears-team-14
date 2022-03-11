@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from "react";
 import { Link } from "react-router-dom";
-import { ProjectResult, Tech } from "../../shared/Interfaces";
+import { ProjectResult, Tech, Member } from "../../shared/Interfaces";
 import { truncateString } from "../../shared/Utils";
 import Preview from "../../components/formatting/Preview";
 interface Props {
@@ -23,7 +23,7 @@ const ProjectPreview: FunctionComponent<Props> = ({ projects }) => {
               </p>
             </div>
             <div
-              className={`pt-1 mb-2 text-sm text-darkGray pl-2 pr-2 leading-tight ${
+              className={`pt-1 mb-2 text-sm text-darkGray pl-2 pr-2 leading-tight overflow-hidden ${
                 p.matchType.description && "bg-red-400"
               }`}
             >
@@ -49,6 +49,15 @@ const ProjectPreview: FunctionComponent<Props> = ({ projects }) => {
                   } More`}</span>
                 )}
               </div>
+            </div>
+            <div className="-space-x-3 pb-1 pl-1">
+              {p.members.map((m: Member) => (
+                <img
+                  className="relative z-30 inline object-cover w-8 h-8 border-2 border-lightGrey rounded-full"
+                  src={m.user.avatarUrl}
+                  alt={m.user.username}
+                />
+              ))}
             </div>
           </div>
         </Link>
