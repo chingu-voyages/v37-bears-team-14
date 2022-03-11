@@ -2,11 +2,10 @@ import { Document, Model } from "mongoose";
 import { IHook } from "../models/Hook";
 import { IMember } from "../models/Member";
 import NotFoundError from "./errors/NotFoundError";
-import { newSecret, verifySignature } from "./hooks/hookHelpers";
+import { hashHmac, newSecret, verifySignature } from "./hooks/hookHelpers";
 import { verifyRoles } from "./permissions/permissionHelpers";
 import UnauthorizedError from "./errors/UnauthorizedError";
 import { IProjectEvent } from "../models/ProjectEvent";
-import { IUser } from "../models/User";
 import UserController from "./UserController";
 import logger from "../logger";
 
@@ -43,6 +42,7 @@ class HookController {
     const secret = await newSecret(256);
     const hook = await this.hookModel.create({
       secret,
+      secretGeneratedAt: new Date(),
       ...params,
     });
     return hook;
@@ -63,6 +63,29 @@ class HookController {
     return hook;
   }
 
+  async update(
+    user: string,
+    id: string,
+    params: HookUpdateParams,
+    isAdmin?: boolean
+  ): Promise<HookDoc> {
+    const hook = await this.hookModel.findOne({ _id: id });
+    if (!hook) {
+      throw new NotFoundError("hook", id);
+    }
+    if (!isAdmin) {
+      await verifyRoles(this.memberModel, ["owner", "developer"])(
+        hook.project.toString(),
+        user
+      );
+    }
+    for (const key of Object.keys(params)) {
+      (hook as any)[key] = (params as any)[key];
+    }
+    await hook.save();
+    return hook;
+  }
+
   async rotateSecret(
     user: string,
     id: string,
@@ -79,6 +102,7 @@ class HookController {
       );
     }
     hook.secret = await newSecret(256);
+    hook.secretGeneratedAt = new Date();
     await hook.save();
     return hook;
   }
@@ -97,7 +121,7 @@ class HookController {
     return await this.hookModel.find({ project });
   }
 
-  async createEvent(
+  async createEventGithub(
     id: string,
     signature: string,
     eventName: string,
@@ -114,7 +138,18 @@ class HookController {
       return;
     }
 
-    const verified = verifySignature(signature, payload, hook.secret);
+    let verified;
+    try {
+      verified = verifySignature(signature, payload, hook.secret);
+    } catch (err) {
+      // Log for debugging.
+      logger.warn("Failed to verify signature", {
+        signature,
+        hashHmac: hashHmac(payload, hook.secret),
+      });
+      throw new UnauthorizedError("Invalid signature.");
+    }
+
     if (!verified) {
       throw new UnauthorizedError("Invalid signature.");
     }
@@ -125,11 +160,33 @@ class HookController {
       : null;
 
     const event = await this.projectEventModel.create({
-      event: "repo_" + eventName,
+      event: eventName,
       payload,
       project: hook.project,
       user: user ? user.id : null,
     });
+
+    // Save the invocation time asynchronously to prevent the update
+    // from blocking the return.
+    this.hookModel
+      .findOneAndUpdate(
+        {
+          _id: hook.id,
+        },
+        {
+          invokedAt: new Date(),
+          $inc: {
+            invokeCount: 1,
+          },
+        }
+      )
+      .catch((err) => {
+        logger.error("Failed to save update invokedAt/invokeCount", {
+          hookId: hook.id,
+          errorMessage: err.message,
+        });
+      });
+
     return event;
   }
 }

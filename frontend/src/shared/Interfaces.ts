@@ -56,3 +56,13 @@ export interface Application {
   content: string | null;
   requestedRole: string | null;
 }
+
+export interface Hook {
+  id: string;
+  project: string;
+  secret: string;
+  secretGeneratedAt: Date;
+  isActive: boolean;
+  invokedAt: Date | null;
+  invokeCount: number;
+}

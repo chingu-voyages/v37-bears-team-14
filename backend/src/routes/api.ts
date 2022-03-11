@@ -14,6 +14,7 @@ import FieldExistsError from "../controllers/errors/FieldExistsError";
 import InvalidChangeLastOwner from "../controllers/errors/InvalidChangeLastOwner";
 import projectRouter from "./projectRouter";
 import applicationRouter from "./applicationRouter";
+import hookRouter from "./hookRouter";
 import MemberAlreadyExistsError from "../controllers/errors/MemberAlreadyExistsError";
 import PendingApplicationExistsError from "../controllers/errors/PendingApplicationExistsError";
 
@@ -33,6 +34,10 @@ api.use(projectRouter);
 // APPLICATION
 
 api.use("/v1/applications", applicationRouter);
+
+// HOOKS
+
+api.use("/v1/hooks", hookRouter);
 
 // TECH
 

@@ -12,7 +12,11 @@ import ProjectSearch from "./components/projects/ProjectSearch";
 import ProjectSettingsLayout from "./components/project_page/layouts/ProjectSettingsLayout";
 import ProjectSettingsTeamPage from "./components/project_page/pages/ProjectSettingsTeamPage";
 import ProjectApplicationPage from "./components/project_page/pages/ProjectApplicationPage/index";
+import ProjectSettingsHooksPage from "./components/project_page/pages/ProjectSettingsHooksPage";
 
+/**
+ * App defines the global layout with Navbar and all the application routes.
+ */
 function App() {
   return (
     <>
@@ -35,6 +39,7 @@ function App() {
               <Route path="" element={<Navigate to="project" />} />
               <Route path="project" element={<ProjectSettingsPage />} />
               <Route path="team" element={<ProjectSettingsTeamPage />} />
+              <Route path="hooks" element={<ProjectSettingsHooksPage />} />
               <Route path="*" element={null} />
             </Route>
             <Route path="*" element={<Navigate to=".." />} />

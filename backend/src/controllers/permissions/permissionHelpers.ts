@@ -2,6 +2,12 @@ import { Model } from "mongoose";
 import { IMember } from "../../models/Member";
 import UnauthorizedError from "../errors/UnauthorizedError";
 
+/**
+ * Usage:
+ *     await verifyRoles(Member, ["owner"])(project, user);
+ *
+ * @throws UnauthorizedError
+ */
 export const verifyRoles =
   (memberModel: Model<IMember>, roleNames: string[]) =>
   async (project: string, user: string): Promise<boolean> => {

@@ -13,6 +13,7 @@ const ProjectEventSchema = new Schema<IProjectEvent>(
   {
     event: {
       type: Schema.Types.String,
+      indexed: true,
     },
     project: {
       type: Schema.Types.ObjectId,
@@ -23,7 +24,7 @@ const ProjectEventSchema = new Schema<IProjectEvent>(
     user: {
       type: Schema.Types.ObjectId,
       indexed: true,
-      sparse: true,
+      sparse: true, // in case a user cannot be associated and is null.
       ref: "user",
     },
     payload: {

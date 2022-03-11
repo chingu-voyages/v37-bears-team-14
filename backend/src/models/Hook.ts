@@ -4,7 +4,10 @@ import { IProject } from "./Project";
 export interface IHook {
   project: IProject | ObjectId;
   secret: string;
+  secretGeneratedAt: Date;
   isActive: boolean;
+  invokedAt: Date | null;
+  invokeCount: number;
 }
 
 const HookSchema = new Schema<IHook>(
@@ -18,8 +21,19 @@ const HookSchema = new Schema<IHook>(
     secret: {
       type: Schema.Types.String,
     },
+    secretGeneratedAt: {
+      type: Schema.Types.Date,
+    },
     isActive: {
       type: Schema.Types.Boolean,
+    },
+    invokedAt: {
+      type: Schema.Types.Date,
+      default: null,
+    },
+    invokeCount: {
+      type: Schema.Types.Number,
+      default: 0,
     },
   },
   {
