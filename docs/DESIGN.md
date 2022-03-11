@@ -52,4 +52,22 @@ Application {
   status: string // pending, accepted, closed
   requestedRole: string
 }
+
+Hook {
+  id: ObjectId
+  project: ObjectId // ref to Project
+  secret: string
+  secretGeneratedAt: Date
+  isActive: boolean
+  invokedAt: Date | null
+  invokeCount: number
+}
+
+ProjectEvent {
+  id: ObjectId
+  event: string
+  project: ObjectId // ref to Project
+  user?: ObjectId // ref to User, missing if a user can't be associated.
+  payload: string // JSON string of event payload
+}
 ```
