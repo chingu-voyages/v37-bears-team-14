@@ -2,7 +2,6 @@ import { Dispatch, FunctionComponent, SetStateAction, useState } from "react";
 import { Project } from "../../../../../shared/Interfaces";
 import Tech from "../../../components/Tech";
 import MemberList from "../../../components/MemberList";
-import PencilAltIcon from "../../../../icons/PencilAltIcon";
 import useMember from "../../../hooks/useMember";
 import UpdateTechModal from "./UpdateTechModal";
 import EditLink from "../../../../controls/EditLink";
