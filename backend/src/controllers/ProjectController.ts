@@ -1,7 +1,7 @@
 import logger from "../logger";
 import { ClientSession, Document, Model, ObjectId } from "mongoose";
 import { MongoError } from "mongodb";
-import _ from "lodash";
+import _, { merge } from "lodash";
 import { IMember } from "../models/Member";
 import { IProject } from "../models/Project";
 import { IUser } from "../models/User";
@@ -82,6 +82,8 @@ class ProjectController {
   }
 
   async searchProjects(search: string): Promise<ProjectSearchResultItem[]> {
+    const start = Date.now();
+
     const nameMatches: ProjectSearchResultItem[] =
       await this.projectModel.aggregate([
         createQuery({
@@ -125,11 +127,22 @@ class ProjectController {
         }),
       ]);
 
-    return mergeResults([
-      ...nameMatches,
-      ...descriptionMatches,
-      ...techMatches,
-    ]);
+    const total = [...nameMatches, ...descriptionMatches, ...techMatches];
+    const merged = mergeResults(total);
+    const timeElapsed = Date.now() - start;
+
+    logger.info("[project_search_stat]", {
+      search,
+      timeElapsed,
+      total: total.length,
+      merged: merged.length,
+      techsFound: techs.length,
+      techMatchesLength: techMatches.length,
+      nameMatchesLength: nameMatches.length,
+      descriptionMatchesLength: descriptionMatches.length,
+    });
+
+    return merged;
   }
 
   async lookup(pageSize: number): Promise<ProjectDoc[]> {
