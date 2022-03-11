@@ -11,6 +11,11 @@
     background-color: #e4e9ef;
     font-family: "DM Sans", sans-serif;
   }
+
+  ul,
+  ol {
+    list-style: revert;
+  }
 }
 /* body {
   margin: 0;
@@ -36,6 +41,10 @@ code {
 
   .main-gradient {
     @apply bg-gradient-to-br from-purple-600 to-blue-500;
+  }
+
+  .no-first-margin > :first-child {
+    margin-left: 0 !important;
   }
 }
 

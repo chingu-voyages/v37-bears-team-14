@@ -6,6 +6,19 @@ export interface Project {
   settingOpenRoles: string[];
 }
 
+export interface ProjectResult {
+  id: string;
+  name: string;
+  description: string;
+  matchType: {
+    name: boolean;
+    description: boolean;
+    techs: boolean;
+  };
+  techs: Tech[];
+  settingOpenRoles: string[];
+}
+
 export interface Tech {
   id: string;
   name: string;

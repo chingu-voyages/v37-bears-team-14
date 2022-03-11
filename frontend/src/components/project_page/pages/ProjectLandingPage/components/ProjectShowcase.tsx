@@ -20,7 +20,7 @@ const ProjectLanding: FunctionComponent<ProjectLandingProps> = ({
   const isOwner = isMember && member && member.roleName === "owner";
 
   return (
-    <div className="m-3 md:mx-8 mb-8 md:mb-16">
+    <div className="m-3 md:mx-8 mb-8 md:mb-16 ">
       <div className="my-4 md:my-8">
         <div className="font-bold my-1">Team</div>
         <MemberList projectId={project.id} />

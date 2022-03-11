@@ -5,6 +5,11 @@ export interface IProject {
   name: string;
   description: null | string;
   techs: ObjectId[] | ITech[];
+  matchType?: {
+    name?: boolean;
+    description?: boolean;
+    techs?: boolean;
+  };
   settingOpenRoles: string[];
 }
 
@@ -33,6 +38,11 @@ const ProjectSchema = new Schema<IProject>(
   {
     timestamps: true,
   }
+);
+
+ProjectSchema.index(
+  { name: "text", description: "text" },
+  { weights: { name: 5, description: 2 } }
 );
 
 ProjectSchema.set("toJSON", {
