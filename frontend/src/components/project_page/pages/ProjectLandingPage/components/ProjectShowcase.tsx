@@ -5,6 +5,7 @@ import MemberList from "../../../components/MemberList";
 import PencilAltIcon from "../../../../icons/PencilAltIcon";
 import useMember from "../../../hooks/useMember";
 import UpdateTechModal from "./UpdateTechModal";
+import EditLink from "../../../../controls/EditLink";
 
 export interface ProjectLandingProps {
   project: Project;
@@ -29,18 +30,10 @@ const ProjectLanding: FunctionComponent<ProjectLandingProps> = ({
       <div className="my-4 md:my-8">
         <div className="font-bold my-1">
           Tech Stack
-          <div
+          <EditLink
             onClick={() => isOwner && setShowAddTech(true)}
-            className={
-              " mx-2 inline cursor-pointer text-slate-600 hover:text-slate-900 active:text-slate-600 " +
-              (isOwner
-                ? ""
-                : "opacity-40 hover:text-slate-600 cursor-not-allowed")
-            }
-          >
-            <PencilAltIcon className="p-1 h-6 inline" />{" "}
-            <span className="text-sm font-medium">Edit</span>
-          </div>
+            disabled={!isOwner}
+          />
         </div>
         <div className="flex flex-wrap">
           {project.techs.map((tech) => (

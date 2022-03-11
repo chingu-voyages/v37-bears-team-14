@@ -10,6 +10,10 @@ import ApplicationService from "../../../services/ApplicationService";
 import Details from "../../info/Details";
 import ArrowLeftIcon from "../../icons/ArrowLeftIcon";
 import InformationCircleIcon from "../../icons/InformationCircleIcon";
+import ActionButton from "../../controls/ActionButton";
+import Modal from "../../controls/Modal";
+import ApplicationUpdateForm from "../components/ApplicationUpdateForm";
+import EditLink from "../../controls/EditLink";
 
 const Layout = (props: any) => {
   return (
@@ -29,6 +33,7 @@ const ApplicationEditPage = () => {
   const { applicationId } = useParams();
   const [loading, setLoading] = useState(true);
   const [application, setApplication] = useState<Application | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
     const getApplication = async () => {
@@ -63,7 +68,7 @@ const ApplicationEditPage = () => {
                 </div>
 
                 <div className="text-2xl">
-                  Application to{" "}
+                  <span className="text-gray-600">Application to </span>
                   <Link
                     to={"/projects/" + application.project.id}
                     className="hover:underline"
@@ -100,7 +105,9 @@ const ApplicationEditPage = () => {
                 />
               </div>
 
-              <div className="mt-2 font-semibold text-sm my-1">Message</div>
+              <div className="mt-2 font-semibold text-sm my-1">
+                Message <EditLink onClick={() => setModalOpen(true)} />
+              </div>
               <div className="border-[1px] border-slate-300 rounded p-3">
                 {application.content ? (
                   <Readme>{application.content}</Readme>
@@ -108,6 +115,23 @@ const ApplicationEditPage = () => {
                   <div className="text-slate-400">No message</div>
                 )}
               </div>
+              {modalOpen && application && (
+                <Modal>
+                  <ApplicationUpdateForm
+                    initialContent={application.content || ""}
+                    updateApplication={async (params) => {
+                      const updated =
+                        await ApplicationService.updateApplication(
+                          application.id,
+                          params
+                        );
+                      setApplication(updated);
+                      setModalOpen(false);
+                    }}
+                    onCancel={() => setModalOpen(false)}
+                  />
+                </Modal>
+              )}
             </>
           )}
         </>

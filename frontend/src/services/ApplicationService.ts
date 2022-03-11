@@ -4,6 +4,7 @@ import { CreateApplicationParams } from "../shared/ApplicationInterfaces";
 export interface ApplicationUpdateParams {
   status?: string;
   requestedRole?: string;
+  content?: string;
 }
 
 const findApplication = (
