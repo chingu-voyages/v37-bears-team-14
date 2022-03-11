@@ -129,11 +129,11 @@ class ProjectController {
 
     const total = [...nameMatches, ...descriptionMatches, ...techMatches];
     const merged = mergeResults(total);
-    const timeElapsed = Date.now() - start;
+    const timeElapsedMs = Date.now() - start;
 
     logger.info("[project_search_stat]", {
       search,
-      timeElapsed,
+      timeElapsedMs,
       total: total.length,
       merged: merged.length,
       techsFound: techs.length,
