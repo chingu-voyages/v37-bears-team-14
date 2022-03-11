@@ -16,6 +16,7 @@ import {
   createJoins,
   createProjection,
   createQuery,
+  mergeResults,
 } from "./projects/searchHelpers";
 import { TechDoc } from "./TechController";
 
@@ -32,6 +33,12 @@ export interface MemberUpdateParams {
 
 export type ProjectDoc = IProject & Document<unknown, any, IProject>;
 
+export type MatchType = {
+  name: boolean;
+  description: boolean;
+  techs: boolean;
+};
+
 export type ProjectSearchResultItem = {
   id: ObjectId;
   createdAt: Date;
@@ -40,11 +47,7 @@ export type ProjectSearchResultItem = {
   description: string;
   techs: (ITech & { id: ObjectId })[];
   members: (IMember & { id: ObjectId })[];
-  matchType: {
-    name: boolean;
-    description: boolean;
-    techs: boolean;
-  };
+  matchType: MatchType;
 };
 
 class ProjectController {
@@ -84,12 +87,11 @@ class ProjectController {
         createQuery({
           name: { $regex: search, $options: "i" },
         }),
+        { $limit: 20 },
         ...createJoins(),
         createProjection(),
         createAddedFields({
           name: true,
-          description: false,
-          techs: false,
         }),
       ]);
 
@@ -98,12 +100,11 @@ class ProjectController {
         createQuery({
           description: { $regex: search, $options: "i" },
         }),
+        { $limit: 20 },
         ...createJoins(),
         createProjection(),
         createAddedFields({
-          name: false,
           description: true,
-          techs: false,
         }),
       ]);
 
@@ -116,20 +117,19 @@ class ProjectController {
         createQuery({
           techs: { $in: techs.map((t) => t._id) },
         }),
+        { $limit: 20 },
         ...createJoins(),
         createProjection(),
         createAddedFields({
-          name: false,
-          description: false,
           techs: true,
         }),
       ]);
 
-    const projects = _.uniqBy(
-      [...nameMatches, ...descriptionMatches, ...techMatches],
-      (r) => r.id.toString()
-    );
-    return projects;
+    return mergeResults([
+      ...nameMatches,
+      ...descriptionMatches,
+      ...techMatches,
+    ]);
   }
 
   async lookup(pageSize: number): Promise<ProjectDoc[]> {

@@ -1,5 +1,6 @@
 import { FilterQuery, PipelineStage } from "mongoose";
 import { IProject } from "../../models/Project";
+import { MatchType, ProjectSearchResultItem } from "../ProjectController";
 
 /**
  * Helpers for Project aggregation queries.
@@ -118,10 +119,48 @@ export const createProjection = (): PipelineStage.Project => {
  * Creates a projection pipeline for the final Project search result item.
  * The projections replace the "_id" key to "id" to match the API schema.
  */
-export const createAddedFields = (matchType?: any): PipelineStage.AddFields => {
+export const createAddedFields = (
+  matchType: Partial<MatchType>
+): PipelineStage.AddFields => {
   return {
     $addFields: {
       matchType: matchType || null,
     },
   };
+};
+
+const EMPTY_MATCH_TYPE: MatchType = {
+  name: false,
+  description: false,
+  techs: false,
+};
+
+export const mergeResults = (
+  results: ProjectSearchResultItem[]
+): ProjectSearchResultItem[] => {
+  const indices: Record<string, number> = {};
+  const deduped: ProjectSearchResultItem[] = [];
+
+  for (let i = 0; i < results.length; i++) {
+    const project = results[i];
+    const prevIndex = indices[project.id.toString()];
+    if (prevIndex !== undefined) {
+      const prev = deduped[prevIndex];
+      prev.matchType = {
+        ...prev.matchType,
+        ...project.matchType,
+      };
+    } else {
+      indices[project.id.toString()] = deduped.length;
+      deduped.push(project);
+    }
+  }
+
+  return deduped.map((p) => ({
+    ...p,
+    matchType: {
+      ...EMPTY_MATCH_TYPE,
+      ...p.matchType,
+    },
+  }));
 };
