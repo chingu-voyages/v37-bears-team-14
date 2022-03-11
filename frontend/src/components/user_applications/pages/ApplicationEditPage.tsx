@@ -9,11 +9,10 @@ import RoleSelector from "../../controls/RoleSelector";
 import ApplicationService from "../../../services/ApplicationService";
 import Details from "../../info/Details";
 import ArrowLeftIcon from "../../icons/ArrowLeftIcon";
-import InformationCircleIcon from "../../icons/InformationCircleIcon";
-import ActionButton from "../../controls/ActionButton";
 import Modal from "../../controls/Modal";
 import ApplicationUpdateForm from "../components/ApplicationUpdateForm";
 import EditLink from "../../controls/EditLink";
+import { useSession } from "../../../hooks/session";
 
 const Layout = (props: any) => {
   return (
@@ -29,6 +28,7 @@ const Layout = (props: any) => {
 };
 
 const ApplicationEditPage = () => {
+  const { loading: sessionLoading, user } = useSession();
   const navigate = useNavigate();
   const { applicationId } = useParams();
   const [loading, setLoading] = useState(true);
@@ -36,12 +36,22 @@ const ApplicationEditPage = () => {
   const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
+    if (sessionLoading) return;
+
     const getApplication = async () => {
       const resp = await fetch("/api/v1/applications/" + applicationId);
       if (resp.status === 403) {
         navigate("/applications");
       } else if (resp.status === 200 || resp.status === 304) {
-        setApplication(await resp.json());
+        // FIXME: This is a weak protection against other users from viewing an application.
+        // A better solution requires backend permission validation.
+        const application = await resp.json();
+        if (user && application.user.id !== user.id) {
+          navigate("/applications");
+          return;
+        }
+
+        setApplication(application);
         setLoading(false);
       } else {
         console.error("Failed to load application", resp.status, resp);
@@ -49,7 +59,7 @@ const ApplicationEditPage = () => {
     };
 
     getApplication().catch(console.error);
-  }, [applicationId, navigate]);
+  }, [sessionLoading, user, applicationId, navigate]);
 
   return (
     <Layout

@@ -11,8 +11,8 @@ import ProjectSettingsPage from "./components/project_page/pages/ProjectSettings
 import ProjectSearch from "./components/projects/ProjectSearch";
 import ProjectSettingsLayout from "./components/project_page/layouts/ProjectSettingsLayout";
 import ProjectSettingsTeamPage from "./components/project_page/pages/ProjectSettingsTeamPage";
-import ProjectApplicationPage from "./components/project_page/pages/ProjectApplicationPage/index";
-import ApplicationListPage from "./components/user_applications/ApplicationListPage";
+import ProjectApplicationPage from "./components/project_page/pages/ProjectApplicationPage";
+import ApplicationListPage from "./components/user_applications/pages/ApplicationListPage";
 import ApplicationEditPage from "./components/user_applications/pages/ApplicationEditPage";
 
 function App() {

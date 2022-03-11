@@ -1,8 +1,8 @@
-import { Application } from "../../shared/Interfaces";
+import { Application } from "../../../../shared/Interfaces";
 import { FC } from "react";
-import ApplicationStatus from "../project_page/pages/ProjectApplicationPage/components/ApplicationStatus";
+import ApplicationStatus from "../../../project_page/pages/ProjectApplicationPage/components/ApplicationStatus";
 import { Link } from "react-router-dom";
-import getBlurb from "../project_page/pages/ProjectApplicationsListPage/getBlurb";
+import getBlurb from "../../../project_page/pages/ProjectApplicationsListPage/getBlurb";
 import moment from "moment";
 
 interface ApplicationPreviewProps {

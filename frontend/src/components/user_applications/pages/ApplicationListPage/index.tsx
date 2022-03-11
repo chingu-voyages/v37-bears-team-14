@@ -1,19 +1,10 @@
-import { useEffect } from "react";
-import { useSession } from "../../hooks/session";
-import { Link, useNavigate } from "react-router-dom";
+import { useSession } from "../../../../hooks/session";
+import { Link } from "react-router-dom";
 import ApplicationList from "./ApplicationList";
-import LoadingSpinner from "../Spinners/LoadingSpinner";
+import LoadingSpinner from "../../../Spinners/LoadingSpinner";
 
 const ApplicationListPage = () => {
   const { loading, isLoggedIn, user } = useSession();
-  // const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   if (loading) return;
-  //   if (!isLoggedIn || !user) {
-  //     navigate("/"); // or wherever they should log in.
-  //   }
-  // }, [loading, isLoggedIn, user, navigate]);
 
   return (
     <div className="bg-white flex flex-col-reverse md:flex-row">

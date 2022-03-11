@@ -1,9 +1,9 @@
 import { FC, useState } from "react";
-import { Application } from "../../shared/Interfaces";
+import { Application } from "../../../../shared/Interfaces";
 import { useEffect } from "react";
 import ApplicationPreview from "./ApplicationPreview";
-import LoadingSpinner from "../Spinners/LoadingSpinner";
-import QueryTabs from "../controls/QueryTabs";
+import LoadingSpinner from "../../../Spinners/LoadingSpinner";
+import QueryTabs from "../../../controls/QueryTabs";
 
 interface ApplicationListProps {
   userId: string;
