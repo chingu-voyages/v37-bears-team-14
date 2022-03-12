@@ -5,7 +5,7 @@ import { User } from "../../shared/Interfaces";
 import UpdateUserForm from "./UpdateUserForm";
 
 interface Props {
-  userProps: User;
+  userProps?: User;
 }
 
 const UserSettingsLayout: FunctionComponent<Props> = ({ userProps }) => {

@@ -3,10 +3,9 @@ import { NextFunction, Request, Response, Router } from "express";
 import { isValidObjectId, startSession } from "mongoose";
 import NotFoundError from "../controllers/errors/NotFoundError";
 import TechController from "../controllers/TechController";
-import UserController from "../controllers/UserController";
-import ProfileController, {
+import UserController, {
   ProfileUpdateParams,
-} from "../controllers/ProfileController";
+} from "../controllers/UserController";
 import logger from "../logger";
 import Tech from "../models/Tech";
 import User from "../models/User";
@@ -23,8 +22,7 @@ import PendingApplicationExistsError from "../controllers/errors/PendingApplicat
 /* Dependencies */
 
 const techController = new TechController(Tech);
-const userController = new UserController(User);
-const profileController = new ProfileController(User, () => startSession());
+const userController = new UserController(User, () => startSession());
 /* API routes */
 
 const api = Router();
@@ -120,18 +118,11 @@ api.get("/v1/users/:id", async (req, res, next) => {
     next(err);
   }
 });
-api.get("/v1/users/", async (req, res, next) => {
-  try {
-    const user = req.user;
-    res.json(user);
-  } catch (err) {
-    next(err);
-  }
-});
+
 api.post(
-  "/v1/users/",
+  "/v1/users/:id",
   async (req: Request, res, next) => {
-    if (req.user) {
+    if (req.user?.id.toString() == req.params["id"]) {
       next();
     } else {
       res.status(401).json({ errors: ["unauthenticated"] });
@@ -175,7 +166,11 @@ api.post(
     }
 
     try {
-      const profile = await profileController.updateProfile(userId, params);
+      const profile = await userController.updateProfile(
+        userId,
+        req.params["id"],
+        params
+      );
       res.json(profile);
     } catch (err) {
       next(err);

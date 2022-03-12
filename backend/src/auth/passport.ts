@@ -1,7 +1,7 @@
 import passport from "passport";
 import logger from "../logger";
 import UserModel, { IUser } from "../models/User";
-import { Document } from "mongoose";
+import { Document, startSession } from "mongoose";
 import { Strategy as GithubStrategy } from "passport-github2";
 import { mustGetConfig } from "../config";
 import { parseAvatarUrl } from "./github";
@@ -9,7 +9,7 @@ import UserController from "../controllers/UserController";
 
 /* dependencies */
 const config = mustGetConfig(process.env);
-const userController = new UserController(UserModel);
+const userController = new UserController(UserModel, () => startSession());
 
 export type PassportCallback = (err: null | Error, user?: Express.User) => void;
 

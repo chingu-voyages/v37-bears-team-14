@@ -4,6 +4,7 @@ import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import Alert from "../alerts/Alert";
 import { Tech } from "../../shared/Interfaces";
+import { useSession } from "../../hooks/session";
 
 interface Props {
   chosenTechs: Tech[];
@@ -43,6 +44,7 @@ const UpdateUserForm: React.FC<Props> = ({
 }) => {
   const [customOpen, setCustomOpen] = useState(false);
   const [userUpdated, setuserUpdated] = useState(false);
+  const { user } = useSession();
 
   const CustomMenuButton = forwardRef<HTMLButtonElement>(
     ({ children }, ref) => (
@@ -70,31 +72,33 @@ const UpdateUserForm: React.FC<Props> = ({
           values.techs = chosenTechs.map((t) => t.id);
           function updateUser(values: FormValues) {
             // setLoading(true);
-            fetch("http://localhost:3000/api/v1/users/", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(values),
-            }).then((response) => {
-              if (response.status === 200) {
-                // setLoading(false);
-                resetForm();
-                setTechs([...techs, ...chosenTechs]);
-                techs.sort((a: Tech, b: Tech) => (a.name > b.name ? 1 : -1));
-                setChosenTechs([]);
-                setuserUpdated(true);
-                setTimeout(() => {
-                  setuserUpdated(false);
-                }, 2000);
-              } else {
-                console.error(
-                  "failed to update user",
-                  response.status,
-                  response.json()
-                );
-              }
-            });
+            if (user && user.id) {
+              fetch(`http://localhost:3000/api/v1/users/${user.id}`, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(values),
+              }).then((response) => {
+                if (response.status === 200) {
+                  // setLoading(false);
+                  resetForm();
+                  setTechs([...techs, ...chosenTechs]);
+                  techs.sort((a: Tech, b: Tech) => (a.name > b.name ? 1 : -1));
+                  setChosenTechs([]);
+                  setuserUpdated(true);
+                  setTimeout(() => {
+                    setuserUpdated(false);
+                  }, 2000);
+                } else {
+                  console.error(
+                    "failed to update user",
+                    response.status,
+                    response.json()
+                  );
+                }
+              });
+            }
           }
           updateUser(values);
         }}
@@ -115,7 +119,7 @@ const UpdateUserForm: React.FC<Props> = ({
                 htmlFor="name"
                 className="block text-gray-700 text-sm font-bold mb-2"
               >
-                Name
+                Username
               </label>
               <Field
                 name="username"
