@@ -1,4 +1,5 @@
 import UserController from "./UserController";
+import { startSession } from "mongoose";
 
 test("Test that updateDefaultsIfNeeded fills in null fields", async () => {
   let saveCount = 0;
@@ -19,7 +20,9 @@ test("Test that updateDefaultsIfNeeded fills in null fields", async () => {
     findOne: async () => Promise.resolve(null),
   };
 
-  const userController = new UserController(fakeUserModel as any);
+  const userController = new UserController(fakeUserModel as any, () =>
+    startSession()
+  );
   const updatedUser = await userController.updateDefaultsIfNeeded(
     fakeUser as any,
     fakeProfile
@@ -49,7 +52,9 @@ test("Test that updateDefaultsIfNeeded does not modify non-null fields", async (
     findOne: async () => Promise.resolve(null),
   };
 
-  const userController = new UserController(fakeUserModel as any);
+  const userController = new UserController(fakeUserModel as any, () =>
+    startSession()
+  );
   const updatedUser = await userController.updateDefaultsIfNeeded(
     fakeUser as any,
     fakeProfile
@@ -84,7 +89,9 @@ test("Test that updateDefaultsIfNeeded does not exceed maximum retries", async (
     },
   };
 
-  const userController = new UserController(fakeUserModel as any);
+  const userController = new UserController(fakeUserModel as any, () =>
+    startSession()
+  );
   try {
     await userController.updateDefaultsIfNeeded(fakeUser as any, fakeProfile);
   } catch (err) {
