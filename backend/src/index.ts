@@ -44,6 +44,8 @@ app.use("/auth", auth);
 
 app.use("/api", api);
 
+app.get("/ping", (_, res) => res.end());
+
 app.get("/*", (_, res) => {
   res.sendFile(path.resolve(__dirname, "../build/client/index.html"));
 });
