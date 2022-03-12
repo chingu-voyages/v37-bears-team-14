@@ -66,12 +66,12 @@ const HookControl: FC<HookControlProps> = ({ hook, onDelete, onUpdate }) => {
   return (
     <div className="my-4 p-4 border-[1px] border-gray-400 rounded">
       <div className="w-full my-2">
-        <label className="font-semibold" htmlFor="webhook_url">
+        <label className="font-semibold" htmlFor={"webhook_url_" + hook.id}>
           Webhook URL
         </label>
         <input
           className=" w-full"
-          id="webhook_url"
+          id={"webhook_url_" + hook.id}
           tabIndex={0}
           value={webhookUrl}
           readOnly
@@ -79,12 +79,12 @@ const HookControl: FC<HookControlProps> = ({ hook, onDelete, onUpdate }) => {
       </div>
 
       <div className="w-full my-2">
-        <label className="font-semibold" htmlFor="webhook_secret">
+        <label className="font-semibold" htmlFor={"webhook_secret_" + hook.id}>
           Webhook Secret
         </label>
         <textarea
           className=" w-full h-32"
-          id="webhook_secret"
+          id={"webhook_secret_" + hook.id}
           tabIndex={0}
           value={hook.secret}
           readOnly
@@ -112,7 +112,7 @@ const HookControl: FC<HookControlProps> = ({ hook, onDelete, onUpdate }) => {
 
       <div className="my-1">
         <input
-          id="webhook_isActive"
+          id={"webhook_isActive_" + hook.id}
           type="checkbox"
           checked={hook.isActive}
           className="mr-2"
@@ -120,7 +120,7 @@ const HookControl: FC<HookControlProps> = ({ hook, onDelete, onUpdate }) => {
             updateWebhook(hook.id, { isActive: e.target.checked })
           }
         />
-        <label htmlFor="webhook_isActive">Active</label>
+        <label htmlFor={"webhook_isActive_" + hook.id}>Active</label>
       </div>
 
       <div className="my-2">
