@@ -146,11 +146,12 @@ class ProjectController {
   }
 
   async lookup(pageSize: number): Promise<ProjectDoc[]> {
-    const projects = await this.projectModel
-      .find()
-      .sort({ _id: -1 })
-      .limit(pageSize)
-      .populate("techs");
+    const projects = await this.projectModel.aggregate([
+      { $limit: pageSize },
+      { $sort: { updatedAt: -1 } },
+      ...createJoins(),
+      createProjection(),
+    ]);
 
     return projects;
   }

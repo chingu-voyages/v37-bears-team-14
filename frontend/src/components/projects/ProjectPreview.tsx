@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from "react";
 import { Link } from "react-router-dom";
 import Preview from "../../components/formatting/Preview";
-import { Project, Tech } from "../../shared/Interfaces";
+import { Project, Tech, Member } from "../../shared/Interfaces";
 import { truncateString } from "../../shared/Utils";
 
 interface Props {
@@ -14,8 +14,8 @@ const ProjectPreview: FunctionComponent<Props> = ({ projects }) => {
       {console.log(projects)}
       {projects.map((p, index) => (
         <Link to={`/projects/${p.id}`} key={index}>
-          <div className="bg-neutral-400" key={index}>
-            <div className="bg-darkGray border-b-4 border-lightGray">
+          <div className="bg-neutral-400 shadow-lg" key={index}>
+            <div className="bg-darkGray border-b-[1px] border-mintGreen">
               <p className="text-center sm:text-md lg:text-xl text-lightGray pb-2 pt-1">
                 {p.name}
               </p>
@@ -32,12 +32,21 @@ const ProjectPreview: FunctionComponent<Props> = ({ projects }) => {
                     />
                   </div>
                 ))}
-                {p.techs.length > 5 && (
+                {p.techs.length > 4 && (
                   <span className="align-middle">{`+ ${
-                    p.techs.length - 5
+                    p.techs.length - 4
                   } More`}</span>
                 )}
               </div>
+            </div>
+            <div className="-space-x-3 pb-1 pl-1">
+              {p.members.map((m: Member) => (
+                <img
+                  className="relative z-30 bg-white inline object-cover w-8 h-8 border-2 border-neutral-400 rounded-full shadow-md"
+                  src={m.user.avatarUrl}
+                  alt={m.user.username}
+                />
+              ))}
             </div>
           </div>
         </Link>

@@ -12,9 +12,9 @@ const ProjectPreview: FunctionComponent<Props> = ({ projects }) => {
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 m-1">
       {projects.map((p, index) => (
         <Link to={`/projects/${p.id}`} key={index}>
-          <div className="bg-neutral-400" key={index}>
+          <div className="bg-neutral-400 shadow-lg" key={index}>
             <div
-              className={`bg-darkGray border-b-4 border-lightGray ${
+              className={`bg-darkGray border-b-[1px] border-mintGreen ${
                 p.matchType.name ? "bg-red-400 text-darkGray" : "text-lightGray"
               }`}
             >
@@ -53,7 +53,7 @@ const ProjectPreview: FunctionComponent<Props> = ({ projects }) => {
             <div className="-space-x-3 pb-1 pl-1">
               {p.members.map((m: Member) => (
                 <img
-                  className="relative z-30 inline object-cover w-8 h-8 border-2 border-lightGrey rounded-full"
+                  className="relative z-30 inline object-cover bg-white w-8 h-8 border-2 border-neutral-400 rounded-full"
                   src={m.user.avatarUrl}
                   alt={m.user.username}
                 />

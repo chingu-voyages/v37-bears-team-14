@@ -3,6 +3,7 @@ export interface Project {
   name: string;
   description: string;
   techs: Tech[];
+  members: Member[];
   settingOpenRoles: string[];
 }
 
