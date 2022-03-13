@@ -130,6 +130,7 @@ hooks.post("/:id/events/github", async (req, res, next) => {
 
     logger.info("Processed hook events/github " + req.params["id"], {
       hookId: req.params["id"],
+      eventId: event?.id,
       timeElapsedMs,
       ...pick(req.headers, [
         "content-type",
