@@ -42,10 +42,12 @@ export interface Member {
 export interface Application {
   id: string;
   createdAt: Date;
+  updatedAt: Date;
   project: {
     id: string;
     name: string;
     description: string;
+    settingOpenRoles: string[];
   };
   user: {
     id: string;
