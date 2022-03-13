@@ -68,3 +68,27 @@ Application {
   requestedRole: string
 }
 ```
+
+## Computation Data Models
+
+Computations are the result of periodic endpoint calls.
+Only the latest result matters, so no indexing on any fields
+besides the _id field is needed. Getting the latest item
+relies on the fact that _id's ObjectId contains a timestamp component
+and the latest _id can be queried.
+
+```
+ComputationTrendingSearch {
+  id: ObjectId
+  suggestions: {
+    query: string
+    score: number
+  }[];
+  start: ObjectId // ref to Search
+  end: ObjectId // ref to Search
+  analyzed: number
+  maxAnalyzed: number
+  timeElapsedMs: number
+  createdAt: Date
+}
+```

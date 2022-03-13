@@ -170,7 +170,7 @@ class ComputationTrendingSearchController {
   }
 
   private updateState(state: ComputationState, search: SearchDoc) {
-    // TODO: In the future, one evaluate more criteria based on project name or description here.
+    // TODO: In the future, evaluate more criteria based on project name or description here.
 
     // Don't add matched techs if they weren't a part of any project!
     if (search.techMatchesProjects.length < 1) {

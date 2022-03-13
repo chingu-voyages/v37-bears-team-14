@@ -24,11 +24,9 @@ const ComputationItemSchema = new Schema<IComputationItem>({
   },
 });
 
-/**
- * None of the fields are indexed to improve insert speed.
- * Future optimization can be done by batching inserts and
- * writing in bulk.
- */
+// None of the fields besides _id are indexed.
+// Relies on timestamp component of ObjectId _id for querying the latest record.
+// e.g. ComputationTrendingSearch.findOne().sort({_id: -1}).limit(1);
 const ComputationTrendingSearchSchema = new Schema<IComputationTrendingSearch>({
   suggestions: {
     type: [ComputationItemSchema],
