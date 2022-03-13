@@ -12,6 +12,9 @@ vice versa (projects can be associated with multiple users).
 
 Applications represent a User's request to be added as a Member to a Project.
 
+Search is an insert-only collection we don't plan to update the items of.
+It saves the metadata of project searches for downstream processing.
+
 ```
 User {
   id: ObjectId
@@ -29,6 +32,18 @@ Project {
   description: string // short description
   techs: ObjectId[] // ref to Tech
   settingOpenRoles: string[] // default ["developer", "designer"]
+}
+
+Search {
+  query: string;
+  nameMatchesProjects: ObjectId[]; // ref to Project
+  descriptionMatchesProjects: ObjectId[]; // ref to Project
+  techMatchesProjects: ObjectId[]; // ref to Project
+  matchedTechs: ObjectId[]; // ref to Tech
+  mergedCount: number;
+  totalCount: number;
+  timeElapsedMs: number;
+  user: ObjectId | null; // ref to User, the logged-in user making the search
 }
 
 Member {

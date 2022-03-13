@@ -1,5 +1,5 @@
 import logger from "../logger";
-import { ClientSession, Document, Model, ObjectId } from "mongoose";
+import { ClientSession, Document, isValidObjectId, Model, ObjectId } from "mongoose";
 import { MongoError } from "mongodb";
 import _, { merge } from "lodash";
 import { IMember } from "../models/Member";
@@ -19,6 +19,7 @@ import {
   mergeResults,
 } from "./projects/searchHelpers";
 import { TechDoc } from "./TechController";
+import { ISearch } from "../models/Search";
 
 export interface ProjectUpdateParams {
   name?: string;
@@ -50,6 +51,18 @@ export type ProjectSearchResultItem = {
   matchType: MatchType;
 };
 
+interface SaveSearchParams {
+  query: string;
+  nameMatches: ProjectSearchResultItem[];
+  descriptionMatches: ProjectSearchResultItem[];
+  techMatches: ProjectSearchResultItem[];
+  matchedTechs: TechDoc[];
+  mergedCount: number;
+  totalCount: number;
+  timeElapsedMs: number;
+  user?: ObjectId;
+}
+
 class ProjectController {
   constructor(
     private projectModel: Model<IProject>,
@@ -57,6 +70,7 @@ class ProjectController {
     private userModel: Model<IUser>,
     private memberModel: Model<IMember>,
     private techModel: Model<ITech>,
+    private searchModel: Model<ISearch>,
     private createSession: () => Promise<ClientSession>
   ) {}
 
@@ -81,7 +95,7 @@ class ProjectController {
     return project;
   }
 
-  async searchProjects(search: string): Promise<ProjectSearchResultItem[]> {
+  async searchProjects(search: string, user?: ObjectId): Promise<ProjectSearchResultItem[]> {
     const start = Date.now();
 
     const nameMatches: ProjectSearchResultItem[] =
@@ -131,6 +145,18 @@ class ProjectController {
     const merged = mergeResults(total);
     const timeElapsedMs = Date.now() - start;
 
+    this.saveSearch({
+      query: search,
+      nameMatches,
+      descriptionMatches,
+      techMatches,
+      matchedTechs: techs,
+      mergedCount: merged.length,
+      totalCount: total.length,
+      timeElapsedMs,
+      user,
+    });
+
     logger.info("[project_search_stat]", {
       search,
       timeElapsedMs,
@@ -143,6 +169,40 @@ class ProjectController {
     });
 
     return merged;
+  }
+
+  // Tracks searches, so this method should be as lightweight as possible.
+  saveSearch(params: SaveSearchParams) {
+    // Run this asynchronously so that it does not block the request.
+    setTimeout(() => this.saveSearchSafe(params));
+  }
+
+  /**
+   * saveSearchSafe suppresses exceptions by catching, logging, and moving on
+   * so that it does not fail the caller.
+   */
+  async saveSearchSafe(params: SaveSearchParams) {
+    try {
+      const search = await this.searchModel.create({
+        query: params.query,
+        nameMatchesProjects: params.nameMatches.map((p) => p.id),
+        descriptionMatchesProjects: params.descriptionMatches.map((p) => p.id),
+        techMatchesProjects: params.techMatches.map((p) => p.id),
+        matchedTechs: params.matchedTechs.map((t) => t._id),
+        mergedCount: params.mergedCount,
+        totalCount: params.totalCount,
+        timeElapsedMs: params.timeElapsedMs,
+        user: isValidObjectId(params.user) ? params.user : null,
+      });
+      logger.info("Search saved " + search._id, {
+        searchId: search._id,
+      });
+    } catch (err: any) {
+      logger.error("Failed to save search!!", {
+        errorMessage: err.message,
+        params,
+      })
+    }
   }
 
   async lookup(pageSize: number): Promise<ProjectDoc[]> {
