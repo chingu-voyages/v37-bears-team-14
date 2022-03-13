@@ -20,9 +20,7 @@ test("Test that updateDefaultsIfNeeded fills in null fields", async () => {
     findOne: async () => Promise.resolve(null),
   };
 
-  const userController = new UserController(fakeUserModel as any, () =>
-    startSession()
-  );
+  const userController = new UserController(fakeUserModel as any);
   const updatedUser = await userController.updateDefaultsIfNeeded(
     fakeUser as any,
     fakeProfile
@@ -52,9 +50,7 @@ test("Test that updateDefaultsIfNeeded does not modify non-null fields", async (
     findOne: async () => Promise.resolve(null),
   };
 
-  const userController = new UserController(fakeUserModel as any, () =>
-    startSession()
-  );
+  const userController = new UserController(fakeUserModel as any);
   const updatedUser = await userController.updateDefaultsIfNeeded(
     fakeUser as any,
     fakeProfile
@@ -89,9 +85,7 @@ test("Test that updateDefaultsIfNeeded does not exceed maximum retries", async (
     },
   };
 
-  const userController = new UserController(fakeUserModel as any, () =>
-    startSession()
-  );
+  const userController = new UserController(fakeUserModel as any);
   try {
     await userController.updateDefaultsIfNeeded(fakeUser as any, fakeProfile);
   } catch (err) {

@@ -9,7 +9,7 @@ import UserController from "../controllers/UserController";
 
 /* dependencies */
 const config = mustGetConfig(process.env);
-const userController = new UserController(UserModel, () => startSession());
+const userController = new UserController(UserModel);
 
 export type PassportCallback = (err: null | Error, user?: Express.User) => void;
 

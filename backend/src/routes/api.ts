@@ -22,7 +22,7 @@ import PendingApplicationExistsError from "../controllers/errors/PendingApplicat
 /* Dependencies */
 
 const techController = new TechController(Tech);
-const userController = new UserController(User, () => startSession());
+const userController = new UserController(User);
 /* API routes */
 
 const api = Router();

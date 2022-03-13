@@ -15,10 +15,7 @@ export interface ProfileUpdateParams {
 }
 
 class UserController {
-  constructor(
-    private userModel: Model<IUser>,
-    private createSession: () => Promise<ClientSession>
-  ) {}
+  constructor(private userModel: Model<IUser>) {}
   //TODO: Update User
   async updateProfile(
     id: string,
@@ -27,26 +24,21 @@ class UserController {
     isAdmin?: boolean
   ) {
     await this.validateUserUpdatePermission(id, isAdmin);
-    const session = await this.createSession();
     let user: null | Document<IUser> = null;
-    try {
-      user = await this.userModel.findOneAndUpdate(
-        {
-          _id: id,
-        },
-        {
-          _id: id,
-          ...params,
-        },
-        {
-          new: true,
-          upsert: true,
-          session,
-        }
-      );
-    } finally {
-      session.endSession();
-    }
+
+    user = await this.userModel.findOneAndUpdate(
+      {
+        _id: id,
+      },
+      {
+        _id: id,
+        ...params,
+      },
+      {
+        new: true,
+        upsert: true,
+      }
+    );
 
     if (null !== user) {
       //await (user as Document<IUser>).populate("user");
