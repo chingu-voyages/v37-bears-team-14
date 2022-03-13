@@ -190,6 +190,8 @@ class ProjectController {
         techMatchesProjects: params.techMatches.map((p) => p.id),
         matchedTechs: params.matchedTechs.map((t) => t._id),
         mergedCount: params.mergedCount,
+        totalCount: params.totalCount,
+        timeElapsedMs: params.timeElapsedMs,
         user: isValidObjectId(params.user) ? params.user : null,
       });
       logger.info("Search saved " + search._id, {
