@@ -12,6 +12,14 @@ import ProjectSearch from "./components/projects/ProjectSearch";
 import ProjectSettingsLayout from "./components/project_page/layouts/ProjectSettingsLayout";
 import ProjectSettingsTeamPage from "./components/project_page/pages/ProjectSettingsTeamPage";
 import ProjectApplicationPage from "./components/project_page/pages/ProjectApplicationPage/index";
+import DocumentPage from "./components/info/DocumentPage";
+import Footer from "./components/formatting/Footer";
+
+import aboutMdUrl from "./content/about.md";
+import teamMdUrl from "./content/team.md";
+import privacyMdUrl from "./content/privacy.md";
+import termsMdUrl from "./content/terms.md";
+import contactMdUrl from "./content/contact.md";
 
 function App() {
   return (
@@ -45,9 +53,26 @@ function App() {
           <Route path="techs" element={<TechListPage />} />
           <Route path="*" element={<div className="m-8">Page not found</div>} />
         </Route>
+        <Route
+          path="/about"
+          element={<DocumentPage contentUrl={aboutMdUrl} />}
+        />
+        <Route path="/team" element={<DocumentPage contentUrl={teamMdUrl} />} />
+        <Route
+          path="/terms"
+          element={<DocumentPage contentUrl={termsMdUrl} />}
+        />
+        <Route
+          path="/privacy"
+          element={<DocumentPage contentUrl={privacyMdUrl} />}
+        />
+        <Route
+          path="/contact"
+          element={<DocumentPage contentUrl={contactMdUrl} />}
+        />
         <Route path="/" element={null} />
       </Routes>
-      <div className="flex"></div>
+      <Footer />
     </>
   );
 }
