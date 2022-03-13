@@ -1,0 +1,97 @@
+import React, { FunctionComponent, useState, useEffect } from "react";
+import LoadingSpinner from "../Spinners/LoadingSpinner";
+import { User } from "../../shared/Interfaces";
+
+import UpdateUserForm from "./UpdateUserForm";
+
+interface Props {
+  userProps?: User;
+}
+
+const UserSettingsLayout: FunctionComponent<Props> = ({ userProps }) => {
+  // const [isLoading, setIsLoading] = useState(true);
+  const [techs, setTechs] = useState<any[]>([]);
+  const [chosenTechs, setChosenTechs] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [userForm, setuserForm] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+    setLoading(true);
+    fetch("/api/v1/techs").then(async (response) => {
+      if (response.status === 200) {
+        if (isMounted) {
+          const data = await response.json();
+
+          setTechs(data);
+          setLoading(false);
+        }
+      } else {
+        console.error(
+          "failed to load techs",
+          response.status,
+          await response.json()
+        );
+      }
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const chooseTech = (e: any, chosenTech: object) => {
+    const updatedTechs = techs.filter((tech) => tech !== chosenTech);
+    setTechs(updatedTechs);
+    setChosenTechs([...chosenTechs, chosenTech]);
+  };
+
+  const removeTech = (e: any, chosenTech: object) => {
+    const updatedChosenTechs = chosenTechs.filter(
+      (tech) => tech !== chosenTech
+    );
+    setChosenTechs(updatedChosenTechs);
+    setTechs([...techs, chosenTech]);
+  };
+
+  let content;
+  if (userForm) {
+    content = loading ? (
+      <LoadingSpinner />
+    ) : (
+      <>
+        <div className="fixed top-0 left-0 h-screen w-screen backdrop-blur-sm"></div>
+        <div className="fixed z-10 inset-0 overflow-y-auto max-w-3xl mx-auto">
+          {/* fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 */}
+          <UpdateUserForm
+            chosenTechs={chosenTechs}
+            setChosenTechs={setChosenTechs}
+            removeTech={removeTech}
+            techs={techs}
+            setTechs={setTechs}
+            chooseTech={chooseTech}
+            loading={loading}
+            setLoading={setLoading}
+            userForm={userForm}
+            setuserForm={setuserForm}
+          />
+        </div>
+      </>
+    );
+  }
+
+  return (
+    <>
+      {content}
+      <div className="w-full bg-medGray">
+        <div
+          className="p-1 cursor-pointer"
+          onClick={() => setuserForm(!userForm)}
+        >
+          <span className="p-2 text-mintGreen">Change User Information</span>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default UserSettingsLayout;
