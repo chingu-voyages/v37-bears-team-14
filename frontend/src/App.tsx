@@ -1,6 +1,7 @@
 import React from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Navbar from "./Navbar";
+import Footer from "./components/formatting/Footer";
 import Projects from "./components/projects/Projects";
 import AdminOutlet from "./components/routing/AdminOutlet";
 import TechListPage from "./components/admin/techs/TechListPage";
@@ -13,6 +14,13 @@ import ProjectSettingsLayout from "./components/project_page/layouts/ProjectSett
 import ProjectSettingsTeamPage from "./components/project_page/pages/ProjectSettingsTeamPage";
 import ProjectApplicationPage from "./components/project_page/pages/ProjectApplicationPage/index";
 import FrontPage from "./components/front_page/FrontPage";
+import DocumentPage from "./components/info/DocumentPage";
+
+import aboutMdUrl from "./content/about.md";
+import teamMdUrl from "./content/team.md";
+import privacyMdUrl from "./content/privacy.md";
+import termsMdUrl from "./content/terms.md";
+import contactMdUrl from "./content/contact.md";
 
 function App() {
   return (
@@ -46,9 +54,26 @@ function App() {
           <Route path="techs" element={<TechListPage />} />
           <Route path="*" element={<div className="m-8">Page not found</div>} />
         </Route>
+        <Route
+          path="/about"
+          element={<DocumentPage contentUrl={aboutMdUrl} />}
+        />
+        <Route path="/team" element={<DocumentPage contentUrl={teamMdUrl} />} />
+        <Route
+          path="/terms"
+          element={<DocumentPage contentUrl={termsMdUrl} />}
+        />
+        <Route
+          path="/privacy"
+          element={<DocumentPage contentUrl={privacyMdUrl} />}
+        />
+        <Route
+          path="/contact"
+          element={<DocumentPage contentUrl={contactMdUrl} />}
+        />
         <Route path="/" element={<FrontPage />} />
       </Routes>
-      <div className="flex"></div>
+      <Footer />
     </>
   );
 }
