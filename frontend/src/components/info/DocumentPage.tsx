@@ -1,6 +1,5 @@
 import { FC, useEffect, useState } from "react";
 import Document from "../formatting/Document";
-// import Readme from "../formatting/Readme";
 
 interface DocumentPageProps {
   contentUrl: string;

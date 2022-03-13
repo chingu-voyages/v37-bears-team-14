@@ -5,6 +5,10 @@ interface DocumentProps {
   children: string;
 }
 
+/**
+ * The tag definitions here customize the markdown for info pages,
+ * standalone pages with static content.
+ */
 const Document: FC<DocumentProps> = ({ children }) => {
   return (
     <ReactMarkdown
