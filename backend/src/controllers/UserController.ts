@@ -1,14 +1,66 @@
 import crypto from "crypto";
-import { Document, Model, ObjectId } from "mongoose";
+import { Document, Model, ObjectId, ClientSession } from "mongoose";
 import { IUser } from "../models/User";
 import { GithubProfile, parseAvatarUrl } from "../auth/github";
 import NotFoundError from "./errors/NotFoundError";
+import UnauthorizedError from "./errors/UnauthorizedError";
+import UnexpectedError from "./errors/UnexpectedError";
 
 export type UserRecord = IUser & Document<ObjectId, any, IUser>;
 
+export interface ProfileUpdateParams {
+  username?: string;
+  displayName?: string;
+  techs?: string[];
+}
+
 class UserController {
   constructor(private userModel: Model<IUser>) {}
+  //TODO: Update User
+  async updateProfile(
+    id: string,
+    paramsId: string,
+    params: ProfileUpdateParams,
+    isAdmin?: boolean
+  ) {
+    await this.validateUserUpdatePermission(id, isAdmin);
+    let user: null | Document<IUser> = null;
 
+    user = await this.userModel.findOneAndUpdate(
+      {
+        _id: id,
+      },
+      {
+        _id: id,
+        ...params,
+      },
+      {
+        new: true,
+        upsert: true,
+      }
+    );
+
+    if (null !== user) {
+      //await (user as Document<IUser>).populate("user");
+      await (user as Document<IUser>).populate("techs");
+      return user;
+    } else {
+      throw new UnexpectedError("Expected user to be updated");
+    }
+  }
+  private async validateUserUpdatePermission(id: string, isAdmin?: boolean) {
+    isAdmin = isAdmin || false;
+
+    if (!isAdmin) {
+      const user = await this.userModel.findOne({
+        _id: id,
+      });
+
+      if (!user || user.id !== id) {
+        throw new UnauthorizedError("Updater is not the user");
+      }
+    }
+  }
   async createOrUpdateUser(githubId: number): Promise<UserRecord> {
     return await this.userModel.findOneAndUpdate(
       { githubId },
@@ -63,17 +115,30 @@ class UserController {
     }
   }
   async searchByName(username: string) {
-    const user = await this.userModel.findOne({
-      username: { $regex: username, $options: "i" },
-    });
+    const user = await this.userModel
+      .findOne({
+        username: { $regex: "^" + username + "$", $options: "i" },
+      })
+      .populate("techs");
     if (!user) {
       throw new NotFoundError("user", username);
     }
     return user;
   }
+  async findDuplicate(username: string) {
+    const user = await this.userModel.findOne({
+      username: { $regex: "^" + username + "$", $options: "i" },
+    });
+    if (!user) {
+      return false;
+    }
+    return true;
+  }
 
   async searchById(id: string) {
-    const user = await this.userModel.findOne({ githubId: id });
+    const user = await this.userModel
+      .findOne({ githubId: id })
+      .populate("techs");
     if (!user) {
       throw new NotFoundError("id", id);
     }

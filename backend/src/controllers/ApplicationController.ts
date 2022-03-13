@@ -146,7 +146,8 @@ class ApplicationController {
     viewerUserId: string,
     params: LookupProjectApplicationsParams | LookupUserApplicationsParams,
     pageSize: number,
-    greaterThanId?: string
+    greaterThanId?: string,
+    isAdmin?: boolean
   ): Promise<ApplicationDoc[]> {
     const query: Record<string, any> = pick(params, [
       "project",
@@ -160,7 +161,24 @@ class ApplicationController {
       };
     }
 
-    // TODO: check lookup parameters for permissions against viewerUserId
+    // Verify that the viewer can access the user or project query parameters.
+    if (!isAdmin && query["user"] && query["user"] !== viewerUserId) {
+      throw new UnauthorizedError(
+        "Cannot query for another user's applications."
+      );
+    }
+
+    if (!isAdmin && query["project"]) {
+      const member = await this.memberModel.findOne({
+        project: query["project"],
+        user: viewerUserId,
+      });
+      if (!member || !["owner"].includes(member.roleName)) {
+        throw new UnauthorizedError(
+          "Cannot query for the applications of a project you do not own."
+        );
+      }
+    }
 
     const applications = await this.applicationModel
       .find(query)

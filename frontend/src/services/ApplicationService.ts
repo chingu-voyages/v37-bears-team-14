@@ -1,6 +1,12 @@
 import { Application } from "../shared/Interfaces";
 import { CreateApplicationParams } from "../shared/ApplicationInterfaces";
 
+export interface ApplicationUpdateParams {
+  status?: string;
+  requestedRole?: string;
+  content?: string;
+}
+
 const findApplication = (
   projectId: string,
   applications: Application[]
@@ -92,6 +98,23 @@ class ApplicationService {
       body: JSON.stringify({
         status,
       }),
+    });
+
+    if (!(update.status === 200 || update.status === 304)) {
+      throw new Error("Failed to update project status, please try again");
+    }
+
+    return await update.json();
+  }
+
+  static async updateApplication(
+    applicationId: string,
+    params: ApplicationUpdateParams
+  ): Promise<Application> {
+    const update = await fetch("/api/v1/applications/" + applicationId, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(params),
     });
 
     if (!(update.status === 200 || update.status === 304)) {

@@ -12,9 +12,14 @@ import ProjectSettingsPage from "./components/project_page/pages/ProjectSettings
 import ProjectSearch from "./components/projects/ProjectSearch";
 import ProjectSettingsLayout from "./components/project_page/layouts/ProjectSettingsLayout";
 import ProjectSettingsTeamPage from "./components/project_page/pages/ProjectSettingsTeamPage";
-import ProjectApplicationPage from "./components/project_page/pages/ProjectApplicationPage/index";
-import FrontPage from "./components/front_page/FrontPage";
+import ProjectSettingsHooksPage from "./components/project_page/pages/ProjectSettingsHooksPage";
+import ProjectApplicationPage from "./components/project_page/pages/ProjectApplicationPage";
+import UserPageLayout from "./components/user_page/UserPageLayout";
+import UserSettingsPage from "./components/user_page/UserSettingsPage";
+import ApplicationListPage from "./components/user_applications/pages/ApplicationListPage";
+import ApplicationEditPage from "./components/user_applications/pages/ApplicationEditPage";
 import DocumentPage from "./components/info/DocumentPage";
+import FrontPage from "./components/front_page/FrontPage";
 
 import aboutMdUrl from "./content/about.md";
 import teamMdUrl from "./content/team.md";
@@ -22,6 +27,9 @@ import privacyMdUrl from "./content/privacy.md";
 import termsMdUrl from "./content/terms.md";
 import contactMdUrl from "./content/contact.md";
 
+/**
+ * App defines the global layout with Navbar and all the application routes.
+ */
 function App() {
   return (
     <>
@@ -44,15 +52,24 @@ function App() {
               <Route path="" element={<Navigate to="project" />} />
               <Route path="project" element={<ProjectSettingsPage />} />
               <Route path="team" element={<ProjectSettingsTeamPage />} />
+              <Route path="hooks" element={<ProjectSettingsHooksPage />} />
               <Route path="*" element={null} />
             </Route>
             <Route path="*" element={<Navigate to=".." />} />
           </Route>
         </Route>
+        <Route path="applications">
+          <Route path="" element={<ApplicationListPage />} />
+          <Route path=":applicationId" element={<ApplicationEditPage />} />
+        </Route>
         <Route path="admin" element={<AdminOutlet />}>
           <Route path="" element={<Navigate to="techs" />} />
           <Route path="techs" element={<TechListPage />} />
           <Route path="*" element={<div className="m-8">Page not found</div>} />
+        </Route>
+        <Route path="/user">
+          <Route path=":username" element={<UserPageLayout />} />
+          <Route path="settings" element={<UserSettingsPage />} />
         </Route>
         <Route
           path="/about"

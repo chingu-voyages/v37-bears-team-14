@@ -1,4 +1,5 @@
 import UserController from "./UserController";
+import { startSession } from "mongoose";
 
 test("Test that updateDefaultsIfNeeded fills in null fields", async () => {
   let saveCount = 0;
