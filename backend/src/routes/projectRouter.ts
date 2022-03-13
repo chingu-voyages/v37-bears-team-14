@@ -9,6 +9,7 @@ import Project from "../models/Project";
 
 import User from "../models/User";
 import Tech from "../models/Tech";
+import Search from "../models/Search";
 
 /* dependencies */
 const projectController = new ProjectController(
@@ -16,6 +17,7 @@ const projectController = new ProjectController(
   User,
   Member,
   Tech,
+  Search,
   () => startSession()
 );
 
@@ -145,7 +147,8 @@ projects.get("/v1/project_search", async (req, res, next) => {
   if (req.query["search"]) {
     try {
       const project = await projectController.searchProjects(
-        req.query["search"].toString()
+        req.query["search"].toString(),
+        req.user?.id
       );
 
       res.json(project);
