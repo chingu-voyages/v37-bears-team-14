@@ -73,7 +73,7 @@ const UpdateUserForm: React.FC<Props> = ({
           function updateUser(values: FormValues) {
             // setLoading(true);
             if (user && user.id) {
-              fetch(`http://localhost:3000/api/v1/users/${user.id}`, {
+              fetch(`/api/v1/users/${user.id}`, {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",

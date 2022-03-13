@@ -66,12 +66,6 @@ function App() {
           <Route path=":username" element={<UserPageLayout />} />
           <Route path="settings" element={<UserSettingsPage />} />
         </Route>
-
-        <Route path="/" element={null} />
-
-        <Route path="/" element={null} />
-
-        <div className="flex"></div>
         <Route
           path="/about"
           element={<DocumentPage contentUrl={aboutMdUrl} />}
