@@ -1,7 +1,7 @@
 import logger from "../logger";
-import { ClientSession, Document, Model, ObjectId } from "mongoose";
+import { ClientSession, Document, isValidObjectId, Model, ObjectId } from "mongoose";
 import { MongoError } from "mongodb";
-import _ from "lodash";
+import _, { merge } from "lodash";
 import { IMember } from "../models/Member";
 import { IProject } from "../models/Project";
 import { IUser } from "../models/User";
@@ -11,6 +11,15 @@ import UnexpectedError from "./errors/UnexpectedError";
 import UnauthorizedError from "./errors/UnauthorizedError";
 import FieldExistsError from "./errors/FieldExistsError";
 import InvalidChangeLastOwner from "./errors/InvalidChangeLastOwner";
+import {
+  createAddedFields,
+  createJoins,
+  createProjection,
+  createQuery,
+  mergeResults,
+} from "./projects/searchHelpers";
+import { TechDoc } from "./TechController";
+import { ISearch } from "../models/Search";
 
 export interface ProjectUpdateParams {
   name?: string;
@@ -23,22 +32,36 @@ export interface MemberUpdateParams {
   roleName: string;
 }
 
-interface MatchedProject {
-  _id?: object;
-  id?: object;
-  name: string;
-  description: string | null;
-  techs: ITech[] | ObjectId[];
-  matchType?: {
-    name?: boolean;
-    description?: boolean;
-    techs?: boolean;
-  };
-}
-
 export type ProjectDoc = IProject & Document<unknown, any, IProject>;
-// export type ProjectMatchDoc = IProjectMatch & Document<unknown, any, IProject>;
-export type TechDoc = ITech & Document<unknown, any, IProject>;
+
+export type MatchType = {
+  name: boolean;
+  description: boolean;
+  techs: boolean;
+};
+
+export type ProjectSearchResultItem = {
+  id: ObjectId;
+  createdAt: Date;
+  updatedAt: Date;
+  name: string;
+  description: string;
+  techs: (ITech & { id: ObjectId })[];
+  members: (IMember & { id: ObjectId })[];
+  matchType: MatchType;
+};
+
+interface SaveSearchParams {
+  query: string;
+  nameMatches: ProjectSearchResultItem[];
+  descriptionMatches: ProjectSearchResultItem[];
+  techMatches: ProjectSearchResultItem[];
+  matchedTechs: TechDoc[];
+  mergedCount: number;
+  totalCount: number;
+  timeElapsedMs: number;
+  user?: ObjectId;
+}
 
 class ProjectController {
   constructor(
@@ -47,6 +70,7 @@ class ProjectController {
     private userModel: Model<IUser>,
     private memberModel: Model<IMember>,
     private techModel: Model<ITech>,
+    private searchModel: Model<ISearch>,
     private createSession: () => Promise<ClientSession>
   ) {}
 
@@ -71,81 +95,114 @@ class ProjectController {
     return project;
   }
 
-  async searchProjects(search: string): Promise<MatchedProject[]> {
-    const techs = await this.techModel.find();
-    const matchedTechs: TechDoc[] = [];
-    techs.forEach((t) => {
-      if (new RegExp(search, "i").test(t.name)) {
-        matchedTechs.push(t);
-      }
-    });
+  async searchProjects(search: string, user?: ObjectId): Promise<ProjectSearchResultItem[]> {
+    const start = Date.now();
 
-    const names = await this.projectModel
-      .find({ name: { $regex: search, $options: "i" } })
-      .populate("techs")
-      .lean();
+    const nameMatches: ProjectSearchResultItem[] =
+      await this.projectModel.aggregate([
+        createQuery({
+          name: { $regex: search, $options: "i" },
+        }),
+        { $limit: 20 },
+        ...createJoins(),
+        createProjection(),
+        createAddedFields({
+          name: true,
+        }),
+      ]);
 
-    const descriptions = await this.projectModel
-      .find({ description: { $regex: search, $options: "i" } })
-      .populate("techs")
-      .lean();
-    const techMatches = await this.projectModel
-      .find()
-      .where("techs")
-      .in(matchedTechs.map((t) => t._id))
-      .populate("techs")
-      .lean();
-    let projects: MatchedProject[] = [];
-
-    names.map((n) => {
-      n.matchType = {
-        name: true,
-        description: false,
-        techs: false,
-      };
-    });
-
-    descriptions.map((n) => {
-      if (!n.matchType) {
-        n.matchType = {
-          name: false,
+    const descriptionMatches: ProjectSearchResultItem[] =
+      await this.projectModel.aggregate([
+        createQuery({
+          description: { $regex: search, $options: "i" },
+        }),
+        { $limit: 20 },
+        ...createJoins(),
+        createProjection(),
+        createAddedFields({
           description: true,
-          techs: false,
-        };
-      } else {
-        n.matchType.description = true;
-      }
+        }),
+      ]);
+
+    const techs: TechDoc[] = await this.techModel.find({
+      name: { $regex: search, $options: "i" },
     });
-    techMatches.map((n) => {
-      if (!n.matchType) {
-        n.matchType = {
-          name: false,
-          description: false,
+
+    const techMatches: ProjectSearchResultItem[] =
+      await this.projectModel.aggregate([
+        createQuery({
+          techs: { $in: techs.map((t) => t._id) },
+        }),
+        { $limit: 20 },
+        ...createJoins(),
+        createProjection(),
+        createAddedFields({
           techs: true,
-        };
-      } else {
-        n.matchType.techs = true;
-      }
+        }),
+      ]);
+
+    const total = [...nameMatches, ...descriptionMatches, ...techMatches];
+    const merged = mergeResults(total);
+    const timeElapsedMs = Date.now() - start;
+
+    this.saveSearch({
+      query: search,
+      nameMatches,
+      descriptionMatches,
+      techMatches,
+      matchedTechs: techs,
+      mergedCount: merged.length,
+      totalCount: total.length,
+      timeElapsedMs,
+      user,
     });
 
-    projects = _.uniqBy(
-      [...names, ...descriptions, ...techMatches],
-      (project: MatchedProject) => {
-        if (project._id) return project._id.toString();
-      }
-    );
-
-    projects.map((p: MatchedProject): MatchedProject => {
-      p["_id"] = p["id"];
-      delete p["_id"];
-      return p;
+    logger.info("[project_search_stat]", {
+      search,
+      timeElapsedMs,
+      total: total.length,
+      merged: merged.length,
+      techsFound: techs.length,
+      techMatchesLength: techMatches.length,
+      nameMatchesLength: nameMatches.length,
+      descriptionMatchesLength: descriptionMatches.length,
     });
 
-    if (!projects) {
-      throw new NotFoundError("project", search);
+    return merged;
+  }
+
+  // Tracks searches, so this method should be as lightweight as possible.
+  saveSearch(params: SaveSearchParams) {
+    // Run this asynchronously so that it does not block the request.
+    setTimeout(() => this.saveSearchSafe(params));
+  }
+
+  /**
+   * saveSearchSafe suppresses exceptions by catching, logging, and moving on
+   * so that it does not fail the caller.
+   */
+  async saveSearchSafe(params: SaveSearchParams) {
+    try {
+      const search = await this.searchModel.create({
+        query: params.query,
+        nameMatchesProjects: params.nameMatches.map((p) => p.id),
+        descriptionMatchesProjects: params.descriptionMatches.map((p) => p.id),
+        techMatchesProjects: params.techMatches.map((p) => p.id),
+        matchedTechs: params.matchedTechs.map((t) => t._id),
+        mergedCount: params.mergedCount,
+        totalCount: params.totalCount,
+        timeElapsedMs: params.timeElapsedMs,
+        user: isValidObjectId(params.user) ? params.user : null,
+      });
+      logger.info("Search saved " + search._id, {
+        searchId: search._id,
+      });
+    } catch (err: any) {
+      logger.error("Failed to save search!!", {
+        errorMessage: err.message,
+        params,
+      })
     }
-    console.log(projects.length);
-    return projects;
   }
 
   async lookup(pageSize: number): Promise<ProjectDoc[]> {
