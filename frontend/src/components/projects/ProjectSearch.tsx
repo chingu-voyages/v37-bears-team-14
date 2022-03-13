@@ -1,15 +1,40 @@
-import React, { useState, FunctionComponent } from "react";
+import React, { useState, FunctionComponent, useEffect } from "react";
 
 import { Formik } from "formik";
 import { ProjectResult } from "../../shared/Interfaces";
 import ProjectPreviewSearch from "./ProjectPreviewSearch";
+import { useSearchParams } from "react-router-dom";
 
 const ProjectSearch: FunctionComponent = () => {
   const [searchResults, setSearchResults] = useState<ProjectResult[] | []>([]);
+  const [params] = useSearchParams();
+  const initialQuery = params.get("query") || "";
+
+  useEffect(() => {
+    if (!initialQuery) {
+      return;
+    }
+
+    fetch(`/api/v1/project_search?search=${initialQuery}`).then(
+      async (response) => {
+        if (response.status === 200) {
+          const data = await response.json();
+          setSearchResults(data);
+        } else {
+          console.error(
+            "failed to execute search",
+            response.status,
+            await response.json()
+          );
+        }
+      }
+    );
+  }, [initialQuery]);
+
   return (
     <>
       <Formik
-        initialValues={{ search: "" }}
+        initialValues={{ search: initialQuery }}
         onSubmit={(values, { setSubmitting }) => {
           if (values.search)
             fetch(`/api/v1/project_search?search=${values.search}`).then(

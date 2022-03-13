@@ -1,5 +1,11 @@
 import logger from "../logger";
-import { ClientSession, Document, isValidObjectId, Model, ObjectId } from "mongoose";
+import {
+  ClientSession,
+  Document,
+  isValidObjectId,
+  Model,
+  ObjectId,
+} from "mongoose";
 import { MongoError } from "mongodb";
 import _, { merge } from "lodash";
 import { IMember } from "../models/Member";
@@ -95,7 +101,10 @@ class ProjectController {
     return project;
   }
 
-  async searchProjects(search: string, user?: ObjectId): Promise<ProjectSearchResultItem[]> {
+  async searchProjects(
+    search: string,
+    user?: ObjectId
+  ): Promise<ProjectSearchResultItem[]> {
     const start = Date.now();
 
     const nameMatches: ProjectSearchResultItem[] =
@@ -201,7 +210,7 @@ class ProjectController {
       logger.error("Failed to save search!!", {
         errorMessage: err.message,
         params,
-      })
+      });
     }
   }
 

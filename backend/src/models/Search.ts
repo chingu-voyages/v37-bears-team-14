@@ -21,47 +21,45 @@ export interface ISearch {
  * Future optimization can be done by batching inserts and
  * writing in bulk.
  */
-const SearchSchema = new Schema<ISearch>(
-  {
-    query: {
-      type: Schema.Types.String,
-    },
-    nameMatchesProjects: {
-      type: [Schema.Types.ObjectId],
-      ref: "project",
-    },
-    descriptionMatchesProjects: {
-      type: [Schema.Types.ObjectId],
-      ref: "project",
-    },
-    techMatchesProjects: {
-      type: [Schema.Types.ObjectId],
-      ref: "project",
-    },
-    matchedTechs: {
-      type: [Schema.Types.ObjectId],
-      ref: "tech",
-    },
-    mergedCount: {
-      type: Schema.Types.Number,
-    },
-    totalCount: {
-      type: Schema.Types.Number,
-    },
-    timeElapsedMs: {
-      type: Schema.Types.Number,
-    },
-    user: {
-      type: Schema.Types.ObjectId,
-      ref: "user",
-    },
-    // Updates are not supported, so we only need to track createdAt.
-    createdAt: {
-      type: Schema.Types.Date,
-      default: () => new Date(),
-    },
-  }
-);
+const SearchSchema = new Schema<ISearch>({
+  query: {
+    type: Schema.Types.String,
+  },
+  nameMatchesProjects: {
+    type: [Schema.Types.ObjectId],
+    ref: "project",
+  },
+  descriptionMatchesProjects: {
+    type: [Schema.Types.ObjectId],
+    ref: "project",
+  },
+  techMatchesProjects: {
+    type: [Schema.Types.ObjectId],
+    ref: "project",
+  },
+  matchedTechs: {
+    type: [Schema.Types.ObjectId],
+    ref: "tech",
+  },
+  mergedCount: {
+    type: Schema.Types.Number,
+  },
+  totalCount: {
+    type: Schema.Types.Number,
+  },
+  timeElapsedMs: {
+    type: Schema.Types.Number,
+  },
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: "user",
+  },
+  // Updates are not supported, so we only need to track createdAt.
+  createdAt: {
+    type: Schema.Types.Date,
+    default: () => new Date(),
+  },
+});
 
 SearchSchema.set("toJSON", {
   transform: (_, ret, __) => {
