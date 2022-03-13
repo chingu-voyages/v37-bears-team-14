@@ -30,6 +30,8 @@ export interface User {
   id: string;
   username: string;
   avatarUrl: string;
+  displayName: string;
+  techs: Tech[];
 }
 
 export interface Member {

@@ -1,7 +1,7 @@
 import passport from "passport";
 import logger from "../logger";
 import UserModel, { IUser } from "../models/User";
-import { Document } from "mongoose";
+import { Document, startSession } from "mongoose";
 import { Strategy as GithubStrategy } from "passport-github2";
 import { mustGetConfig } from "../config";
 import { parseAvatarUrl } from "./github";

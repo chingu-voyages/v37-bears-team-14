@@ -12,7 +12,10 @@ import ProjectSearch from "./components/projects/ProjectSearch";
 import ProjectSettingsLayout from "./components/project_page/layouts/ProjectSettingsLayout";
 import ProjectSettingsTeamPage from "./components/project_page/pages/ProjectSettingsTeamPage";
 import ProjectSettingsHooksPage from "./components/project_page/pages/ProjectSettingsHooksPage";
+
 import ProjectApplicationPage from "./components/project_page/pages/ProjectApplicationPage";
+import UserPageLayout from "./components/user_page/UserPageLayout";
+import UserSettingsPage from "./components/user_page/UserSettingsPage";
 import ApplicationListPage from "./components/user_applications/pages/ApplicationListPage";
 import ApplicationEditPage from "./components/user_applications/pages/ApplicationEditPage";
 import DocumentPage from "./components/info/DocumentPage";
@@ -63,6 +66,10 @@ function App() {
           <Route path="" element={<Navigate to="techs" />} />
           <Route path="techs" element={<TechListPage />} />
           <Route path="*" element={<div className="m-8">Page not found</div>} />
+        </Route>
+        <Route path="/user">
+          <Route path=":username" element={<UserPageLayout />} />
+          <Route path="settings" element={<UserSettingsPage />} />
         </Route>
         <Route
           path="/about"
