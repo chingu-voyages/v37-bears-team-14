@@ -53,7 +53,7 @@ const ProjectPreview: FunctionComponent<Props> = ({ projects }) => {
             <div className="-space-x-3 pb-1 pl-1">
               {p.members.map((m: Member) => (
                 <img
-                  className="relative z-30 inline object-cover bg-white w-8 h-8 border-2 border-neutral-400 rounded-full"
+                  className="relative z-1 inline object-cover bg-white w-8 h-8 border-2 border-neutral-400 rounded-full"
                   src={m.user.avatarUrl}
                   alt={m.user.username}
                 />
