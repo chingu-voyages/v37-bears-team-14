@@ -12,7 +12,6 @@ import ProjectSearch from "./components/projects/ProjectSearch";
 import ProjectSettingsLayout from "./components/project_page/layouts/ProjectSettingsLayout";
 import ProjectSettingsTeamPage from "./components/project_page/pages/ProjectSettingsTeamPage";
 import ProjectSettingsHooksPage from "./components/project_page/pages/ProjectSettingsHooksPage";
-
 import ProjectApplicationPage from "./components/project_page/pages/ProjectApplicationPage";
 import UserPageLayout from "./components/user_page/UserPageLayout";
 import UserSettingsPage from "./components/user_page/UserSettingsPage";
