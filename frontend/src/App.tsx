@@ -11,10 +11,10 @@ import ProjectSettingsPage from "./components/project_page/pages/ProjectSettings
 import ProjectSearch from "./components/projects/ProjectSearch";
 import ProjectSettingsLayout from "./components/project_page/layouts/ProjectSettingsLayout";
 import ProjectSettingsTeamPage from "./components/project_page/pages/ProjectSettingsTeamPage";
-
+import ProjectSettingsHooksPage from "./components/project_page/pages/ProjectSettingsHooksPage";
+import ProjectApplicationPage from "./components/project_page/pages/ProjectApplicationPage";
 import UserPageLayout from "./components/user_page/UserPageLayout";
 import UserSettingsPage from "./components/user_page/UserSettingsPage";
-import ProjectApplicationPage from "./components/project_page/pages/ProjectApplicationPage";
 import ApplicationListPage from "./components/user_applications/pages/ApplicationListPage";
 import ApplicationEditPage from "./components/user_applications/pages/ApplicationEditPage";
 import DocumentPage from "./components/info/DocumentPage";
@@ -26,6 +26,9 @@ import privacyMdUrl from "./content/privacy.md";
 import termsMdUrl from "./content/terms.md";
 import contactMdUrl from "./content/contact.md";
 
+/**
+ * App defines the global layout with Navbar and all the application routes.
+ */
 function App() {
   return (
     <>
@@ -48,6 +51,7 @@ function App() {
               <Route path="" element={<Navigate to="project" />} />
               <Route path="project" element={<ProjectSettingsPage />} />
               <Route path="team" element={<ProjectSettingsTeamPage />} />
+              <Route path="hooks" element={<ProjectSettingsHooksPage />} />
               <Route path="*" element={null} />
             </Route>
             <Route path="*" element={<Navigate to=".." />} />
