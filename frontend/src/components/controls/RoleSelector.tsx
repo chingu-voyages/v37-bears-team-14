@@ -3,7 +3,7 @@ import ChevronDownIcon from "../icons/ChevronDownIcon";
 import useOutsideClickHandler from "../../hooks/useOutsideClickHandler";
 
 interface RoleSelectorProps {
-  value: string;
+  value: string | null;
   options: string[];
   onChange?: (value: string) => Promise<void>;
   backgroundColor?: string;

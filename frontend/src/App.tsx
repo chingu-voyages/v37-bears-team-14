@@ -11,8 +11,10 @@ import ProjectSettingsPage from "./components/project_page/pages/ProjectSettings
 import ProjectSearch from "./components/projects/ProjectSearch";
 import ProjectSettingsLayout from "./components/project_page/layouts/ProjectSettingsLayout";
 import ProjectSettingsTeamPage from "./components/project_page/pages/ProjectSettingsTeamPage";
-import ProjectApplicationPage from "./components/project_page/pages/ProjectApplicationPage/index";
 import ProjectSettingsHooksPage from "./components/project_page/pages/ProjectSettingsHooksPage";
+import ProjectApplicationPage from "./components/project_page/pages/ProjectApplicationPage";
+import ApplicationListPage from "./components/user_applications/pages/ApplicationListPage";
+import ApplicationEditPage from "./components/user_applications/pages/ApplicationEditPage";
 import DocumentPage from "./components/info/DocumentPage";
 import Footer from "./components/formatting/Footer";
 
@@ -52,6 +54,10 @@ function App() {
             </Route>
             <Route path="*" element={<Navigate to=".." />} />
           </Route>
+        </Route>
+        <Route path="applications">
+          <Route path="" element={<ApplicationListPage />} />
+          <Route path=":applicationId" element={<ApplicationEditPage />} />
         </Route>
         <Route path="admin" element={<AdminOutlet />}>
           <Route path="" element={<Navigate to="techs" />} />
