@@ -1,7 +1,9 @@
-import React, { useState, forwardRef } from "react";
+import React, { useState, forwardRef, useContext } from "react";
 import { Menu } from "@headlessui/react";
 import { Formik, Form, Field } from "formik";
+import ProjectContext from "../../store/project-context";
 import * as Yup from "yup";
+
 import Alert from "../alerts/Alert";
 import { Tech } from "../../shared/Interfaces";
 
@@ -43,6 +45,7 @@ const NewProjectForm: React.FC<Props> = ({
 }) => {
   const [customOpen, setCustomOpen] = useState(false);
   const [projectSubmitted, setProjectSubmitted] = useState(false);
+  const projectCtx = useContext<any>(ProjectContext);
 
   const CustomMenuButton = forwardRef<HTMLButtonElement>(
     ({ children }, ref) => (
@@ -70,7 +73,7 @@ const NewProjectForm: React.FC<Props> = ({
 
           values.techs = chosenTechs.map((t) => t.id);
           function postProject(values: FormValues) {
-            // setLoading(true);
+            setLoading(true);
             fetch("api/v1/projects", {
               method: "POST",
               headers: {
@@ -79,12 +82,14 @@ const NewProjectForm: React.FC<Props> = ({
               body: JSON.stringify(values),
             }).then((response) => {
               if (response.status === 200) {
-                // setLoading(false);
+                setLoading(false);
                 resetForm();
                 setTechs([...techs, ...chosenTechs]);
                 techs.sort((a: Tech, b: Tech) => (a.name > b.name ? 1 : -1));
+                projectCtx.addProject({ ...values, techs: chosenTechs });
                 setChosenTechs([]);
                 setProjectSubmitted(true);
+                setProjectForm(false);
                 setTimeout(() => {
                   setProjectSubmitted(false);
                 }, 2000);
@@ -109,7 +114,7 @@ const NewProjectForm: React.FC<Props> = ({
           handleBlur,
           isSubmitting,
         }) => (
-          <Form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 mt-4 max-h-screen">
+          <Form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 mt-4">
             <h2 className="text-xl text-center font-bold">Create Project</h2>
             <div className="mb-4">
               <label
@@ -132,7 +137,7 @@ const NewProjectForm: React.FC<Props> = ({
                 Description
               </label>
               <Field
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline max-h-48"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 name="description"
                 as="textarea"
               />

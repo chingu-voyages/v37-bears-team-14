@@ -11,9 +11,20 @@ import ProjectSettingsPage from "./components/project_page/pages/ProjectSettings
 import ProjectSearch from "./components/projects/ProjectSearch";
 import ProjectSettingsLayout from "./components/project_page/layouts/ProjectSettingsLayout";
 import ProjectSettingsTeamPage from "./components/project_page/pages/ProjectSettingsTeamPage";
-import ProjectApplicationPage from "./components/project_page/pages/ProjectApplicationPage/index";
+
 import UserPageLayout from "./components/user_page/UserPageLayout";
 import UserSettingsPage from "./components/user_page/UserSettingsPage";
+import ProjectApplicationPage from "./components/project_page/pages/ProjectApplicationPage";
+import ApplicationListPage from "./components/user_applications/pages/ApplicationListPage";
+import ApplicationEditPage from "./components/user_applications/pages/ApplicationEditPage";
+import DocumentPage from "./components/info/DocumentPage";
+import Footer from "./components/formatting/Footer";
+
+import aboutMdUrl from "./content/about.md";
+import teamMdUrl from "./content/team.md";
+import privacyMdUrl from "./content/privacy.md";
+import termsMdUrl from "./content/terms.md";
+import contactMdUrl from "./content/contact.md";
 
 function App() {
   return (
@@ -42,6 +53,10 @@ function App() {
             <Route path="*" element={<Navigate to=".." />} />
           </Route>
         </Route>
+        <Route path="applications">
+          <Route path="" element={<ApplicationListPage />} />
+          <Route path=":applicationId" element={<ApplicationEditPage />} />
+        </Route>
         <Route path="admin" element={<AdminOutlet />}>
           <Route path="" element={<Navigate to="techs" />} />
           <Route path="techs" element={<TechListPage />} />
@@ -55,9 +70,28 @@ function App() {
         <Route path="/" element={null} />
 
         <Route path="/" element={null} />
-      </Routes>
 
-      <div className="flex"></div>
+        <div className="flex"></div>
+        <Route
+          path="/about"
+          element={<DocumentPage contentUrl={aboutMdUrl} />}
+        />
+        <Route path="/team" element={<DocumentPage contentUrl={teamMdUrl} />} />
+        <Route
+          path="/terms"
+          element={<DocumentPage contentUrl={termsMdUrl} />}
+        />
+        <Route
+          path="/privacy"
+          element={<DocumentPage contentUrl={privacyMdUrl} />}
+        />
+        <Route
+          path="/contact"
+          element={<DocumentPage contentUrl={contactMdUrl} />}
+        />
+        <Route path="/" element={null} />
+      </Routes>
+      <Footer />
     </>
   );
 }

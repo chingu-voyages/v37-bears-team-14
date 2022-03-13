@@ -1,11 +1,10 @@
 import React, { FunctionComponent } from "react";
 import { Link } from "react-router-dom";
-import Preview from "../../components/formatting/Preview";
-import { Project, Tech } from "../../shared/Interfaces";
+import { ProjectResult, Tech } from "../../shared/Interfaces";
 import { truncateString } from "../../shared/Utils";
-
+import Preview from "../../components/formatting/Preview";
 interface Props {
-  projects: Project[] | [];
+  projects: ProjectResult[] | [];
 }
 
 const ProjectPreview: FunctionComponent<Props> = ({ projects }) => {
@@ -14,17 +13,29 @@ const ProjectPreview: FunctionComponent<Props> = ({ projects }) => {
       {projects.map((p, index) => (
         <Link to={`/projects/${p.id}`} key={index}>
           <div className="bg-neutral-400" key={index}>
-            <div className="bg-darkGray border-b-4 border-lightGray">
-              <p className="text-center sm:text-md lg:text-xl text-lightGray pb-2 pt-1">
+            <div
+              className={`bg-darkGray border-b-4 border-lightGray ${
+                p.matchType.name ? "bg-red-400 text-darkGray" : "text-lightGray"
+              }`}
+            >
+              <p className="text-center sm:text-md lg:text-xl pb-2 pt-1">
                 {p.name}
               </p>
             </div>
-            <div className="pt-1 mb-2 text-sm text-darkGray pl-2 pr-2 leading-tight overflow-hidden">
-              {/* <p className="mb-2 text-sm text-darkGray pl-2 pr-2 leading-tight"></p> */}
+            <div
+              className={`pt-1 mb-2 text-sm text-darkGray pl-2 pr-2 leading-tight ${
+                p.matchType.description && "bg-red-400"
+              }`}
+            >
               <Preview>{truncateString(p.description)}</Preview>
-              <div className="flex justify-start no-first-margin">
+
+              <div
+                className={`flex justify-start ${
+                  p.matchType.techs && "bg-red-400"
+                }`}
+              >
                 {p.techs.slice(0, 4).map((t: Tech, index) => (
-                  <div className="relative m-1" key={index}>
+                  <div className="relative m-1 no-first-margin" key={index}>
                     <img
                       className="h-7 mx-auto flex justify-center align-middle"
                       alt={t.name}

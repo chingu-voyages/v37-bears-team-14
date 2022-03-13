@@ -1,31 +1,33 @@
 import React, { useState, FunctionComponent } from "react";
 
 import { Formik } from "formik";
-import { Project } from "../../shared/Interfaces";
-import ProjectPreview from "./ProjectPreview";
+import { ProjectResult } from "../../shared/Interfaces";
+import ProjectPreviewSearch from "./ProjectPreviewSearch";
 
 const ProjectSearch: FunctionComponent = () => {
-  const [searchResults, setSearchResults] = useState<Project[] | []>([]);
+  const [searchResults, setSearchResults] = useState<ProjectResult[] | []>([]);
   return (
     <>
       <Formik
         initialValues={{ search: "" }}
         onSubmit={(values, { setSubmitting }) => {
-          fetch(`/api/v1/project_search/${values.search}`).then(
-            async (response) => {
-              if (response.status === 200) {
-                const data = await response.json();
+          if (values.search)
+            fetch(`/api/v1/project_search?search=${values.search}`).then(
+              async (response) => {
+                if (response.status === 200) {
+                  const data = await response.json();
 
-                setSearchResults(data);
-              } else {
-                console.error(
-                  "failed to exicute search",
-                  response.status,
-                  await response.json()
-                );
+                  setSearchResults(data);
+                  setSubmitting(false);
+                } else {
+                  console.error(
+                    "failed to exicute search",
+                    response.status,
+                    await response.json()
+                  );
+                }
               }
-            }
-          );
+            );
         }}
       >
         {({
@@ -69,7 +71,7 @@ const ProjectSearch: FunctionComponent = () => {
           </form>
         )}
       </Formik>
-      <ProjectPreview projects={searchResults}></ProjectPreview>
+      <ProjectPreviewSearch projects={searchResults}></ProjectPreviewSearch>
     </>
   );
 };

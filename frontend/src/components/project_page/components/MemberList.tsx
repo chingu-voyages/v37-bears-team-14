@@ -34,7 +34,7 @@ const MemberList: FunctionComponent<MemberListProps> = ({ projectId }) => {
   }
 
   return (
-    <div className="flex ">
+    <div className="flex -space-x-4">
       {members.map((member) => (
         <UserAvatar key={member.id} user={member.user} />
       ))}

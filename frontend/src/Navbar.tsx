@@ -50,12 +50,6 @@ const Navbar: FunctionComponent = () => {
   return (
     <>
       <nav className="flex text-center sm:flex-row sm:text-left justify-between text-emerald-200 bg-gray-700 py-2 px-6 shadow h-[64px]">
-        {/* <a
-            href="/home"
-            className="text-2xl no-underline text-grey-darkest hover:text-blue-dark"
-          >
-            Link Up
-          </a> */}
         <div className="sm:hidden flex items-center">
           <button
             className="outline-none mobile-menu-button"
@@ -66,14 +60,37 @@ const Navbar: FunctionComponent = () => {
           >
             <Hamburger />
           </button>
+          {mobileMenu && (
+            <div className="inline">
+              <div className="absolute left-0 sm:hidden mt-8 w-48 bg-darkGray rounded-br-md overflow-hidden shadow-xl z-20 cursor-pointer">
+                <Link to="/projects">
+                  <span className="block px-4 py-2 text-sm text-mintGreen border-y-2 border-medGray hover:bg-gradient-to-br hover:from-purple-600 hover:to-blue-500 hover:text-white">
+                    Projects
+                  </span>
+                </Link>
+                <Link to="/developers">
+                  <span className="block px-4 py-2 text-sm text-mintGreen border-b-2 border-medGray hover:bg-gradient-to-br hover:from-purple-600 hover:to-blue-500 hover:text-white">
+                    Developers
+                  </span>
+                </Link>
+                <Link to="/applications">
+                  <span className="block px-4 py-2 text-sm text-mintGreen hover:bg-gradient-to-br hover:from-purple-600 hover:to-blue-500 hover:text-white">
+                    Applications
+                  </span>
+                </Link>
+              </div>
+            </div>
+          )}
         </div>
-        <div className="hidden sm:inline-flex items-center justify-center">
+
+        <div className="sm:inline-flex items-center justify-center">
           <div className="flex justify-between content-center">
-            <StackCafeIcon className="w-12" />
-            {/* <span className="inline ml-2">StackCafe</span> */}
+            <Link to="/" className="hover:text-emerald-400">
+              <StackCafeIcon className="w-12" />
+            </Link>
           </div>
         </div>
-        {/* className="flex items-center justify-center" */}
+
         <div className="inline-flex items-center justify-between content-center">
           <div className="hidden sm:block">
             <Link to="/projects">
@@ -140,25 +157,6 @@ const Navbar: FunctionComponent = () => {
                       </span>
                     </Link>
                   )}
-                </div>
-              )}
-              {mobileMenu && (
-                <div className="absolute left-0 sm:hidden mt-2 w-48 bg-darkGray rounded-br-md overflow-hidden shadow-xl z-20 cursor-pointer">
-                  <Link to="/projects">
-                    <span className="block px-4 py-2 text-sm text-mintGreen border-b-2 border-medGray hover:bg-gradient-to-br hover:from-purple-600 hover:to-blue-500 hover:text-white">
-                      Projects
-                    </span>
-                  </Link>
-                  <Link to="/developers">
-                    <span className="block px-4 py-2 text-sm text-mintGreen border-b-2 border-medGray hover:bg-gradient-to-br hover:from-purple-600 hover:to-blue-500 hover:text-white">
-                      Developers
-                    </span>
-                  </Link>
-                  <Link to="/applications">
-                    <span className="block px-4 py-2 text-sm text-mintGreen hover:bg-gradient-to-br hover:from-purple-600 hover:to-blue-500 hover:text-white">
-                      Applications
-                    </span>
-                  </Link>
                 </div>
               )}
             </div>

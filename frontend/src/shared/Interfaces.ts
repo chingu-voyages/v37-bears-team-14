@@ -6,6 +6,19 @@ export interface Project {
   settingOpenRoles: string[];
 }
 
+export interface ProjectResult {
+  id: string;
+  name: string;
+  description: string;
+  matchType: {
+    name: boolean;
+    description: boolean;
+    techs: boolean;
+  };
+  techs: Tech[];
+  settingOpenRoles: string[];
+}
+
 export interface Tech {
   id: string;
   name: string;
@@ -31,10 +44,12 @@ export interface Member {
 export interface Application {
   id: string;
   createdAt: Date;
+  updatedAt: Date;
   project: {
     id: string;
     name: string;
     description: string;
+    settingOpenRoles: string[];
   };
   user: {
     id: string;
