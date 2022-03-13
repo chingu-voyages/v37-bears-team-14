@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useState, useEffect } from "react";
 import LoadingSpinner from "../Spinners/LoadingSpinner";
-import { User, Tech } from "../../shared/Interfaces";
+import { User } from "../../shared/Interfaces";
 
 import UpdateUserForm from "./UpdateUserForm";
 
