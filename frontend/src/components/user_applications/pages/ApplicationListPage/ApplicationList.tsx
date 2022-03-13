@@ -45,8 +45,8 @@ const ApplicationListPage: FC<ApplicationListProps> = ({ userId }) => {
             title: "Accepted",
           },
           {
-            value: "rejected",
-            title: "Rejected",
+            value: "closed",
+            title: "Closed",
           },
         ]}
         onTabSelect={(t) => setStatus(t.value)}
