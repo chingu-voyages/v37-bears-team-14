@@ -18,7 +18,7 @@ computations.post(
   isAuthenticatedJobToken,
   async (req, res, next) => {
     try {
-      logger.info("ComputationTrendingSearch triggered");
+      logger.info("Triggered computation trendingsearches");
       const result =
         await computationTrendingSearchController.triggerComputationTrendingSearch(
           pick(req.body, ["maxAnalyzed", "batchSize"])
