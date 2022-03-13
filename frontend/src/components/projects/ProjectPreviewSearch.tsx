@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from "react";
 import { Link } from "react-router-dom";
-import { ProjectResult, Tech } from "../../shared/Interfaces";
+import { ProjectResult, Tech, Member } from "../../shared/Interfaces";
 import { truncateString } from "../../shared/Utils";
 import Preview from "../../components/formatting/Preview";
 interface Props {
@@ -12,9 +12,9 @@ const ProjectPreview: FunctionComponent<Props> = ({ projects }) => {
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 m-1">
       {projects.map((p, index) => (
         <Link to={`/projects/${p.id}`} key={index}>
-          <div className="bg-neutral-400" key={index}>
+          <div className="bg-neutral-400 shadow-lg" key={index}>
             <div
-              className={`bg-darkGray border-b-4 border-lightGray ${
+              className={`bg-darkGray border-b-[1px] border-mintGreen ${
                 p.matchType.name ? "bg-red-400 text-darkGray" : "text-lightGray"
               }`}
             >
@@ -23,7 +23,7 @@ const ProjectPreview: FunctionComponent<Props> = ({ projects }) => {
               </p>
             </div>
             <div
-              className={`pt-1 mb-2 text-sm text-darkGray pl-2 pr-2 leading-tight ${
+              className={`pt-1 mb-2 text-sm text-darkGray pl-2 pr-2 leading-tight overflow-hidden ${
                 p.matchType.description && "bg-red-400"
               }`}
             >
@@ -49,6 +49,15 @@ const ProjectPreview: FunctionComponent<Props> = ({ projects }) => {
                   } More`}</span>
                 )}
               </div>
+            </div>
+            <div className="-space-x-3 pb-1 pl-1">
+              {p.members.map((m: Member) => (
+                <img
+                  className="relative z-1 inline object-cover bg-white w-8 h-8 border-2 border-neutral-400 rounded-full"
+                  src={m.user.avatarUrl}
+                  alt={m.user.username}
+                />
+              ))}
             </div>
           </div>
         </Link>

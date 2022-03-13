@@ -3,6 +3,7 @@ export interface Project {
   name: string;
   description: string;
   techs: Tech[];
+  members: Member[];
   settingOpenRoles: string[];
 }
 
@@ -15,6 +16,7 @@ export interface ProjectResult {
     description: boolean;
     techs: boolean;
   };
+  members: Member[];
   techs: Tech[];
   settingOpenRoles: string[];
 }
