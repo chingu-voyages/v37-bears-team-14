@@ -438,6 +438,18 @@ class ProjectController {
     );
   }
 
+  // public async getStarred(user: string) {
+  //   console.log(user);
+  //   const starred = await this.projectModel.aggregate([
+  //     {
+  //       $match: {
+  //         $expr: { $in: [new mongoose.Types.ObjectId(user), "$starrers"] },
+  //       },
+  //     },
+  //   ]);
+  //   console.log(starred);
+  // }
+
   /**
    * Updating a member requires an admin or project owner.
    * id: project ID

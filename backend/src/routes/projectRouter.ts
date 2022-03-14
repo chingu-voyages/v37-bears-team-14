@@ -136,6 +136,12 @@ projects.post("/v1/projects/:id/unstar", async (req: Request, res, next) => {
   await projectController.removeStarrer(req.body.user.id, req.body.project);
   //console.log(res.json());
 });
+//Get Starred Projects
+projects.post("/v1/projects/get-starred", async (req: Request, res, next) => {
+  console.log(req.body.user);
+  // const starred = await projectController.getStarred(req.body.user.id);
+  // console.log(starred);
+});
 
 projects.get("/v1/projects/:id", async (req, res, next) => {
   try {

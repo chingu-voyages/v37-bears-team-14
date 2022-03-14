@@ -8,12 +8,14 @@ import { Link } from "react-router-dom";
 import NewProject from "./NewProject";
 import ProjectContext from "../../store/project-context";
 import ProjectPreview from "./ProjectPreview";
-
+import { useSession } from "../../hooks/session";
 import isEqual from "react-fast-compare";
 
 import LoadingSpinner from "../Spinners/LoadingSpinner";
+import { userInfo } from "os";
 
 const Projects: FunctionComponent = () => {
+  const { isLoggedIn, user } = useSession();
   const [loading, setLoading] = useState(false);
 
   const projectCtx = useContext<any>(ProjectContext);
@@ -30,6 +32,16 @@ const Projects: FunctionComponent = () => {
         return response;
       }
     });
+    if (user) {
+      console.log(user);
+      fetch("/api/v1/projects/getStarred", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ user: user.id }),
+      });
+    }
   }, [projectCtx]);
 
   return (
