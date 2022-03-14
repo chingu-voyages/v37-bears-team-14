@@ -40,9 +40,14 @@ const ProjectPageMarkdown: FC<ReadmeProps> = ({ children }) => {
           </h6>
         ),
         ul: ({ children, ...props }) => (
-          <ul className="list-disc" {...props}>
+          <ul className="list-disc markdown" {...props}>
             {children}
           </ul>
+        ),
+        ol: ({ children, ...props }) => (
+          <ol className="markdown" {...props}>
+            {children}
+          </ol>
         ),
         table: ({ children, ...props }) => (
           <table className="table-auto" {...props}>

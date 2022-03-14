@@ -70,7 +70,8 @@ applications.get("/", isLoggedIn, async (req, res, next) => {
       req.user!._id!.toString(),
       query,
       Math.min(50, +(req.query["pageSize"] || 50)),
-      gtString
+      gtString,
+      req.user!.isAdmin
     );
     res.json(applications);
   } catch (err) {
