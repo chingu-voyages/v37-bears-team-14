@@ -1,5 +1,5 @@
 import logger from "../logger";
-import {
+import mongoose, {
   ClientSession,
   Document,
   isValidObjectId,
@@ -57,6 +57,16 @@ export type ProjectSearchResultItem = {
   matchType: MatchType;
 };
 
+export type ProjectItem = {
+  id: ObjectId;
+  createdAt: Date;
+  updatedAt: Date;
+  name: string;
+  description: string;
+  techs: (ITech & { id: ObjectId })[];
+  members: (IMember & { id: ObjectId })[];
+};
+
 interface SaveSearchParams {
   query: string;
   nameMatches: ProjectSearchResultItem[];
@@ -80,14 +90,21 @@ class ProjectController {
     private createSession: () => Promise<ClientSession>
   ) {}
 
-  async getById(id: string): Promise<ProjectDoc> {
-    const project = await this.projectModel
-      .findOne({ _id: id })
-      .populate("techs");
+  async getById(id: string): Promise<any> {
+    console.log(id);
+    // const project = await this.projectModel
+    //   .findOne({ _id: id })
+    //   .populate("techs");
+    const project = await this.projectModel.aggregate([
+      { $match: { _id: new mongoose.Types.ObjectId(id) } },
+      ...createJoins(),
+      createProjection(),
+      { $limit: 1 },
+    ]);
     if (!project) {
       throw new NotFoundError("project", id);
     }
-    return project;
+    return project[0];
   }
 
   async getByName(name: string): Promise<ProjectDoc> {

@@ -11,7 +11,6 @@ interface Props {
 const ProjectPreview: FunctionComponent<Props> = ({ projects }) => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 m-1">
-      {console.log(projects)}
       {projects.map((p, index) => (
         <Link to={`/projects/${p.id}`} key={index}>
           <div className="bg-neutral-400 shadow-lg" key={index}>
@@ -40,11 +39,12 @@ const ProjectPreview: FunctionComponent<Props> = ({ projects }) => {
               </div>
             </div>
             <div className="-space-x-3 pb-1 pl-1">
-              {p.members.map((m: Member) => (
+              {p.members.map((m: Member, index) => (
                 <img
                   className="relative z-1 bg-white inline object-cover w-8 h-8 border-2 border-neutral-400 rounded-full shadow-md"
                   src={m.user.avatarUrl}
                   alt={m.user.username}
+                  key={index}
                 />
               ))}
             </div>
