@@ -9,17 +9,13 @@ const ProjectLandingPage = () => {
 
   return (
     <>
-      <div className="flex m-1 p-1 justify-end">
-        <div className="basis-1/4">
-          <StarButton project={project}></StarButton>
-        </div>
-      </div>
       <div className="flex flex-col-reverse md:flex-row">
         <main className="basis-3/4">
           <ProjectLanding project={project} setProject={setProject} />
         </main>
         <aside className="basis-1/4">
           <div className="mx-3 my-4 md:mr-8 md:my-8">
+            <StarButton project={project}></StarButton>
             <ApplyButtonContainer projectId={project.id} />
           </div>
         </aside>

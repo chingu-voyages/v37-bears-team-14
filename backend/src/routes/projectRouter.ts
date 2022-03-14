@@ -128,11 +128,13 @@ projects.post(
 projects.post("/v1/projects/:id/star", async (req: Request, res, next) => {
   console.log(req.body.user.id);
   await projectController.addStarrer(req.body.user.id, req.body.project);
+  //console.log(res.json());
 });
 
 // Unstar Project
 projects.post("/v1/projects/:id/unstar", async (req: Request, res, next) => {
   await projectController.removeStarrer(req.body.user.id, req.body.project);
+  //console.log(res.json());
 });
 
 projects.get("/v1/projects/:id", async (req, res, next) => {
