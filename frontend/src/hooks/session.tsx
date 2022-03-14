@@ -1,4 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { StringLiteralLike } from "typescript";
+import { Tech } from "../shared/Interfaces";
 
 export type SessionData = {
   loading: boolean;
@@ -11,6 +13,8 @@ export type SessionData = {
     isAdmin: boolean;
     updatedAt: string;
     username: string;
+    displayName: string;
+    techs: Tech[];
   };
 };
 

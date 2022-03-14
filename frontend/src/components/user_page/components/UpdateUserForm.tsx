@@ -2,9 +2,9 @@ import React, { useState, forwardRef, useEffect } from "react";
 import { Menu } from "@headlessui/react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import Alert from "../alerts/Alert";
-import { Tech } from "../../shared/Interfaces";
-import { useSession } from "../../hooks/session";
+import Alert from "../../alerts/Alert";
+import { Tech } from "../../../shared/Interfaces";
+import { useSession } from "../../../hooks/session";
 import { setConstantValue } from "typescript";
 
 interface Props {
@@ -45,10 +45,14 @@ const UpdateUserForm: React.FC<Props> = ({
 }) => {
   const [customOpen, setCustomOpen] = useState(false);
   const [userUpdated, setuserUpdated] = useState(false);
+  const [username, setUsername] = useState("");
+  const [displayName, setDisplayName] = useState("");
+  const [userTechs, setUserTechs] = useState([]);
   const { user } = useSession();
 
-  // Similar to componentDidMount and componentDidUpdate:
-  useEffect(() => {});
+  const handleFormChange = (event: any) => {
+    setUsername(event.target.value);
+  };
 
   const CustomMenuButton = forwardRef<HTMLButtonElement>(
     ({ children }, ref) => (
@@ -66,8 +70,8 @@ const UpdateUserForm: React.FC<Props> = ({
     <>
       <Formik
         initialValues={{
-          username: "",
-          displayName: "",
+          username: user ? user.username : "",
+          displayName: user ? user.displayName : "",
           techs: [],
         }}
         validationSchema={UpdateUserSchema}

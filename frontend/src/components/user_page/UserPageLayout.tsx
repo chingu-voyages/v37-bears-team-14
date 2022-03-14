@@ -8,8 +8,10 @@ import React, {
 import { useParams } from "react-router-dom";
 import { User } from "../../shared/Interfaces";
 import UserPageTech from "./UserPageTech";
+import UserSettingsLayout from "./UserSettingsLayout";
 import LoadingSpinner from "../Spinners/LoadingSpinner";
 import UserNotFound from "./UserNotFound";
+import { useSession } from "../../hooks/session";
 
 export interface UserPageContext {
   user: User;
@@ -22,6 +24,8 @@ const UserPageLayout: FunctionComponent = () => {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [user, setUser] = useState<null | User>(null);
+  const sessionUser = useSession().user;
+
   //const [techs, setTechs] = useState();
 
   useEffect(() => {
@@ -66,6 +70,7 @@ const UserPageLayout: FunctionComponent = () => {
   return (
     <section className="w-full">
       <div className="py-1 mx-2 md:py-3 md:mx-8">
+        {sessionUser && sessionUser.id === user.id && <UserSettingsLayout />}
         <h1 className="text-lg py-2 bold justify-center flex">
           {user.displayName && user.displayName}
         </h1>
@@ -73,7 +78,6 @@ const UserPageLayout: FunctionComponent = () => {
           {user.username && user.username}
         </h4>
         <h1 className="py-4 text-lg flex justify-center">Tech Stack</h1>
-
         <ul>
           {user &&
             user.techs &&
