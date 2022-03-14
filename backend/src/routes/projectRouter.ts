@@ -124,8 +124,10 @@ projects.post(
     }
   }
 );
-projects.post("/v1/projects/:id/star", (req: Request, res, next) => {
-  console.log(req.body);
+// Star Project
+projects.post("/v1/projects/:id/star", async (req: Request, res, next) => {
+  console.log(req.body.user.id);
+  await projectController.addStarrer(req.body.user.id, req.body.project);
 });
 
 projects.get("/v1/projects/:id", async (req, res, next) => {

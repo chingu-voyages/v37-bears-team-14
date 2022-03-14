@@ -4,6 +4,7 @@ import ProjectLanding from "./components/ProjectShowcase";
 import ApplyButtonContainer from "../../components/ApplyFlow/ApplyButtonContainer";
 import ActionButton from "../../../controls/ActionButton";
 import { useSession } from "../../../../hooks/session";
+import StarButton from "./components/StarButton";
 const ProjectLandingPage = () => {
   const { project, setProject } = useOutletContext<ProjectPageContext>();
   const { loading, isLoggedIn, user } = useSession();
