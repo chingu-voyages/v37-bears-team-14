@@ -6,7 +6,7 @@ import ApplyButtonContainer from "../../components/ApplyFlow/ApplyButtonContaine
 import StarButton from "./components/StarButton";
 const ProjectLandingPage = () => {
   const { project, setProject } = useOutletContext<ProjectPageContext>();
-  console.log(project);
+
   return (
     <>
       <div className="flex m-1 p-1 justify-end">

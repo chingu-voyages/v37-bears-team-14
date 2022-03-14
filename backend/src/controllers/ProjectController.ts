@@ -91,7 +91,6 @@ class ProjectController {
   ) {}
 
   async getById(id: string): Promise<any> {
-    console.log(id);
     // const project = await this.projectModel
     //   .findOne({ _id: id })
     //   .populate("techs");
@@ -104,6 +103,7 @@ class ProjectController {
     if (!project) {
       throw new NotFoundError("project", id);
     }
+    console.log(project[0].members);
     return project[0];
   }
 
@@ -428,6 +428,13 @@ class ProjectController {
     await this.projectModel.updateOne(
       { id: projectId },
       { $addToSet: { starrers: user } }
+    );
+  }
+
+  public async removeStarrer(user: string, projectId: string) {
+    await this.projectModel.updateOne(
+      { id: projectId },
+      { $pull: { starrers: user } }
     );
   }
 

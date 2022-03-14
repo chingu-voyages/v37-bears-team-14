@@ -8,23 +8,31 @@ interface Props {
 }
 const StarButton: FC<Props> = ({ project }) => {
   const { loading, isLoggedIn, user } = useSession();
-  const [members, setMembers] = useState<Member[]>();
-  const [owner, setOwner] = useState<User>();
   const [starButton, setStarButton] = useState(false);
+  const [unstarButton, setUnstarButton] = useState(false);
   const params = useParams();
 
   useEffect(() => {
     fetch(`/api/v1/projects/${project.id}`).then(async (response) => {
       if (response.status === 200) {
         const data = await response.json();
+        console.log(data.starrers);
+        console.log(user);
+        if (data.members) {
+          data.members.map((m: Member) => {
+            // console.log(m);
+            if (
+              m.roleName === "owner" &&
+              user &&
+              m.user.id !== user.id &&
+              !data.starrers.includes(user.id)
+            ) {
+              // console.log({ owner: m.user.id, user: user.id });
 
-        setMembers(data.members);
-        if (members) {
-          members.map((m) => {
-            if (m.roleName === "owner" && user && m.user.id !== user.id) {
-              console.log({ owner: m.user.id, user: user.id });
-              setOwner(m.user);
               setStarButton(true);
+            }
+            if (user && data.starrers.includes(user.id)) {
+              setUnstarButton(true);
             }
           });
         }
@@ -37,9 +45,18 @@ const StarButton: FC<Props> = ({ project }) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ user: user, project: params.projectId }),
+      body: JSON.stringify({ user: user, project: project.id }),
     });
     console.log(user);
+  };
+  const unstarProject = () => {
+    fetch(`/api/v1/projects/${project.id}/unstar`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ user: user, project: project.id }),
+    });
   };
   return (
     <>
@@ -60,6 +77,9 @@ const StarButton: FC<Props> = ({ project }) => {
             />
           </svg>
         </ActionButton>
+      )}
+      {unstarButton && (
+        <ActionButton onClick={() => unstarProject()}>unstar</ActionButton>
       )}
     </>
   );
