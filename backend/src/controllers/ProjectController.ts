@@ -407,6 +407,13 @@ class ProjectController {
     }
   }
 
+  public async addStarrer(user: string, projectId: string) {
+    await this.projectModel.updateOne(
+      { id: projectId },
+      { $addToSet: { starrers: user } }
+    );
+  }
+
   /**
    * Updating a member requires an admin or project owner.
    * id: project ID
