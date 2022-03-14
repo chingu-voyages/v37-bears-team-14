@@ -9,12 +9,14 @@ export interface RequiredAppConfig {
 export interface OptionalAppConfig {
   logtailToken?: string;
   nodeEnv?: string;
+  jobTokens?: string[];
 }
 
 export function getOptionalConfig(env: NodeJS.ProcessEnv): OptionalAppConfig {
   return {
     logtailToken: env["LOGTAIL_TOKEN"],
     nodeEnv: env["NODE_ENV"],
+    jobTokens: env["JOB_TOKENS"] ? env["JOB_TOKENS"].split(";") : undefined,
   };
 }
 

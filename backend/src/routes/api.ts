@@ -14,6 +14,7 @@ import UnexpectedError from "../controllers/errors/UnexpectedError";
 import UnauthorizedError from "../controllers/errors/UnauthorizedError";
 import FieldExistsError from "../controllers/errors/FieldExistsError";
 import InvalidChangeLastOwner from "../controllers/errors/InvalidChangeLastOwner";
+import computationRouter from "./computationRouter";
 import projectRouter from "./projectRouter";
 import applicationRouter from "./applicationRouter";
 import hookRouter from "./hookRouter";
@@ -27,6 +28,10 @@ const userController = new UserController(User);
 /* API routes */
 
 const api = Router();
+
+// COMPUTATION
+
+api.use(computationRouter);
 
 // PROJECT
 

@@ -1,6 +1,7 @@
 import React from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Navbar from "./Navbar";
+import Footer from "./components/formatting/Footer";
 import Projects from "./components/projects/Projects";
 import AdminOutlet from "./components/routing/AdminOutlet";
 import TechListPage from "./components/admin/techs/TechListPage";
@@ -18,7 +19,7 @@ import UserSettingsPage from "./components/user_page/UserSettingsPage";
 import ApplicationListPage from "./components/user_applications/pages/ApplicationListPage";
 import ApplicationEditPage from "./components/user_applications/pages/ApplicationEditPage";
 import DocumentPage from "./components/info/DocumentPage";
-import Footer from "./components/formatting/Footer";
+import FrontPage from "./components/front_page/FrontPage";
 
 import aboutMdUrl from "./content/about.md";
 import teamMdUrl from "./content/team.md";
@@ -87,7 +88,7 @@ function App() {
           path="/contact"
           element={<DocumentPage contentUrl={contactMdUrl} />}
         />
-        <Route path="/" element={null} />
+        <Route path="/" element={<FrontPage />} />
       </Routes>
       <Footer />
     </>
