@@ -51,7 +51,7 @@ join projects as team members.
   - Show +N if there are more than 5 technologies
 - View latest updated projects
 - Search by name, description, and technology
-- Search metrics ([see dashboard snapshot](https://snapshots.raintank.io/dashboard/snapshot/HjvBHi1eHCYNgZ43Obc35Y0KqJ7I1z3r))
+- Search metrics ([see dashboard snapshot](https://snapshots.raintank.io/dashboard/snapshot/7Fl3U1Vi9CTm07P8KmJiSDO61SlxXarq))
 #### Front Page
 - Call to action - Browse Projects
 - Search term suggestions
