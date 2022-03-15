@@ -17,7 +17,7 @@ const Hero = () => {
         </Link>
       </div>
       <div className="relative top-28 md:top-[-8rem] md:right-0 md:text-right text-center">
-        <ConnectionIllustration className="inline-block h-80" />
+        <ConnectionIllustration className="inline-block max-h-80 w-full md:w-auto" />
       </div>
     </div>
   );
