@@ -1,4 +1,4 @@
-import { useOutletContext, useParams } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
 import { ProjectPageContext } from "../../layouts/ProjectPageLayout";
 import ProjectLanding from "./components/ProjectShowcase";
 import ApplyButtonContainer from "../../components/ApplyFlow/ApplyButtonContainer";

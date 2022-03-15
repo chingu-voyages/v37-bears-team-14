@@ -1,8 +1,8 @@
 import React, { FC, useEffect, useState } from "react";
-import ActionButton from "../../../../controls/ActionButton";
+
 import { useSession } from "../../../../../hooks/session";
-import { useParams } from "react-router-dom";
-import { Project, Member, User } from "../../../../../shared/Interfaces";
+
+import { Project, Member } from "../../../../../shared/Interfaces";
 interface Props {
   project: Project;
 }
@@ -37,11 +37,12 @@ const StarButton: FC<Props> = ({ project }) => {
                 setProjectOwner(true);
               }
             }
+            return m;
           });
         }
       }
     });
-  }, []);
+  });
 
   const starProject = () => {
     fetch(`/api/v1/projects/${project.id}/star`, {
