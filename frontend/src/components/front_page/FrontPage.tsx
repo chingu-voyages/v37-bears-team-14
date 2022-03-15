@@ -5,7 +5,7 @@ const FrontPage = () => {
   return (
     <>
       <div className="bg-white pt-4 md:pt-12">
-        <div className="mx-3 _my-4 md:mx-8 _md:my-12">
+        <div className="mx-3 md:mx-8">
           <Hero />
         </div>
       </div>
