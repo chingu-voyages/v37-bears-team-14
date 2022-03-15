@@ -100,7 +100,7 @@ class ProjectController {
       createProjection(),
       { $limit: 1 },
     ]);
-    if (!project) {
+    if (project.length === 0) {
       throw new NotFoundError("project", id);
     }
 
