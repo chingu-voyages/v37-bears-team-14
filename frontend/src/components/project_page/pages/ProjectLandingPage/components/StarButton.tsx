@@ -1,8 +1,7 @@
 import React, { FC, useEffect, useState } from "react";
-
 import { useSession } from "../../../../../hooks/session";
-
 import { Project, Member } from "../../../../../shared/Interfaces";
+import LoadingSpinner from "../../../../Spinners/LoadingSpinner";
 interface Props {
   project: Project;
 }
