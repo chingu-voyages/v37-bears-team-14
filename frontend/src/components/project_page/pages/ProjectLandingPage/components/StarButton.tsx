@@ -17,20 +17,16 @@ const StarButton: FC<Props> = ({ project }) => {
     fetch(`/api/v1/projects/${project.id}`).then(async (response) => {
       if (response.status === 200) {
         const data = await response.json();
-        console.log(data.starrers);
         setStarrers(data.starrers);
-        console.log(user);
+
         if (data.members) {
           data.members.map((m: Member) => {
-            // console.log(m);
             if (
               m.roleName === "owner" &&
               user &&
               m.user.id !== user.id &&
               !data.starrers.includes(user.id)
             ) {
-              // console.log({ owner: m.user.id, user: user.id });
-
               setStarButton(true);
             }
             if (user && data.starrers.includes(user.id)) {
@@ -49,7 +45,7 @@ const StarButton: FC<Props> = ({ project }) => {
       },
       body: JSON.stringify({ user: user, project: project.id }),
     });
-    console.log(user);
+
     setStarButton(false);
     setUnstarButton(true);
     if (user) setStarrers([...starrers, user.id]);

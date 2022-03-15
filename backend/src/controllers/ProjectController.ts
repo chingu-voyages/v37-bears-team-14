@@ -103,7 +103,7 @@ class ProjectController {
     if (!project) {
       throw new NotFoundError("project", id);
     }
-    console.log(project[0].members);
+
     return project[0];
   }
 
@@ -425,7 +425,6 @@ class ProjectController {
   }
 
   public async addStarrer(user: string, projectId: string) {
-    console.log(user, projectId);
     await this.projectModel.updateOne(
       { _id: projectId },
       { $addToSet: { starrers: user } }
@@ -438,9 +437,8 @@ class ProjectController {
       { $pull: { starrers: user } }
     );
   }
-
+  // Get all projects current user starred
   public async getStarred(user: string) {
-    console.log(user);
     const starred = await this.projectModel.aggregate([
       {
         $match: {
@@ -448,7 +446,7 @@ class ProjectController {
         },
       },
     ]);
-    console.log(starred);
+    return starred;
   }
 
   /**

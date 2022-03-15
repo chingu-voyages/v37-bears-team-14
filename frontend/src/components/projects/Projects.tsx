@@ -33,13 +33,6 @@ const Projects: FunctionComponent = () => {
       }
     });
   }, [projectCtx]);
-  useEffect(() => {
-    if (user) {
-      console.log(user);
-
-      fetch(`/api/v1/projects/get-starred?user=${user.id}`);
-    }
-  }, []);
 
   return (
     <>
