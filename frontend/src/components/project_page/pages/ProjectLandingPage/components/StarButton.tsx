@@ -70,7 +70,7 @@ const StarButton: FC<Props> = ({ project }) => {
   };
   return (
     <>
-      {isLoggedIn && !projectOwner && (
+      {!loading && isLoggedIn && !projectOwner && (
         <button
           onClick={() => {
             if (starButton) starProject();
