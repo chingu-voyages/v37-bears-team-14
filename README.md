@@ -21,6 +21,9 @@ join projects as team members.
 #### Authentication
 - Sign in with GitHub
 - Log out
+#### Authorization
+- Role-based authorization on project members
+- Site admin authorization
 #### Project Profiles
 - Create projects
 - Edit name and descriptions
@@ -39,7 +42,8 @@ join projects as team members.
 - View list of applications to project
   - Filter list by pending, accepted, closed
 #### Project Settings
-- Add, remove, and edit roles of team members
+- Add and remove team members
+  - Edit roles of team members
 - Configure webhooks for receiving GitHub repository events
   - Inline help text for GitHub Webhook configuration
 #### Project Search
