@@ -22,7 +22,7 @@ join projects as team members.
 - Sign in with GitHub
 - Log out
 #### Authorization
-- Role-based authorization on project members
+- Role-based access control for project teams
 - Site admin authorization
 #### Project Profiles
 - Create projects
