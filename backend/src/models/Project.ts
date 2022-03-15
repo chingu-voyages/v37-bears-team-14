@@ -26,14 +26,17 @@ const ProjectSchema = new Schema<IProject>(
     description: {
       type: Schema.Types.String,
       default: null,
+      indexed: true,
     },
     techs: {
       type: [Schema.Types.ObjectId],
       ref: "tech",
+      indexed: true,
     },
     starrers: {
       type: [Schema.Types.ObjectId],
       ref: "user",
+      indexed: true,
     },
     settingOpenRoles: {
       type: [Schema.Types.String],

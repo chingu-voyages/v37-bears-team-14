@@ -11,7 +11,7 @@ const StarButton: FC<Props> = ({ project }) => {
   const [starButton, setStarButton] = useState(false);
   const [unstarButton, setUnstarButton] = useState(false);
   const [starrers, setStarrers] = useState<string[]>([]);
-  const params = useParams();
+  const [projectOwner, setProjectOwner] = useState(false);
 
   useEffect(() => {
     fetch(`/api/v1/projects/${project.id}`).then(async (response) => {
@@ -32,11 +32,17 @@ const StarButton: FC<Props> = ({ project }) => {
             if (user && data.starrers.includes(user.id)) {
               setUnstarButton(true);
             }
+            if (user) {
+              if (m.user.id === user.id) {
+                setProjectOwner(true);
+              }
+            }
           });
         }
       }
     });
   }, []);
+
   const starProject = () => {
     fetch(`/api/v1/projects/${project.id}/star`, {
       method: "POST",
@@ -64,7 +70,7 @@ const StarButton: FC<Props> = ({ project }) => {
   };
   return (
     <>
-      {user && (
+      {isLoggedIn && !projectOwner && (
         <button
           onClick={() => {
             if (starButton) starProject();
