@@ -10,7 +10,7 @@ const StarButton: FC<Props> = ({ project }) => {
   const [starButton, setStarButton] = useState(false);
   const [unstarButton, setUnstarButton] = useState(false);
   const [starrers, setStarrers] = useState<string[]>([]);
-  const [projectOwner, setProjectOwner] = useState(false);
+  //const [projectOwner, setProjectOwner] = useState(false);
 
   useEffect(() => {
     fetch(`/api/v1/projects/${project.id}`).then(async (response) => {
@@ -18,26 +18,28 @@ const StarButton: FC<Props> = ({ project }) => {
         const data = await response.json();
         setStarrers(data.starrers);
 
-        if (data.members) {
-          data.members.map((m: Member) => {
-            if (
-              m.roleName === "owner" &&
-              user &&
-              m.user.id !== user.id &&
-              !data.starrers.includes(user.id)
-            ) {
-              setStarButton(true);
-            }
-            if (user && data.starrers.includes(user.id)) {
-              setUnstarButton(true);
-            }
-            if (user) {
-              if (m.user.id === user.id) {
-                setProjectOwner(true);
-              }
-            }
-            return m;
-          });
+        // if (data.members) {
+        //   data.members.map((m: Member) => {
+        //     if (
+        //       m.roleName === "owner" &&
+        //       user &&
+        //       m.user.id !== user.id &&
+        //       !data.starrers.includes(user.id)
+        //     ) {
+        //       setStarButton(true);
+        //     }
+        //     if (user) {
+        //       if (m.user.id === user.id) {
+        //         setProjectOwner(true);
+        //       }
+        //     }
+        //     return m;
+        //   });
+        // }
+        if (isLoggedIn && user && !data.starrers.includes(user.id)) {
+          setStarButton(true);
+        } else if (user && data.starrers.includes(user.id)) {
+          setUnstarButton(true);
         }
       }
     });
@@ -70,7 +72,9 @@ const StarButton: FC<Props> = ({ project }) => {
   };
   return (
     <>
-      {!loading && isLoggedIn && !projectOwner && (
+      {loading && <LoadingSpinner></LoadingSpinner>}
+
+      {!loading && isLoggedIn && (
         <button
           onClick={() => {
             if (starButton) starProject();
