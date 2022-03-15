@@ -37,6 +37,7 @@ const ProjectSchema = new Schema<IProject>(
       type: [Schema.Types.ObjectId],
       ref: "user",
       indexed: true,
+      default: [],
     },
     settingOpenRoles: {
       type: [Schema.Types.String],
