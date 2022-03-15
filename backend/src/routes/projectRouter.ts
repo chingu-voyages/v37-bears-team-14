@@ -126,7 +126,7 @@ projects.post(
 );
 // Star Project
 projects.post("/v1/projects/:id/star", async (req: Request, res, next) => {
-  console.log(req.body.user.id);
+  //console.log("star method", req.body.user.id);
   await projectController.addStarrer(req.body.user.id, req.body.project);
   //console.log(res.json());
 });
@@ -138,9 +138,17 @@ projects.post("/v1/projects/:id/unstar", async (req: Request, res, next) => {
 });
 //Get Starred Projects
 projects.post("/v1/projects/get-starred", async (req: Request, res, next) => {
-  console.log(req.body.user);
+  console.log(req);
   // const starred = await projectController.getStarred(req.body.user.id);
   // console.log(starred);
+});
+
+projects.get("/v1/projects/get-starred", async (req: Request, res, next) => {
+  //console.log(req.query["user"]);
+  // res.json(req.query["user"]);
+  if (req.query["user"])
+    await projectController.getStarred(req.query["user"].toString());
+  //console.log(starred);
 });
 
 projects.get("/v1/projects/:id", async (req, res, next) => {

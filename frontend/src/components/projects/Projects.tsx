@@ -32,17 +32,14 @@ const Projects: FunctionComponent = () => {
         return response;
       }
     });
+  }, [projectCtx]);
+  useEffect(() => {
     if (user) {
       console.log(user);
-      fetch("/api/v1/projects/getStarred", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ user: user.id }),
-      });
+
+      fetch(`/api/v1/projects/get-starred?user=${user.id}`);
     }
-  }, [projectCtx]);
+  }, []);
 
   return (
     <>

@@ -425,30 +425,31 @@ class ProjectController {
   }
 
   public async addStarrer(user: string, projectId: string) {
+    console.log(user, projectId);
     await this.projectModel.updateOne(
-      { id: projectId },
+      { _id: projectId },
       { $addToSet: { starrers: user } }
     );
   }
 
   public async removeStarrer(user: string, projectId: string) {
     await this.projectModel.updateOne(
-      { id: projectId },
+      { _id: projectId },
       { $pull: { starrers: user } }
     );
   }
 
-  // public async getStarred(user: string) {
-  //   console.log(user);
-  //   const starred = await this.projectModel.aggregate([
-  //     {
-  //       $match: {
-  //         $expr: { $in: [new mongoose.Types.ObjectId(user), "$starrers"] },
-  //       },
-  //     },
-  //   ]);
-  //   console.log(starred);
-  // }
+  public async getStarred(user: string) {
+    console.log(user);
+    const starred = await this.projectModel.aggregate([
+      {
+        $match: {
+          $expr: { $in: [new mongoose.Types.ObjectId(user), "$starrers"] },
+        },
+      },
+    ]);
+    console.log(starred);
+  }
 
   /**
    * Updating a member requires an admin or project owner.
