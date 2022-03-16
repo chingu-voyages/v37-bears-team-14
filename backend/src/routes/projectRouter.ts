@@ -124,6 +124,25 @@ projects.post(
     }
   }
 );
+// Star Project
+projects.post("/v1/projects/:id/star", async (req: Request, res, next) => {
+  await projectController.addStarrer(req.body.user.id, req.body.project);
+  res.json({ ok: true });
+});
+
+// Unstar Project
+projects.post("/v1/projects/:id/unstar", async (req: Request, res, next) => {
+  await projectController.removeStarrer(req.body.user.id, req.body.project);
+  res.json({ ok: true });
+});
+
+//Get Starred Projects
+projects.get("/v1/projects/get-starred", async (req: Request, res, next) => {
+  let starred;
+  if (req.query["user"])
+    starred = await projectController.getStarred(req.query["user"].toString());
+  return res.json(starred);
+});
 
 projects.get("/v1/projects/:id", async (req, res, next) => {
   try {

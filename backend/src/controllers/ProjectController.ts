@@ -1,5 +1,5 @@
 import logger from "../logger";
-import {
+import mongoose, {
   ClientSession,
   Document,
   isValidObjectId,
@@ -59,6 +59,16 @@ export type ProjectSearchResultItem = {
   matchType: MatchType;
 };
 
+export type ProjectItem = {
+  id: ObjectId;
+  createdAt: Date;
+  updatedAt: Date;
+  name: string;
+  description: string;
+  techs: (ITech & { id: ObjectId })[];
+  members: (IMember & { id: ObjectId })[];
+};
+
 interface SaveSearchParams {
   query: string;
   nameMatches: ProjectSearchResultItem[];
@@ -82,14 +92,21 @@ class ProjectController {
     private createSession: () => Promise<ClientSession>
   ) {}
 
-  async getById(id: string): Promise<ProjectDoc> {
-    const project = await this.projectModel
-      .findOne({ _id: id })
-      .populate("techs");
-    if (!project) {
+  async getById(id: string): Promise<any> {
+    // const project = await this.projectModel
+    //   .findOne({ _id: id })
+    //   .populate("techs");
+    const project = await this.projectModel.aggregate([
+      { $match: { _id: new mongoose.Types.ObjectId(id) } },
+      ...createJoins(),
+      createProjection(),
+      { $limit: 1 },
+    ]);
+    if (project.length === 0) {
       throw new NotFoundError("project", id);
     }
-    return project;
+
+    return project[0];
   }
 
   async getByName(name: string): Promise<ProjectDoc> {
@@ -428,6 +445,31 @@ class ProjectController {
         throw new UnauthorizedError("Updater must be an owner");
       }
     }
+  }
+
+  public async addStarrer(user: string, projectId: string) {
+    await this.projectModel.updateOne(
+      { _id: projectId },
+      { $addToSet: { starrers: user } }
+    );
+  }
+
+  public async removeStarrer(user: string, projectId: string) {
+    await this.projectModel.updateOne(
+      { _id: projectId },
+      { $pull: { starrers: user } }
+    );
+  }
+  // Get all projects current user starred
+  public async getStarred(user: string) {
+    const starred = await this.projectModel.aggregate([
+      {
+        $match: {
+          $expr: { $in: [new mongoose.Types.ObjectId(user), "$starrers"] },
+        },
+      },
+    ]);
+    return starred;
   }
 
   /**

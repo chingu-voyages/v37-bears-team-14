@@ -5,6 +5,7 @@ export interface IProject {
   name: string;
   description: null | string;
   techs: ObjectId[] | ITech[];
+  starrers: ObjectId[];
   matchType?: {
     name?: boolean;
     description?: boolean;
@@ -25,10 +26,18 @@ const ProjectSchema = new Schema<IProject>(
     description: {
       type: Schema.Types.String,
       default: null,
+      indexed: true,
     },
     techs: {
       type: [Schema.Types.ObjectId],
       ref: "tech",
+      indexed: true,
+    },
+    starrers: {
+      type: [Schema.Types.ObjectId],
+      ref: "user",
+      indexed: true,
+      default: [],
     },
     settingOpenRoles: {
       type: [Schema.Types.String],
