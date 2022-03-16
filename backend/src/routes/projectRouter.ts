@@ -206,7 +206,7 @@ projects.get("/v1/projects", async (req, res, next) => {
 });
 
 // Returns the session user's projects
-projects.get("/v1/user_projects", async (req: Request, res, next) => {
+projects.get("/v1/members", async (req: Request, res, next) => {
   if (req.query["user"]) {
     const userId = req.query["user"];
     const userMembers = await projectController.findUserProjects(
