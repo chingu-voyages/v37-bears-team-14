@@ -5,10 +5,7 @@ import ApplyButtonContainer from "../../components/ApplyFlow/ApplyButtonContaine
 
 const ProjectLandingPage = () => {
   const { project, setProject } = useOutletContext<ProjectPageContext>();
-  fetch("/api/v1/user_projects?user=62041c51a00bb005822d8388").then(async (r) =>
-    console.log(await r.json())
-  );
-  //62041c51a00bb005822d8388
+
   return (
     <div className="flex flex-col-reverse md:flex-row">
       <main className="basis-3/4">
