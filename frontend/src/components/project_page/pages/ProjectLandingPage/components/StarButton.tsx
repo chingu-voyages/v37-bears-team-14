@@ -24,7 +24,7 @@ const StarButton: FC<Props> = ({ project }) => {
         }
       }
     });
-  });
+  }, [isLoggedIn, project.id, user]);
 
   const starProject = () => {
     fetch(`/api/v1/projects/${project.id}/star`, {
