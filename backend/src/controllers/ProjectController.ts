@@ -7,6 +7,7 @@ import {
   ObjectId,
 } from "mongoose";
 import { MongoError } from "mongodb";
+import mongoose from "mongoose";
 import _, { merge } from "lodash";
 import { IMember } from "../models/Member";
 import { IProject } from "../models/Project";
@@ -39,6 +40,7 @@ export interface MemberUpdateParams {
 }
 
 export type ProjectDoc = IProject & Document<unknown, any, IProject>;
+export type MemberDoc = IMember & Document<unknown, any, IProject>;
 
 export type MatchType = {
   name: boolean;
@@ -223,6 +225,21 @@ class ProjectController {
     ]);
 
     return projects;
+  }
+
+  public async findUserProjects(userId: string): Promise<ProjectDoc[]> {
+    let userMembers = await this.memberModel.aggregate([
+      { $match: { user: new mongoose.Types.ObjectId(userId) } },
+      { $group: { _id: "$project" } },
+      { $group: { _id: null, projects: { $push: "$_id" } } },
+    ]);
+
+    userMembers = userMembers[0].projects;
+
+    let userProjects = await this.projectModel.find({
+      _id: { $in: userMembers },
+    });
+    return userProjects;
   }
 
   // Creating a project involves associating its creator.
