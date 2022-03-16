@@ -236,9 +236,15 @@ class ProjectController {
 
     userMembers = userMembers[0].projects;
 
-    let userProjects = await this.projectModel.find({
-      _id: { $in: userMembers },
-    });
+    let userProjects = await this.projectModel.aggregate([
+      {
+        $match: {
+          _id: { $in: userMembers },
+        },
+      },
+      ...createJoins(),
+      createProjection(),
+    ]);
     return userProjects;
   }
 
