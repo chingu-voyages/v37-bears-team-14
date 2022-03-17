@@ -2,8 +2,9 @@ import { Router } from "express";
 import GraphController from "../controllers/GraphController";
 import Project from "../models/Project";
 import Member from "../models/Member";
+import User from "../models/User";
 
-const graphController = new GraphController(Project, Member);
+const graphController = new GraphController(Project, Member, User);
 
 const graph = Router();
 
