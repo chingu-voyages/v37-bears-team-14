@@ -3,8 +3,9 @@ import GraphController from "../controllers/GraphController";
 import Project from "../models/Project";
 import Member from "../models/Member";
 import User from "../models/User";
+import Tech from "../models/Tech";
 
-const graphController = new GraphController(Project, Member, User);
+const graphController = new GraphController(Project, Member, User, Tech);
 
 const graph = Router();
 
