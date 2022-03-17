@@ -12,8 +12,8 @@
     font-family: "DM Sans", sans-serif;
   }
 
-  ul,
-  ol {
+  markdown ul,
+  markdown ol {
     list-style: revert;
   }
 }

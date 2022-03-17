@@ -42,6 +42,7 @@ const ProjectSettingsLayout = () => {
       <div className="flex flex-col mx-3 my-5 md:mx-8 md:w-60">
         <ProjectSettingsNavLink to="project">Project</ProjectSettingsNavLink>
         <ProjectSettingsNavLink to="team">Team</ProjectSettingsNavLink>
+        <ProjectSettingsNavLink to="hooks">Webhooks</ProjectSettingsNavLink>
       </div>
       <Outlet context={context} />
     </div>

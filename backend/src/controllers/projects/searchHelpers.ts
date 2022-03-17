@@ -111,6 +111,7 @@ export const createProjection = (): PipelineStage.Project => {
       description: 1,
       techs: 1,
       members: 1,
+      starrers: 1,
     },
   };
 };

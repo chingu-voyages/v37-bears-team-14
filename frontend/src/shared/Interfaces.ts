@@ -3,6 +3,7 @@ export interface Project {
   name: string;
   description: string;
   techs: Tech[];
+  members: Member[];
   settingOpenRoles: string[];
 }
 
@@ -15,6 +16,7 @@ export interface ProjectResult {
     description: boolean;
     techs: boolean;
   };
+  members: Member[];
   techs: Tech[];
   settingOpenRoles: string[];
 }
@@ -59,4 +61,14 @@ export interface Application {
   status: string;
   content: string | null;
   requestedRole: string | null;
+}
+
+export interface Hook {
+  id: string;
+  project: string;
+  secret: string;
+  secretGeneratedAt: Date;
+  isActive: boolean;
+  invokedAt: Date | null;
+  invokeCount: number;
 }
