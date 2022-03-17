@@ -124,6 +124,25 @@ projects.post(
     }
   }
 );
+// Star Project
+projects.post("/v1/projects/:id/star", async (req: Request, res, next) => {
+  await projectController.addStarrer(req.body.user.id, req.body.project);
+  res.json({ ok: true });
+});
+
+// Unstar Project
+projects.post("/v1/projects/:id/unstar", async (req: Request, res, next) => {
+  await projectController.removeStarrer(req.body.user.id, req.body.project);
+  res.json({ ok: true });
+});
+
+//Get Starred Projects
+projects.get("/v1/projects/get-starred", async (req: Request, res, next) => {
+  let starred;
+  if (req.query["user"])
+    starred = await projectController.getStarred(req.query["user"].toString());
+  return res.json(starred);
+});
 
 projects.get("/v1/projects/:id", async (req, res, next) => {
   try {
@@ -203,6 +222,17 @@ projects.get("/v1/projects", async (req, res, next) => {
   const pageSize = Math.max(50, +(req.query["pageSize"] || 50));
   const projects = await projectController.lookup(pageSize);
   res.json(projects);
+});
+
+// Returns the session user's projects
+projects.get("/v1/members", async (req: Request, res, next) => {
+  if (req.query["user"]) {
+    const userId = req.query["user"];
+    const userMembers = await projectController.findUserProjects(
+      userId.toString()
+    );
+    res.json(userMembers);
+  }
 });
 
 projects.post(
