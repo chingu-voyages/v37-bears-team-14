@@ -7,8 +7,6 @@ import React, {
 } from "react";
 import { useParams } from "react-router-dom";
 import { User, Tech } from "../../shared/Interfaces";
-import UserPageTech from "./UserPageTech";
-import UserSettingsLayout from "./UserSettingsLayout";
 import LoadingSpinner from "../Spinners/LoadingSpinner";
 import UserNotFound from "./UserNotFound";
 import { useSession } from "../../hooks/session";
@@ -16,7 +14,6 @@ import TechComponent from "./components/TechComponent";
 import TechSection from "./components/TechSection";
 import UserHeader from "./components/UserHeader";
 import UserUpdateButton from "./components/UserUpdateButton";
-import UserPageUpdate from "./UserPageUpdate";
 import EmptyTechSection from "./components/EmptyTechSection";
 
 export interface UserPageContext {

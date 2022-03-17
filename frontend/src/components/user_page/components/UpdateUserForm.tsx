@@ -5,9 +5,7 @@ import * as Yup from "yup";
 import Alert from "../../alerts/Alert";
 import { Tech } from "../../../shared/Interfaces";
 import { useSession } from "../../../hooks/session";
-import { setConstantValue } from "typescript";
-import "lodash";
-import { forEach } from "lodash";
+
 interface Props {
   chosenTechs: Tech[];
   setChosenTechs: React.Dispatch<React.SetStateAction<any[]>>;
@@ -52,14 +50,7 @@ const UpdateUserForm: React.FC<Props> = ({
 }) => {
   const [customOpen, setCustomOpen] = useState(false);
   const [userUpdated, setuserUpdated] = useState(false);
-  const [username, setUsername] = useState("");
-  const [displayName, setDisplayName] = useState("");
-  const [userTechs, setUserTechs] = useState([]);
   const { user } = useSession();
-
-  const handleFormChange = (event: any) => {
-    setUsername(event.target.value);
-  };
 
   const CustomMenuButton = forwardRef<HTMLButtonElement>(
     ({ children }, ref) => (
@@ -92,11 +83,8 @@ const UpdateUserForm: React.FC<Props> = ({
     return () => {
       isMounted = true;
     }; // cleanup
-  }, []);
+  }, [initializeTechs, setTechUpdated, techUpdated, user?.id]);
 
-  const removeUserForm = () => {
-    setuserForm(() => !userForm);
-  };
   return (
     <>
       <Formik
@@ -124,7 +112,8 @@ const UpdateUserForm: React.FC<Props> = ({
                 if (response.status === 200) {
                   // setLoading(false);
                   resetForm();
-                  setTechs([...techs, ...chosenTechs]);
+                  //setTechs([...techs, ...chosenTechs]);
+                  //setTechs([]);
                   techs.sort((a: Tech, b: Tech) => (a.name > b.name ? 1 : -1));
                   //setChosenTechs([]);
                   setuserUpdated(true);

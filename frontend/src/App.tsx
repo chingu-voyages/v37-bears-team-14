@@ -13,7 +13,6 @@ import ProjectSettingsLayout from "./components/project_page/layouts/ProjectSett
 import ProjectSettingsTeamPage from "./components/project_page/pages/ProjectSettingsTeamPage";
 
 import UserPageLayout from "./components/user_page/UserPageLayout";
-import UserSettingsPage from "./components/user_page/UserSettingsPage";
 import ProjectApplicationPage from "./components/project_page/pages/ProjectApplicationPage";
 import ApplicationListPage from "./components/user_applications/pages/ApplicationListPage";
 import ApplicationEditPage from "./components/user_applications/pages/ApplicationEditPage";
@@ -64,7 +63,6 @@ function App() {
         </Route>
         <Route path="/user">
           <Route path=":username" element={<UserPageLayout />} />
-          <Route path="settings" element={<UserSettingsPage />} />
         </Route>
         <Route
           path="/about"
