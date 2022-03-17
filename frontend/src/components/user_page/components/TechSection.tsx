@@ -24,6 +24,7 @@ const TechSection: FunctionComponent<Props> = ({ tech }) => {
         </button>
       </div>
       <div className="p-8 flex flex-1 items-start overflow-auto">
+        {/* CODE FOR TECH INFORMATION 
         <div className="flex-shrink-0 text-sm sticky top-0">
           <div className="flex items-center text-white mb-3">
             Current Projects{" "}
@@ -78,6 +79,7 @@ const TechSection: FunctionComponent<Props> = ({ tech }) => {
             </button>
           </div>
         </div>
+        */}
       </div>
     </div>
   );
