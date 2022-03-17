@@ -1,5 +1,4 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { StringLiteralLike } from "typescript";
 import { Tech } from "../shared/Interfaces";
 
 export type SessionData = {

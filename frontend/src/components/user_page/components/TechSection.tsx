@@ -11,6 +11,7 @@ const TechSection: FunctionComponent<Props> = ({ tech }) => {
       <div className="p-8 bg-indigo-700 flex items-center">
         <img
           src={tech && tech.imageUrl}
+          alt="Tech"
           className="w-16 h-16 mr-4 object-top object-cover rounded"
         />
         <div className="mr-auto">

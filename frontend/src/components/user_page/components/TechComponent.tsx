@@ -22,6 +22,7 @@ const TechComponent: FunctionComponent<Props> = ({ tech, changeTech }) => {
         <div className="flex ml-4">
           <img
             src={tech.imageUrl}
+            alt="Tech Image"
             className="w-10 h-10 object-cover rounded object-top"
           />
           <div className="flex flex-col pl-4">
