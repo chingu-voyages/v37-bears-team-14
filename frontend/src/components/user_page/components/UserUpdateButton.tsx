@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useState, useEffect } from "react";
 import LoadingSpinner from "../../Spinners/LoadingSpinner";
 import { User } from "../../../shared/Interfaces";
-
+import "lodash";
 import UpdateUserForm from "./UpdateUserForm";
 
 interface Props {
@@ -14,6 +14,7 @@ const UserSettingsLayout: FunctionComponent<Props> = ({ userProps }) => {
   const [chosenTechs, setChosenTechs] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [userForm, setuserForm] = useState(false);
+  const [techUpdated, setTechUpdated] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -22,7 +23,6 @@ const UserSettingsLayout: FunctionComponent<Props> = ({ userProps }) => {
       if (response.status === 200) {
         if (isMounted) {
           const data = await response.json();
-
           setTechs(data);
           setLoading(false);
         }
@@ -39,10 +39,24 @@ const UserSettingsLayout: FunctionComponent<Props> = ({ userProps }) => {
     };
   }, []);
 
-  const chooseTech = (e: any, chosenTech: object) => {
-    const updatedTechs = techs.filter((tech) => tech !== chosenTech);
-    setTechs(updatedTechs);
+  const chooseTech = (e: any, chosenTech: any) => {
+    const updatedTechs = techs.filter((tech) => tech.id !== chosenTech.id);
     setChosenTechs([...chosenTechs, chosenTech]);
+    setTechs(updatedTechs);
+  };
+  const initializeTechs = (techArray: any) => {
+    setChosenTechs(techArray);
+    let updatedTechs = [];
+    for (let currentTech of techs) {
+      let found = false;
+      for (let tech of techArray) {
+        if (tech.id === currentTech.id) {
+          found = true;
+        }
+      }
+      if (!found) updatedTechs.push(currentTech);
+    }
+    setTechs(updatedTechs);
   };
 
   const removeTech = (e: any, chosenTech: object) => {
@@ -74,6 +88,9 @@ const UserSettingsLayout: FunctionComponent<Props> = ({ userProps }) => {
             setLoading={setLoading}
             userForm={userForm}
             setuserForm={setuserForm}
+            techUpdated={techUpdated}
+            setTechUpdated={setTechUpdated}
+            initializeTechs={initializeTechs}
           />
         </div>
       </>

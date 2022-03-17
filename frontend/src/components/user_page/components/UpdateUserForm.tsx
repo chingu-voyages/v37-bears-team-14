@@ -6,7 +6,8 @@ import Alert from "../../alerts/Alert";
 import { Tech } from "../../../shared/Interfaces";
 import { useSession } from "../../../hooks/session";
 import { setConstantValue } from "typescript";
-
+import "lodash";
+import { forEach } from "lodash";
 interface Props {
   chosenTechs: Tech[];
   setChosenTechs: React.Dispatch<React.SetStateAction<any[]>>;
@@ -18,6 +19,9 @@ interface Props {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   userForm: boolean;
   setuserForm: React.Dispatch<React.SetStateAction<boolean>>;
+  techUpdated: boolean;
+  setTechUpdated: React.Dispatch<React.SetStateAction<boolean>>;
+  initializeTechs: (techArray: object[]) => void;
 }
 
 interface FormValues {
@@ -42,6 +46,9 @@ const UpdateUserForm: React.FC<Props> = ({
   setLoading,
   userForm,
   setuserForm,
+  techUpdated,
+  setTechUpdated,
+  initializeTechs,
 }) => {
   const [customOpen, setCustomOpen] = useState(false);
   const [userUpdated, setuserUpdated] = useState(false);
@@ -65,7 +72,31 @@ const UpdateUserForm: React.FC<Props> = ({
       </button>
     )
   );
+  // Similar to componentDidMount and componentDidUpdate:
+  useEffect(() => {
+    // Update the document title using the browser API
+    let isMounted = false;
 
+    const fetchData = async () => {
+      if (!isMounted && !techUpdated) {
+        const resp = await fetch(`/api/v1/users/${user?.id}`);
+        const data = await resp.json();
+
+        initializeTechs(data.techs);
+        isMounted = true;
+        setTechUpdated(true);
+      }
+    };
+
+    fetchData();
+    return () => {
+      isMounted = true;
+    }; // cleanup
+  }, []);
+
+  const removeUserForm = () => {
+    setuserForm(() => !userForm);
+  };
   return (
     <>
       <Formik
@@ -73,6 +104,7 @@ const UpdateUserForm: React.FC<Props> = ({
           username: user ? user.username : "",
           displayName: user ? user.displayName : "",
           techs: [],
+          //techs: [{"createdAt":"2022-02-10T05:22:12.503Z","description":"Fast, scalable, distributed revision control system","name":"Git","updatedAt":"2022-02-10T06:33:28.243Z","imageUrl":"https://git-scm.com/images/logos/downloads/Git-Icon-1788C.png","id":"6204a105a00bb005827f5b82"}] as Array<any>
         }}
         validationSchema={UpdateUserSchema}
         onSubmit={(values: FormValues, { resetForm }) => {
@@ -80,6 +112,7 @@ const UpdateUserForm: React.FC<Props> = ({
           values.techs = chosenTechs.map((t) => t.id);
           function updateUser(values: FormValues) {
             // setLoading(true);
+
             if (user && user.id) {
               fetch(`/api/v1/users/${user.id}`, {
                 method: "POST",
@@ -93,7 +126,7 @@ const UpdateUserForm: React.FC<Props> = ({
                   resetForm();
                   setTechs([...techs, ...chosenTechs]);
                   techs.sort((a: Tech, b: Tech) => (a.name > b.name ? 1 : -1));
-                  setChosenTechs([]);
+                  //setChosenTechs([]);
                   setuserUpdated(true);
                   setTimeout(() => {
                     setuserUpdated(false);
@@ -131,6 +164,7 @@ const UpdateUserForm: React.FC<Props> = ({
               </label>
               <Field
                 name="username"
+                min="2"
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
             </div>
@@ -145,6 +179,7 @@ const UpdateUserForm: React.FC<Props> = ({
                 Display Name
               </label>
               <Field
+                min="2"
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline max-h-48"
                 name="displayName"
               />
@@ -247,6 +282,7 @@ const UpdateUserForm: React.FC<Props> = ({
           </Form>
         )}
       </Formik>
+
       {userUpdated && (
         <>
           <Alert message={"User updated"} />

@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { useParams } from "react-router-dom";
 import { User } from "../../shared/Interfaces";
-import { TechComponent } from "./components/TechComponent";
+import TechComponent from "./components/TechComponent";
 import UserHeader from "./components/UserHeader";
 import UserUpdateButton from "./components/UserUpdateButton";
 import UserPageUpdate from "./UserPageUpdate";

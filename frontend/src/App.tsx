@@ -14,7 +14,6 @@ import ProjectSettingsTeamPage from "./components/project_page/pages/ProjectSett
 
 import UserPageLayout from "./components/user_page/UserPageLayout";
 import UserSettingsPage from "./components/user_page/UserSettingsPage";
-import Test from "./components/user_page/Test";
 import ProjectApplicationPage from "./components/project_page/pages/ProjectApplicationPage";
 import ApplicationListPage from "./components/user_applications/pages/ApplicationListPage";
 import ApplicationEditPage from "./components/user_applications/pages/ApplicationEditPage";
@@ -66,7 +65,6 @@ function App() {
         <Route path="/user">
           <Route path=":username" element={<UserPageLayout />} />
           <Route path="settings" element={<UserSettingsPage />} />
-          <Route path="test" element={<Test />} />
         </Route>
         <Route
           path="/about"

@@ -153,9 +153,11 @@ api.post(
 
     if (params.username) {
       try {
-        const checkName = await userController.findDuplicate(params.username);
-        if (checkName) {
-          errors.push("Username already taken");
+        if (params.username !== req.user?.username) {
+          const checkName = await userController.findDuplicate(params.username);
+          if (checkName) {
+            errors.push("Username already taken");
+          }
         }
       } catch (err) {
         next(err);

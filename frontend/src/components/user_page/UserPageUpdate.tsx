@@ -7,29 +7,25 @@ import React, {
 } from "react";
 import { useParams } from "react-router-dom";
 import { User } from "../../shared/Interfaces";
-import { TechComponent } from "./components/TechComponent";
+import TechComponent from "./components/TechComponent";
 import UserHeader from "./components/UserHeader";
 import UserUpdateButton from "./components/UserUpdateButton";
 import { useSession } from "../../hooks/session";
 
 export interface UserPageContext {
-  user: User;
+  sessionUser: User;
   setUser: Dispatch<SetStateAction<User>>;
 }
 
-const changeTech = () => {
-  alert("CHANGED TECH: ");
-};
-
 const UserPageUpdate: FunctionComponent = () => {
-  const { user } = useSession();
+  const sessionUser = useSession().user;
   return (
     <section className="w-full">
       <div className="container mx-auto h-screen py-16 px-8 relative">
         <div className="flex w-full rounded-lg h-full lg:overflow-hidden overflow-auto lg:flex-row flex-col shadow-2xl">
           <div className="lg:w-1/2 bg-white text-gray-800 flex flex-col">
             <div className="p-8 shadow-md relative bg-white">
-              {user && <UserHeader userProps={user} />}
+              {sessionUser && <UserHeader userProps={sessionUser} />}
 
               <div className="mt-6 flex">
                 <UserUpdateButton />
@@ -55,16 +51,7 @@ const UserPageUpdate: FunctionComponent = () => {
                 </div>
               </div>
             </div>
-            <div className="overflow-auto flex-grow">
-              <TechComponent changeTech={changeTech} username="Node.js" />
-              <TechComponent changeTech={changeTech} username="Node.js" />
-
-              <TechComponent changeTech={changeTech} username="Node.js" />
-
-              <TechComponent changeTech={changeTech} username="Node.js" />
-
-              <TechComponent changeTech={changeTech} username="Node.js" />
-            </div>
+            <div className="overflow-auto flex-grow"></div>
           </div>
           <div className="lg:w-1/2 bg-indigo-600 text-white flex flex-col">
             <div className="p-8 bg-indigo-700 flex items-center">
