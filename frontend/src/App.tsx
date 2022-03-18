@@ -26,7 +26,7 @@ import teamMdUrl from "./content/team.md";
 import privacyMdUrl from "./content/privacy.md";
 import termsMdUrl from "./content/terms.md";
 import contactMdUrl from "./content/contact.md";
-import GraphPage from "./components/graph_page/GraphPage";
+import GraphPage from "./components/explore/GraphPage";
 
 /**
  * App defines the global layout with Navbar and all the application routes.

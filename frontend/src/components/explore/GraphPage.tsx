@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import ReactForceGraph2d from "react-force-graph-2d";
 import { useSearchParams } from "react-router-dom";
-import { uniqBy } from "lodash";
+import { uniqBy, uniqWith } from "lodash";
 import NodeInfo from "./NodeInfo";
 
 const getColor = (nid: string) => {
@@ -19,12 +19,14 @@ const getColor = (nid: string) => {
 };
 
 const GraphPage = () => {
+  const [initialLoading, setInitialLoading] = useState(true);
   const [data, setData] = useState<any>({
     nodes: [],
     links: [],
   });
   const [searchParams, setSearchParams] = useSearchParams();
   const nid = searchParams.get("nid");
+  const fgRef = useRef();
 
   const mergeData = (data0: any, data1: any) => {
     const deduped = {
@@ -39,35 +41,59 @@ const GraphPage = () => {
         ],
         (n) => n.nid
       ),
-      links: [
-        ...data0.links,
-        ...data1.edges.map((e: any) => {
-          return {
-            source: e.nodes[0],
-            target: e.nodes[1],
-            value: 1,
-            ...e,
-          };
-        }),
-      ],
+      links: uniqWith(
+        [
+          ...data0.links,
+          ...data1.edges.map((e: any) => {
+            return {
+              source: e.nodes[0],
+              target: e.nodes[1],
+              value: 1,
+              ...e,
+            };
+          }),
+        ],
+        (a, b) => {
+          if (a.source === b.source && a.target === b.target) {
+            return true;
+          } else if (a.source === b.target && a.target === b.source) {
+            return true;
+          } else {
+            return false;
+          }
+        }
+      ),
     };
     return deduped;
   };
 
   useEffect(() => {
-    if (!nid) return;
+    if (!initialLoading) return;
+
+    if (!nid) {
+      const loadAnyNid = async () => {
+        const resp = await fetch("/api/v1/projects?pageSize=1");
+        const projects = await resp.json();
+        const nid = "P_" + projects[0].id;
+        setSearchParams({ nid })
+      }
+
+      loadAnyNid().catch(console.error)
+      return;
+    }
+
     const getGraph = async () => {
       const graph = await fetch("/api/v1/graph?nid=" + nid);
       if (graph.status === 200 || graph.status === 304) {
         setData(mergeData(data, await graph.json()));
+        setInitialLoading(false);
       } else {
         console.error("Failed");
       }
     };
     getGraph().catch(console.error);
-  }, [nid]);
+  }, [nid, initialLoading, data]);
 
-  const fgRef = useRef();
   const handleClick = useCallback(
     (node) => {
       if (nid === node.nid) {
@@ -75,7 +101,7 @@ const GraphPage = () => {
       }
 
       const updateGraph = async () => {
-        const graph = await fetch("/api/v1/graph?nid=" + nid);
+        const graph = await fetch("/api/v1/graph?nid=" + node.nid);
         if (graph.status === 200 || graph.status === 304) {
           setData(mergeData(data, await graph.json()));
         } else {
@@ -96,17 +122,17 @@ const GraphPage = () => {
     [fgRef, nid, data, setSearchParams]
   );
 
-  const nodeInfo = data.nodes.find((n: any) => n.nid === nid);
+  const nodeInfo = data.nodes.find((n: any) => n.nid === nid) || null;
 
   return (
     <>
       <div className="absolute w-full z-10">
         <div className="relative bg-white m-2">
-          {nid && <NodeInfo nid={nid} node={nodeInfo} />}
+          {(nid && nodeInfo) && <NodeInfo nid={nid} node={nodeInfo} />}
         </div>
       </div>
       {data && (
-        <ReactForceGraph2d
+        <div className="bg-gray-500"><ReactForceGraph2d
           ref={fgRef}
           graphData={data}
           nodeCanvasObject={(node: any, ctx, globalScale) => {
@@ -121,7 +147,7 @@ const GraphPage = () => {
             ctx.fillStyle =
               node.nid === nid
                 ? "rgba(255, 255, 255, 1)"
-                : "rgba(255, 255, 255, 0.5)";
+                : "rgba(255, 255, 255, 0.7)";
             ctx.fillRect(
               node.x - bckgDimensions[0] / 2,
               node.y - bckgDimensions[1] / 2,
@@ -150,6 +176,7 @@ const GraphPage = () => {
           }}
           onNodeClick={handleClick}
         />
+        </div>
       )}
     </>
   );

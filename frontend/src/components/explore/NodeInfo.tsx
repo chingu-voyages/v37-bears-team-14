@@ -55,13 +55,13 @@ const NodeInfo: FC<NodeInfoProps> = ({ nid, node }) => {
         )}
       </div>
       {open && (
-        <div className="border-x-2 border-b-2 border-indigo-500 p-1 pb-2">
+        <div className="border-x-2 border-b-2 border-indigo-500 p-1 pb-2 overflow-x-scroll">
           {node &&
             Object.keys(node.attributes).map((n) => {
               const value = node.attributes[n];
               return (
-                <div className="flex text-sm" key={n}>
-                  <label className="mr-1">{n}:</label>
+                <div className="flex text-sm my-1" key={n}>
+                  <label className="mr-1 text-gray-600">{n}:</label>
                   <div>
                     {typeof value === "string" ? value : JSON.stringify(value)}
                   </div>
