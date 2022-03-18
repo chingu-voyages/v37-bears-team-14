@@ -72,7 +72,6 @@ const UpdateUserForm: React.FC<Props> = ({
       if (!isMounted && !techUpdated) {
         const resp = await fetch(`/api/v1/users/${user?.id}`);
         const data = await resp.json();
-
         initializeTechs(data.techs);
         isMounted = true;
         setTechUpdated(true);
