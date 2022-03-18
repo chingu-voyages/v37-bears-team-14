@@ -22,7 +22,7 @@ export const createUserNode = (user: UserRecord): Node => {
 export const createProjectNode = (project: ProjectDoc): Node => {
   return {
     nid: "P_" + project._id,
-    type: NodeType.USER,
+    type: NodeType.PROJECT,
     name: project.name,
     attributes: pick(project, ["name", "description"]),
   };
