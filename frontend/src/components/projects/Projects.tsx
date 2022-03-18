@@ -54,6 +54,13 @@ const Projects: FunctionComponent = () => {
                     </div>
                   </div>
                 </Link>
+                <Link to={"my-projects"}>
+                  <div className="w-full bg-medGray border-t-[1px] border-mintGreen">
+                    <div className="p-1">
+                      <span className="p-2 text-mintGreen">My Projects</span>
+                    </div>
+                  </div>
+                </Link>
               </aside>
             </div>
           </section>

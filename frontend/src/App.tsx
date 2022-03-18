@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import Navbar from "./Navbar";
 import Footer from "./components/formatting/Footer";
 import Projects from "./components/projects/Projects";
+import MyProjects from "./components/projects/MyProjects";
 import AdminOutlet from "./components/routing/AdminOutlet";
 import TechListPage from "./components/admin/techs/TechListPage";
 import ProjectPageLayout from "./components/project_page/layouts/ProjectPageLayout";
@@ -38,6 +39,7 @@ function App() {
         <Route path="/projects">
           <Route path="" element={<Projects />} />
           <Route path="search" element={<ProjectSearch />} />
+          <Route path="my-projects" element={<MyProjects />} />
           <Route path=":projectId" element={<ProjectPageLayout />}>
             <Route path="" element={<ProjectLandingPage />} />
             <Route
