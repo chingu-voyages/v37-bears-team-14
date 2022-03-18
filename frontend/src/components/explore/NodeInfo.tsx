@@ -4,6 +4,7 @@ import { Node, NodeType } from "../../shared/GraphInterfaces";
 import MinusCircleSolidIcon from "../icons/MinusCircleSolidIcon";
 import PlusCircleSolidIcon from "../icons/PlusCircleSolidIcon";
 import { parseNid } from "./nid";
+import { pick } from "lodash";
 
 interface NodeInfoProps {
   nid?: string;
@@ -30,6 +31,12 @@ const NodeInfo: FC<NodeInfoProps> = ({ nid, node }) => {
     }
   })();
 
+  const whitelistedAttributes = pick(node?.attributes, [
+    "name",
+    "username",
+    "description",
+  ]);
+
   return (
     <div className="">
       <div
@@ -55,10 +62,10 @@ const NodeInfo: FC<NodeInfoProps> = ({ nid, node }) => {
         )}
       </div>
       {open && (
-        <div className="border-x-2 border-b-2 border-indigo-500 p-1 pb-2 overflow-x-scroll">
+        <div className="border-x-2 border-b-2 border-indigo-500 p-1 pb-2 overflow-x-auto">
           {node &&
-            Object.keys(node.attributes).map((n) => {
-              const value = node.attributes[n];
+            Object.keys(whitelistedAttributes).map((n) => {
+              const value = whitelistedAttributes[n];
               return (
                 <div className="flex text-sm my-1" key={n}>
                   <label className="mr-1 text-gray-600">{n}:</label>

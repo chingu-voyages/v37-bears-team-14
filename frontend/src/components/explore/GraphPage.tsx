@@ -75,10 +75,10 @@ const GraphPage = () => {
         const resp = await fetch("/api/v1/projects?pageSize=1");
         const projects = await resp.json();
         const nid = "P_" + projects[0].id;
-        setSearchParams({ nid })
-      }
+        setSearchParams({ nid });
+      };
 
-      loadAnyNid().catch(console.error)
+      loadAnyNid().catch(console.error);
       return;
     }
 
@@ -128,54 +128,55 @@ const GraphPage = () => {
     <>
       <div className="absolute w-full z-10">
         <div className="relative bg-white m-2">
-          {(nid && nodeInfo) && <NodeInfo nid={nid} node={nodeInfo} />}
+          {nid && nodeInfo && <NodeInfo nid={nid} node={nodeInfo} />}
         </div>
       </div>
       {data && (
-        <div className="bg-gray-500"><ReactForceGraph2d
-          ref={fgRef}
-          graphData={data}
-          nodeCanvasObject={(node: any, ctx, globalScale) => {
-            const label = node.name;
-            const fontSize = 12 / globalScale;
-            ctx.font = `${fontSize}px Sans-Serif`;
-            const textWidth = ctx.measureText(label).width;
-            const bckgDimensions = [textWidth, fontSize].map(
-              (n) => n + fontSize * 0.2
-            );
+        <div className="bg-gray-500">
+          <ReactForceGraph2d
+            ref={fgRef}
+            graphData={data}
+            nodeCanvasObject={(node: any, ctx, globalScale) => {
+              const label = node.name;
+              const fontSize = 12 / globalScale;
+              ctx.font = `${fontSize}px Sans-Serif`;
+              const textWidth = ctx.measureText(label).width;
+              const bckgDimensions = [textWidth, fontSize].map(
+                (n) => n + fontSize * 0.2
+              );
 
-            ctx.fillStyle =
-              node.nid === nid
-                ? "rgba(255, 255, 255, 1)"
-                : "rgba(255, 255, 255, 0.7)";
-            ctx.fillRect(
-              node.x - bckgDimensions[0] / 2,
-              node.y - bckgDimensions[1] / 2,
-              // @ts-ignore
-              ...bckgDimensions
-            );
-
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-            ctx.fillStyle = getColor(node.nid);
-            ctx.fillText(label, node.x, node.y);
-
-            node.__bckgDimensions = bckgDimensions; // to re-use in nodePointerAreaPaint
-          }}
-          nodePointerAreaPaint={(node: any, color, ctx) => {
-            ctx.fillStyle = color;
-            const bckgDimensions = node.__bckgDimensions;
-            // @ts-ignore
-            bckgDimensions &&
+              ctx.fillStyle =
+                node.nid === nid
+                  ? "rgba(255, 255, 255, 1)"
+                  : "rgba(255, 255, 255, 0.7)";
               ctx.fillRect(
                 node.x - bckgDimensions[0] / 2,
                 node.y - bckgDimensions[1] / 2,
                 // @ts-ignore
                 ...bckgDimensions
               );
-          }}
-          onNodeClick={handleClick}
-        />
+
+              ctx.textAlign = "center";
+              ctx.textBaseline = "middle";
+              ctx.fillStyle = getColor(node.nid);
+              ctx.fillText(label, node.x, node.y);
+
+              node.__bckgDimensions = bckgDimensions; // to re-use in nodePointerAreaPaint
+            }}
+            nodePointerAreaPaint={(node: any, color, ctx) => {
+              ctx.fillStyle = color;
+              const bckgDimensions = node.__bckgDimensions;
+              // @ts-ignore
+              bckgDimensions &&
+                ctx.fillRect(
+                  node.x - bckgDimensions[0] / 2,
+                  node.y - bckgDimensions[1] / 2,
+                  // @ts-ignore
+                  ...bckgDimensions
+                );
+            }}
+            onNodeClick={handleClick}
+          />
         </div>
       )}
     </>
