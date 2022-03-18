@@ -15,6 +15,7 @@ import UnauthorizedError from "../controllers/errors/UnauthorizedError";
 import FieldExistsError from "../controllers/errors/FieldExistsError";
 import InvalidChangeLastOwner from "../controllers/errors/InvalidChangeLastOwner";
 import computationRouter from "./computationRouter";
+import graphRouter from "./graphRouter";
 import projectRouter from "./projectRouter";
 import applicationRouter from "./applicationRouter";
 import hookRouter from "./hookRouter";
@@ -32,6 +33,10 @@ const api = Router();
 // COMPUTATION
 
 api.use(computationRouter);
+
+// GRAPH
+
+api.use(graphRouter);
 
 // PROJECT
 
