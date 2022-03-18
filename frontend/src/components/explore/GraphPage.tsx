@@ -92,7 +92,7 @@ const GraphPage = () => {
       }
     };
     getGraph().catch(console.error);
-  }, [nid, initialLoading, data]);
+  }, [nid, initialLoading, data, setSearchParams]);
 
   const handleClick = useCallback(
     (node) => {
