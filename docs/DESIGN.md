@@ -76,9 +76,9 @@ ProjectEvent {
 
 ## Interaction
 
-The Search model is an insert-only collection stores information about
+The Search model is an insert-only collection that stores information about
 user interaction with the project search. Of relevance are the search term,
-the number of matched  projects per attribute of project, time elapsed,
+the number of matched projects per attribute of project, time elapsed,
 and whether the search was initiated by a logged-in user. This information
 is used for downstream processing.
 
