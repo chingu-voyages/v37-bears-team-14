@@ -11,7 +11,7 @@ const UserHeader: FunctionComponent<Props> = ({ userProps }) => {
       <div className="flex items-center">
         <img
           src={userProps ? userProps.avatarUrl : ""}
-          className="w-15 h-15 block rounded  "
+          className="w-14 h-14 block rounded  "
           alt="Avatar Url"
         />
         <div className="text-indigo-600 text-3xl font-bold ml-3">

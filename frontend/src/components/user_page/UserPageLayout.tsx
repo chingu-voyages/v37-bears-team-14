@@ -27,7 +27,7 @@ const UserPageLayout: FunctionComponent = () => {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [user, setUser] = useState<null | User>(null);
-  const [selectedTech, setSelectedTech] = useState();
+  const [selectedTech, setSelectedTech] = useState<Tech | null>();
   const [search, setSearch] = useState("");
 
   const sessionUser = useSession().user;
@@ -75,7 +75,7 @@ const UserPageLayout: FunctionComponent = () => {
   }
 
   const changeTech = (tech?: Tech) => {
-    setSelectedTech(JSON.parse(JSON.stringify(tech)));
+    setSelectedTech(tech);
   };
 
   const filteredTechs =

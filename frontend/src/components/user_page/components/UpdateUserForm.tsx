@@ -91,7 +91,6 @@ const UpdateUserForm: React.FC<Props> = ({
           username: user ? user.username : "",
           displayName: user ? user.displayName : "",
           techs: [],
-          //techs: [{"createdAt":"2022-02-10T05:22:12.503Z","description":"Fast, scalable, distributed revision control system","name":"Git","updatedAt":"2022-02-10T06:33:28.243Z","imageUrl":"https://git-scm.com/images/logos/downloads/Git-Icon-1788C.png","id":"6204a105a00bb005827f5b82"}] as Array<any>
         }}
         validationSchema={UpdateUserSchema}
         onSubmit={(values: FormValues, { resetForm }) => {
@@ -110,11 +109,9 @@ const UpdateUserForm: React.FC<Props> = ({
               }).then((response) => {
                 if (response.status === 200) {
                   // setLoading(false);
-                  resetForm();
-                  //setTechs([...techs, ...chosenTechs]);
-                  //setTechs([]);
+                  //resetForm();
+
                   techs.sort((a: Tech, b: Tech) => (a.name > b.name ? 1 : -1));
-                  //setChosenTechs([]);
                   setuserUpdated(true);
                   setTimeout(() => {
                     setuserUpdated(false);
