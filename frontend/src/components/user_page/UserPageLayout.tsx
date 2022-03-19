@@ -32,8 +32,6 @@ const UserPageLayout: FunctionComponent = () => {
 
   const sessionUser = useSession().user;
 
-  //const [techs, setTechs] = useState();
-
   useEffect(() => {
     const getUser = async (username: string) => {
       const resp = await fetch("/api/v1/search/" + username);
@@ -41,9 +39,6 @@ const UserPageLayout: FunctionComponent = () => {
         const user = await resp.json();
         setUser(user);
         if (user.techs && user.techs.length > 0) setSelectedTech(user.techs[0]);
-        //const arr = [a]
-        //if(user.techs)Object.keys(user.techs).forEach(key => arr.push({name: key, value: user.techs[key]}))
-        //setTechs(arr);
       } else if (resp.status === 404) {
         setNotFound(true);
       } else {

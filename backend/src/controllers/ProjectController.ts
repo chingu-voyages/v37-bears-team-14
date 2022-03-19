@@ -7,7 +7,6 @@ import mongoose, {
   ObjectId,
 } from "mongoose";
 import { MongoError } from "mongodb";
-import mongoose from "mongoose";
 import _, { merge } from "lodash";
 import { IMember } from "../models/Member";
 import { IProject } from "../models/Project";
