@@ -20,7 +20,8 @@ const ProjectPreview: FunctionComponent<Props> = ({ projects }) => {
               </p>
             </div>
             <div className="pt-1 mb-2 text-sm text-darkGray pl-2 pr-2 leading-tight overflow-hidden">
-              <Preview>{truncateString(p.description)}</Preview>
+              {/* <Preview></Preview> */}
+              {truncateString(p.description)}
               <div className="flex justify-start no-first-margin">
                 {p.techs.slice(0, 4).map((t: Tech, index) => (
                   <div className="relative m-1" key={index}>
@@ -38,16 +39,18 @@ const ProjectPreview: FunctionComponent<Props> = ({ projects }) => {
                 )}
               </div>
             </div>
-            <div className="-space-x-3 pb-1 pl-1">
-              {p.members.map((m: Member, index) => (
-                <img
-                  className="relative z-1 bg-white inline object-cover w-8 h-8 border-2 border-neutral-400 rounded-full shadow-md"
-                  src={m.user.avatarUrl}
-                  alt={m.user.username}
-                  key={index}
-                />
-              ))}
-            </div>
+            {p.members && (
+              <div className="-space-x-3 pb-1 pl-1">
+                {p.members.map((m: Member, index) => (
+                  <img
+                    className="relative z-1 bg-white inline object-cover w-8 h-8 border-2 border-neutral-400 rounded-full shadow-md"
+                    src={m.user.avatarUrl}
+                    alt={m.user.username}
+                    key={index}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </Link>
       ))}
