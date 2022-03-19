@@ -1,6 +1,13 @@
 import logger from "../logger";
-import { ClientSession, Document, isValidObjectId, Model, ObjectId } from "mongoose";
+import mongoose, {
+  ClientSession,
+  Document,
+  isValidObjectId,
+  Model,
+  ObjectId,
+} from "mongoose";
 import { MongoError } from "mongodb";
+import mongoose from "mongoose";
 import _, { merge } from "lodash";
 import { IMember } from "../models/Member";
 import { IProject } from "../models/Project";
@@ -33,6 +40,7 @@ export interface MemberUpdateParams {
 }
 
 export type ProjectDoc = IProject & Document<unknown, any, IProject>;
+export type MemberDoc = IMember & Document<unknown, any, IProject>;
 
 export type MatchType = {
   name: boolean;
@@ -49,6 +57,16 @@ export type ProjectSearchResultItem = {
   techs: (ITech & { id: ObjectId })[];
   members: (IMember & { id: ObjectId })[];
   matchType: MatchType;
+};
+
+export type ProjectItem = {
+  id: ObjectId;
+  createdAt: Date;
+  updatedAt: Date;
+  name: string;
+  description: string;
+  techs: (ITech & { id: ObjectId })[];
+  members: (IMember & { id: ObjectId })[];
 };
 
 interface SaveSearchParams {
@@ -74,14 +92,21 @@ class ProjectController {
     private createSession: () => Promise<ClientSession>
   ) {}
 
-  async getById(id: string): Promise<ProjectDoc> {
-    const project = await this.projectModel
-      .findOne({ _id: id })
-      .populate("techs");
-    if (!project) {
+  async getById(id: string): Promise<any> {
+    // const project = await this.projectModel
+    //   .findOne({ _id: id })
+    //   .populate("techs");
+    const project = await this.projectModel.aggregate([
+      { $match: { _id: new mongoose.Types.ObjectId(id) } },
+      ...createJoins(),
+      createProjection(),
+      { $limit: 1 },
+    ]);
+    if (project.length === 0) {
       throw new NotFoundError("project", id);
     }
-    return project;
+
+    return project[0];
   }
 
   async getByName(name: string): Promise<ProjectDoc> {
@@ -95,7 +120,10 @@ class ProjectController {
     return project;
   }
 
-  async searchProjects(search: string, user?: ObjectId): Promise<ProjectSearchResultItem[]> {
+  async searchProjects(
+    search: string,
+    user?: ObjectId
+  ): Promise<ProjectSearchResultItem[]> {
     const start = Date.now();
 
     const nameMatches: ProjectSearchResultItem[] =
@@ -201,18 +229,40 @@ class ProjectController {
       logger.error("Failed to save search!!", {
         errorMessage: err.message,
         params,
-      })
+      });
     }
   }
 
   async lookup(pageSize: number): Promise<ProjectDoc[]> {
-    const projects = await this.projectModel
-      .find()
-      .sort({ _id: -1 })
-      .limit(pageSize)
-      .populate("techs");
+    const projects = await this.projectModel.aggregate([
+      { $limit: pageSize },
+      { $sort: { updatedAt: -1 } },
+      ...createJoins(),
+      createProjection(),
+    ]);
 
     return projects;
+  }
+
+  public async findUserProjects(userId: string): Promise<ProjectDoc[]> {
+    let userMembers = await this.memberModel.aggregate([
+      { $match: { user: new mongoose.Types.ObjectId(userId) } },
+      { $group: { _id: "$project" } },
+      { $group: { _id: null, projects: { $push: "$_id" } } },
+    ]);
+
+    userMembers = userMembers[0].projects;
+
+    let userProjects = await this.projectModel.aggregate([
+      {
+        $match: {
+          _id: { $in: userMembers },
+        },
+      },
+      ...createJoins(),
+      createProjection(),
+    ]);
+    return userProjects;
   }
 
   // Creating a project involves associating its creator.
@@ -395,6 +445,31 @@ class ProjectController {
         throw new UnauthorizedError("Updater must be an owner");
       }
     }
+  }
+
+  public async addStarrer(user: string, projectId: string) {
+    await this.projectModel.updateOne(
+      { _id: projectId },
+      { $addToSet: { starrers: user } }
+    );
+  }
+
+  public async removeStarrer(user: string, projectId: string) {
+    await this.projectModel.updateOne(
+      { _id: projectId },
+      { $pull: { starrers: user } }
+    );
+  }
+  // Get all projects current user starred
+  public async getStarred(user: string) {
+    const starred = await this.projectModel.aggregate([
+      {
+        $match: {
+          $expr: { $in: [new mongoose.Types.ObjectId(user), "$starrers"] },
+        },
+      },
+    ]);
+    return starred;
   }
 
   /**

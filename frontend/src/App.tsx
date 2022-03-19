@@ -1,6 +1,7 @@
 import React from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Navbar from "./Navbar";
+import Footer from "./components/formatting/Footer";
 import Projects from "./components/projects/Projects";
 import AdminOutlet from "./components/routing/AdminOutlet";
 import TechListPage from "./components/admin/techs/TechListPage";
@@ -11,13 +12,14 @@ import ProjectSettingsPage from "./components/project_page/pages/ProjectSettings
 import ProjectSearch from "./components/projects/ProjectSearch";
 import ProjectSettingsLayout from "./components/project_page/layouts/ProjectSettingsLayout";
 import ProjectSettingsTeamPage from "./components/project_page/pages/ProjectSettingsTeamPage";
-
-import UserPageLayout from "./components/user_page/UserPageLayout";
+import ProjectSettingsHooksPage from "./components/project_page/pages/ProjectSettingsHooksPage";
 import ProjectApplicationPage from "./components/project_page/pages/ProjectApplicationPage";
+import UserPageLayout from "./components/user_page/UserPageLayout";
+
 import ApplicationListPage from "./components/user_applications/pages/ApplicationListPage";
 import ApplicationEditPage from "./components/user_applications/pages/ApplicationEditPage";
 import DocumentPage from "./components/info/DocumentPage";
-import Footer from "./components/formatting/Footer";
+import FrontPage from "./components/front_page/FrontPage";
 
 import aboutMdUrl from "./content/about.md";
 import teamMdUrl from "./content/team.md";
@@ -25,6 +27,9 @@ import privacyMdUrl from "./content/privacy.md";
 import termsMdUrl from "./content/terms.md";
 import contactMdUrl from "./content/contact.md";
 
+/**
+ * App defines the global layout with Navbar and all the application routes.
+ */
 function App() {
   return (
     <>
@@ -47,6 +52,7 @@ function App() {
               <Route path="" element={<Navigate to="project" />} />
               <Route path="project" element={<ProjectSettingsPage />} />
               <Route path="team" element={<ProjectSettingsTeamPage />} />
+              <Route path="hooks" element={<ProjectSettingsHooksPage />} />
               <Route path="*" element={null} />
             </Route>
             <Route path="*" element={<Navigate to=".." />} />
@@ -81,7 +87,7 @@ function App() {
           path="/contact"
           element={<DocumentPage contentUrl={contactMdUrl} />}
         />
-        <Route path="/" element={null} />
+        <Route path="/" element={<FrontPage />} />
       </Routes>
       <Footer />
     </>
