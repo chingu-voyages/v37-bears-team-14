@@ -225,15 +225,29 @@ projects.get("/v1/projects", async (req, res, next) => {
 });
 
 // Returns the session user's projects
-projects.get("/v1/members", async (req: Request, res, next) => {
-  if (req.query["user"]) {
-    const userId = req.query["user"];
-    const userMembers = await projectController.findUserProjects(
-      userId.toString()
-    );
-    res.json(userMembers);
+projects.get(
+  "/v1/members",
+  (req, res, next) => {
+    if (req.query["user"]) {
+      next();
+    } else {
+      res.status(401).json({ errors: ["unauthenticated"] });
+    }
+  },
+  async (req: Request, res, next) => {
+    try {
+      if (req.query["user"]) {
+        const userId = req.query["user"];
+        const userMembers = await projectController.findUserProjects(
+          userId.toString()
+        );
+        res.json(userMembers);
+      }
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
 
 projects.post(
   "/v1/projects/:id/members",
