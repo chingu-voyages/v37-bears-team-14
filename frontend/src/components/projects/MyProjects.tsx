@@ -3,22 +3,24 @@ import { useSession } from "../../hooks/session";
 import { Project } from "../../shared/Interfaces";
 import ProjectPreview from "./ProjectPreview";
 
-type role = "owner" | "designer" | "developer";
+type role = "owner" | "designer" | "developer" | "all";
 const MyProjects: FC = () => {
-  const { loading, isLoggedIn, user } = useSession();
+  const { isLoggedIn, user } = useSession();
   const [allProjects, setAllProjects] = useState<Project[]>([]);
+  const [activeButton, setActiveButton] = useState<role>("all");
 
   const [currentProjects, setCurrentProjects] = useState<Project[]>([]);
 
   useEffect(() => {
-    fetch(`/api/v1/members?user=${user?.id}`).then(async (response) => {
-      if (response.status === 200) {
-        const data = await response.json();
+    if (isLoggedIn)
+      fetch(`/api/v1/members?user=${user?.id}`).then(async (response) => {
+        if (response.status === 200) {
+          const data = await response.json();
 
-        setAllProjects(data);
-        setCurrentProjects(data);
-      }
-    });
+          setAllProjects(data);
+          setCurrentProjects(data);
+        }
+      });
   }, []);
   const filterProjects = (projects: Project[], role: role) => {
     setCurrentProjects(allProjects);
@@ -31,15 +33,20 @@ const MyProjects: FC = () => {
           }
         });
       });
-    console.log(filteredProjects);
+
     setCurrentProjects(filteredProjects);
+    setActiveButton(role);
     return filteredProjects;
   };
   return (
     <>
       <div className="grid grid-cols-3">
         <div
-          className="bg-mintGreen border-t-[1px] border-b-[1px] border-black p-1 text-center shadow-md cursor-pointer"
+          className={`border-t-[1px] border-b-[1px] border-black p-3 sm:p-1 text-center shadow-md cursor-pointer ${
+            activeButton === "owner"
+              ? "shadow-inner bg-cyan-200"
+              : "bg-mintGreen"
+          }`}
           onClick={() => {
             if (allProjects) filterProjects(allProjects, "owner");
           }}
@@ -47,7 +54,11 @@ const MyProjects: FC = () => {
           Owner
         </div>
         <div
-          className="bg-mintGreen border-[1px] border-black p-1 text-center shadow-md cursor-pointer"
+          className={`border-[1px] border-black p-3 sm:p-1 text-center shadow-md cursor-pointer ${
+            activeButton === "developer"
+              ? "shadow-inner bg-cyan-200"
+              : "bg-mintGreen"
+          }`}
           onClick={() => {
             if (allProjects) filterProjects(allProjects, "developer");
           }}
@@ -55,7 +66,11 @@ const MyProjects: FC = () => {
           Developer
         </div>
         <div
-          className="bg-mintGreen border-t-[1px] border-b-[1px] border-black p-1 text-center shadow-md cursor-pointer"
+          className={`border-t-[1px] border-b-[1px] border-black p-3 sm:p-1 text-center shadow-md cursor-pointer ${
+            activeButton === "designer"
+              ? "shadow-inner bg-cyan-200"
+              : "bg-mintGreen"
+          }`}
           onClick={() => {
             if (allProjects) filterProjects(allProjects, "designer");
           }}
@@ -64,9 +79,12 @@ const MyProjects: FC = () => {
         </div>
       </div>
       <div
-        className="bg-teal-200 border-b-[1px] border-black p-1 text-center shadow-md cursor-pointer"
+        className={`border-b-[1px] border-black p-3 sm:p-1 text-center shadow-md cursor-pointer ${
+          activeButton === "all" ? "shadow-inner bg-cyan-200" : "bg-teal-200"
+        }`}
         onClick={() => {
           if (allProjects) setCurrentProjects(allProjects);
+          setActiveButton("all");
         }}
       >
         All Roles

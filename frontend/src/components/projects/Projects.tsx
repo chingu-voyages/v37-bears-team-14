@@ -64,7 +64,6 @@ const Projects: FunctionComponent = () => {
       }
       case "mine": {
         setProjectPreviews(allProjects);
-        console.log(projectPreviews);
         break;
       }
     }
