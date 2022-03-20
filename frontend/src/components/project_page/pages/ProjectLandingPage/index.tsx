@@ -4,6 +4,7 @@ import ProjectShowcase from "./components/ProjectShowcase";
 import ApplyButtonContainer from "../../components/ApplyFlow/ApplyButtonContainer";
 
 import StarButton from "./components/StarButton";
+
 const ProjectLandingPage = () => {
   const { project, setProject } = useOutletContext<ProjectPageContext>();
 
