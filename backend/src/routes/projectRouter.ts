@@ -224,30 +224,23 @@ projects.get("/v1/projects", async (req, res, next) => {
   res.json(projects);
 });
 
-// Returns the session user's projects
-projects.get(
-  "/v1/members",
-  (req, res, next) => {
-    if (req.query["user"]) {
-      next();
-    } else {
-      res.status(401).json({ errors: ["unauthenticated"] });
-    }
-  },
-  async (req: Request, res, next) => {
-    try {
-      if (req.query["user"]) {
-        const userId = req.query["user"];
-        const userMembers = await projectController.findUserProjects(
-          userId.toString()
-        );
-        res.json(userMembers);
-      }
-    } catch (err) {
-      next(err);
-    }
+// Returns users' projects
+projects.get("/v1/members", async (req: Request, res, next) => {
+  // return an error early if this is missing
+  if (!req.query["user"]) {
+    return res.status(400).json({ errors: ["missing_user"] });
   }
-);
+
+  try {
+    const userId = req.query["user"];
+    const userMembers = await projectController.findUserProjects(
+      userId.toString()
+    );
+    res.json(userMembers);
+  } catch (err) {
+    next(err);
+  }
+});
 
 projects.post(
   "/v1/projects/:id/members",
