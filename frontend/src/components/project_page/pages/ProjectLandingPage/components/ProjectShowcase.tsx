@@ -1,9 +1,7 @@
 import {
   Dispatch,
-  FC,
   FunctionComponent,
   SetStateAction,
-  useEffect,
   useState,
 } from "react";
 import { Project } from "../../../../../shared/Interfaces";
