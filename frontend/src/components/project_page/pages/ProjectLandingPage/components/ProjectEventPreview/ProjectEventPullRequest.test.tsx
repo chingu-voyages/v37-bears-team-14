@@ -36,8 +36,8 @@ test("renders repo_pull_request", () => {
         </a>
       </div>
       <div
-        class="font-semibold_ text-sm text-gray-500"
-        title="2022-03-19T17:04:19-07:00"
+        class="text-sm text-gray-500"
+        title="2022-03-20T00:04:19+00:00"
       >
         an hour ago
       </div>

@@ -14,7 +14,7 @@ const Timestamp: FC<TimestampProps> = ({ time, now }) => {
   return (
     <div
       title={moment(time).format()}
-      className="font-semibold_ text-sm text-gray-500"
+      className="text-sm text-gray-500"
     >
       {moment(time).from(now)}
     </div>
