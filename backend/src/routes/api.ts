@@ -17,6 +17,7 @@ import InvalidChangeLastOwner from "../controllers/errors/InvalidChangeLastOwner
 import computationRouter from "./computationRouter";
 import graphRouter from "./graphRouter";
 import projectRouter from "./projectRouter";
+import eventRouter from "./eventRouter";
 import applicationRouter from "./applicationRouter";
 import hookRouter from "./hookRouter";
 import MemberAlreadyExistsError from "../controllers/errors/MemberAlreadyExistsError";
@@ -41,6 +42,10 @@ api.use(graphRouter);
 // PROJECT
 
 api.use(projectRouter);
+
+// EVENTS
+
+api.use(eventRouter);
 
 // APPLICATION
 
