@@ -86,7 +86,11 @@ const NewProjectForm: React.FC<Props> = ({
                 resetForm();
                 setTechs([...techs, ...chosenTechs]);
                 techs.sort((a: Tech, b: Tech) => (a.name > b.name ? 1 : -1));
-                projectCtx.addProject({ ...values, techs: chosenTechs });
+                projectCtx.addProject({
+                  ...values,
+                  techs: chosenTechs,
+                  starrers: [],
+                });
                 setChosenTechs([]);
                 setProjectSubmitted(true);
                 setProjectForm(false);

@@ -6,8 +6,6 @@ StackCafe is built by the Chingu project team v37-bears-team-14.
 
 ![Sean's Profile](https://avatars.githubusercontent.com/u/7483224?s=64&v=4)
 
-Web developer/designer specializing in JavaScript, React, and CSS.
-
 - [GitHub](https://github.com/seann1)
 
 ## Daniel
