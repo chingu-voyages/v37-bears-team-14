@@ -39,7 +39,7 @@ const ProjectEventList: FC<ProjectEventListProps> = ({ projectId }) => {
     <>
       {events.map((event) => (
         <div key={event.id} className="my-1">
-          <ProjectEventPreview event={event} />
+          <ProjectEventPreview event={event} now={new Date()} />
         </div>
       ))}
     </>

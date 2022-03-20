@@ -1,9 +1,4 @@
-import {
-  Dispatch,
-  FunctionComponent,
-  SetStateAction,
-  useState,
-} from "react";
+import { Dispatch, FunctionComponent, SetStateAction, useState } from "react";
 import { Project } from "../../../../../shared/Interfaces";
 import Tech from "../../../components/Tech";
 import MemberList from "../../../components/MemberList";

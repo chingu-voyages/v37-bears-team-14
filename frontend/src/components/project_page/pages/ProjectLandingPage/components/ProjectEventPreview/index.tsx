@@ -6,25 +6,27 @@ import { ProjectEvent } from "../../../../../../shared/EventInterfaces";
 export const RECOGNIZED_EVENTS = ["repo_push", "repo_pull_request"];
 
 interface TimestampProps {
+  now: Date;
   time: Date;
 }
 
-const Timestamp: FC<TimestampProps> = ({ time }) => {
+const Timestamp: FC<TimestampProps> = ({ time, now }) => {
   return (
     <div
       title={moment(time).format()}
       className="font-semibold_ text-sm text-gray-500"
     >
-      {moment(time).fromNow()}
+      {moment(time).from(now)}
     </div>
   );
 };
 
 interface ProjectEventProps {
+  now: Date;
   event: ProjectEvent;
 }
 
-const ProjectEventPullRequest: FC<ProjectEventProps> = ({ event }) => {
+const ProjectEventPullRequest: FC<ProjectEventProps> = ({ event, now }) => {
   const action = event.payload.action;
   const sender = event.user?.username;
   const url = event.payload.pull_request.html_url;
@@ -46,12 +48,12 @@ const ProjectEventPullRequest: FC<ProjectEventProps> = ({ event }) => {
           Pull Request #{number}
         </a>
       </div>
-      <Timestamp time={event.createdAt} />
+      <Timestamp time={event.createdAt} now={now} />
     </div>
   );
 };
 
-const ProjectEventPush: FC<ProjectEventProps> = ({ event }) => {
+const ProjectEventPush: FC<ProjectEventProps> = ({ event, now }) => {
   const sender = event.user?.username;
   const ref = event.payload.ref;
   const url = ref.startsWith("refs/heads")
@@ -76,16 +78,16 @@ const ProjectEventPush: FC<ProjectEventProps> = ({ event }) => {
           {ref}
         </a>
       </div>
-      <Timestamp time={event.createdAt} />
+      <Timestamp time={event.createdAt} now={now} />
     </div>
   );
 };
 
-const ProjectEventUnknown: FC<ProjectEventProps> = ({ event }) => {
+const ProjectEventUnknown: FC<ProjectEventProps> = ({ event, now }) => {
   return (
     <div>
       <div>Unknown event: {event.event}</div>
-      <Timestamp time={event.createdAt} />
+      <Timestamp time={event.createdAt} now={now} />
     </div>
   );
 };
