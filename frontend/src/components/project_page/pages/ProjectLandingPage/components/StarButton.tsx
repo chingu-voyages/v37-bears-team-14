@@ -60,7 +60,7 @@ const StarButton: FC<Props> = ({ project }) => {
             if (starButton) starProject();
             if (unstarButton) unstarProject();
           }}
-          className="flex bg-white hover:bg-gray-100 text-gray-800 font-semibold mb-1 py-2 px-4 border border-gray-400 rounded shadow"
+          className="transition-all duration-1000 flex bg-gradient-to-br from-cyan-200 via-purple-300 to-cyan-100 bg-size-200 bg-pos-0 hover:bg-pos-100 text-gray-800 font-semibold mb-1 py-2 px-4 border border-gray-400 rounded shadow-md"
         >
           <span className="inline mr-1">
             <StarIcon></StarIcon>
@@ -69,7 +69,7 @@ const StarButton: FC<Props> = ({ project }) => {
             {starButton && "Star"}
             {unstarButton && "Unstar"}
           </span>
-          <span className="inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-darkGray bg-lightGray rounded-full">
+          <span className="flex content-center justify-center px-2 py-1 text-xs font-bold text-darkGray bg-white rounded-full shadow-inner">
             {starrers.filter((e) => e).length}
           </span>
         </button>

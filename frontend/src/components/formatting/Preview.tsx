@@ -45,7 +45,7 @@ const Preview: FC<ReadmeProps> = ({ children }) => {
           </ul>
         ),
         ol: ({ children, ...props }) => (
-          <ol className="markdown" {...props}>
+          <ol className="list-disc markdown" {...props}>
             {children}
           </ol>
         ),
