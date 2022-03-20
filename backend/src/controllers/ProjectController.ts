@@ -263,6 +263,24 @@ class ProjectController {
     ]);
     return userProjects;
   }
+  public async findUserProjectsByTech(
+    userId: string,
+    techId: string
+  ): Promise<ProjectDoc[]> {
+    let userMembers = await this.memberModel.aggregate([
+      { $match: { user: new mongoose.Types.ObjectId(userId) } },
+      { $group: { _id: "$project" } },
+      { $group: { _id: null, projects: { $push: "$_id" } } },
+    ]);
+
+    userMembers = userMembers[0].projects;
+
+    let userProjects = await this.projectModel.find({
+      _id: { $in: userMembers },
+      techs: techId,
+    });
+    return userProjects;
+  }
 
   // Creating a project involves associating its creator.
   // params: fields to create the project with

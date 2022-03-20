@@ -6,7 +6,7 @@ import React, {
   SetStateAction,
 } from "react";
 import { useParams } from "react-router-dom";
-import { User, Tech } from "../../shared/Interfaces";
+import { User, Tech, Project } from "../../shared/Interfaces";
 import LoadingSpinner from "../Spinners/LoadingSpinner";
 import UserNotFound from "./UserNotFound";
 import { useSession } from "../../hooks/session";
@@ -29,6 +29,7 @@ const UserPageLayout: FunctionComponent = () => {
   const [user, setUser] = useState<null | User>(null);
   const [selectedTech, setSelectedTech] = useState<Tech | null>();
   const [search, setSearch] = useState("");
+  const [projects, setProjects] = useState<Project[] | null>();
 
   const sessionUser = useSession().user;
 
@@ -38,7 +39,14 @@ const UserPageLayout: FunctionComponent = () => {
       if (resp.status === 200) {
         const user = await resp.json();
         setUser(user);
-        if (user.techs && user.techs.length > 0) setSelectedTech(user.techs[0]);
+        if (user.techs && user.techs.length > 0) {
+          setSelectedTech(user.techs[0]);
+          const resp = await fetch(
+            `/api/v1/projects/${user.id}/tech/${user.techs[0]?.id}`
+          );
+          const data = await resp.json();
+          setProjects(data);
+        }
       } else if (resp.status === 404) {
         setNotFound(true);
       } else {
@@ -69,8 +77,12 @@ const UserPageLayout: FunctionComponent = () => {
     return <UserNotFound />;
   }
 
-  const changeTech = (tech?: Tech) => {
+  const changeTech = async (tech?: Tech) => {
     setSelectedTech(tech);
+
+    const resp = await fetch(`/api/v1/projects/${user.id}/tech/${tech?.id}`);
+    const data = await resp.json();
+    setProjects(data);
   };
 
   const filteredTechs =
@@ -129,7 +141,7 @@ const UserPageLayout: FunctionComponent = () => {
             </div>
           </div>
           {selectedTech ? (
-            <TechSection tech={selectedTech} />
+            <TechSection tech={selectedTech} projects={projects} />
           ) : (
             <EmptyTechSection />
           )}
