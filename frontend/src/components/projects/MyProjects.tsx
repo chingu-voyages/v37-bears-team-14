@@ -21,13 +21,13 @@ const MyProjects: FC = () => {
           setCurrentProjects(data);
         }
       });
-  }, []);
+  }, [isLoggedIn, user?.id]);
   const filterProjects = (projects: Project[], role: role) => {
     setCurrentProjects(allProjects);
     let filteredProjects: Project[] = [];
     if (user)
-      projects.map((p) => {
-        p.members.map((m) => {
+      projects.forEach((p) => {
+        p.members.forEach((m) => {
           if (m.user.id === user.id && m.roleName === role) {
             filteredProjects.push(p);
           }

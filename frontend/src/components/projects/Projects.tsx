@@ -5,27 +5,16 @@ import React, {
   useContext,
 } from "react";
 import { Link } from "react-router-dom";
-import { useSession } from "../../hooks/session";
 import NewProject from "./NewProject";
 import ProjectContext from "../../store/project-context";
 import ProjectPreview from "./ProjectPreview";
-import { Project } from "../../shared/Interfaces";
 import isEqual from "react-fast-compare";
 import LoadingSpinner from "../Spinners/LoadingSpinner";
 
-type PreviewState = "mine" | "recent" | "developer" | "designer";
-
 const Projects: FunctionComponent = () => {
   const [loading, setLoading] = useState(false);
-  const { isLoggedIn, user } = useSession();
+
   const projectCtx = useContext<any>(ProjectContext);
-  const [allProjects, setAllProjects] = useState<Project[]>([]);
-  const [ownerProjects, setOwnerProjects] = useState<Project[]>();
-  const [designerProjects, setDesignerProjects] = useState<Project[]>();
-  const [developerProjects, setDeveloperProjects] = useState<Project[]>();
-  const [projectPreviews, setProjectPreviews] = useState<Project[]>(
-    projectCtx.projects
-  );
 
   useEffect(() => {
     setLoading(true);
@@ -40,34 +29,7 @@ const Projects: FunctionComponent = () => {
         return response;
       }
     });
-    if (user)
-      fetch(`/api/v1/members?user=${user?.id}`).then(async (response) => {
-        if (response.status === 200) {
-          const data = await response.json();
-
-          setAllProjects(data);
-          //setOwnerProjects(data.filter((d)=> d.))
-        }
-      });
   }, [projectCtx]);
-
-  //let projectPreviews = projectCtx.projects;
-  const setMyProjects = () => {
-    decidePreviews("mine");
-  };
-
-  const decidePreviews = (filterString: PreviewState) => {
-    switch (filterString) {
-      case "recent": {
-        setProjectPreviews(projectCtx.projects);
-        break;
-      }
-      case "mine": {
-        setProjectPreviews(allProjects);
-        break;
-      }
-    }
-  };
 
   return (
     <>
@@ -92,10 +54,7 @@ const Projects: FunctionComponent = () => {
                   </div>
                 </Link>
                 <Link to={"my-projects"}>
-                  <div
-                    className="w-full bg-medGray border-t-[1px] border-mintGreen cursor-pointer"
-                    onClick={() => setMyProjects()}
-                  >
+                  <div className="w-full bg-medGray border-t-[1px] border-mintGreen cursor-pointer">
                     <div className="p-1">
                       <span className="p-2 text-mintGreen">My Projects</span>
                     </div>
