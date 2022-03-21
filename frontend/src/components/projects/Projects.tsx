@@ -14,7 +14,7 @@ import { useSession } from "../../hooks/session";
 
 const Projects: FunctionComponent = () => {
   const [loading, setLoading] = useState(false);
-  const { isLoggedIn, user } = useSession();
+  const { isLoggedIn } = useSession();
 
   const projectCtx = useContext<any>(ProjectContext);
 
