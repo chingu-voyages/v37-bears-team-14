@@ -1,3 +1,10 @@
+<p align="center">
+  <a href="#stackcafe">About</a> •
+  <a href="#philosophy">Philosophy</a> •
+  <a href="./docs/DESIGN.md">Design</a> •
+  <a href="#development">Development</a>
+</p>
+
 <img src="https://i.imgur.com/SrodzuF.png" height="100">
 
 # StackCafe
@@ -69,10 +76,54 @@ join projects as team members.
 - Uptime monitor https://status.stack.cafe
   - Ping endpoint for lightweight monitor
 
+## Roadmap
+
+See the [open issues](https://github.com/chingu-voyages/v37-bears-team-14/issues) for a list of proposed features (and known issues).
+
+## Philosophy
+
+We value:
+- velocity
+- monitoring
+- automation
+- reliability
+
+Because of our short sprint cycle and the practice of iteractive development,
+our approach optimizes for feature development velocity.
+We achieve this by using processes that help us to release to production often
+while at the same time using tools to help us build confidence in the quality of the software we write.
+
+### Velocity
+To deploy our changes and respond early, we have set up automatic releases into production
+when code is merged into the `main` branch.
+
+We also follow the [Code Review Developer Guide](https://google.github.io/eng-practices/review/)
+when reviewing pull requests, and only require one approval for merging.
+
+### Monitoring
+We have centralized logging via Logtail and uptime monitoring via Freshping to
+give us visibility into the health of our production website.
+
+### Automation
+Wherever possible, we use automation to eliminate toil.
+We use automated systems for testing and deploying code, as well
+as for collecting and managing data in production.
+
+### Reliability
+To achieve reliability, we use GitHub Actions to automatically build and
+test each pull request. We also document manual test plans (if any)
+in the description of each pull request.
+
+## Development
+
+The code structure is split between `backend/`, which contains the server
+code, and `frontend/`, which contains the React app code.
+
 ## Deployment
 
 The application is deployed onto fly.io at each push into `main` branch.
-The production deployment is accessible at https://v37-bears-team-14.fly.dev/
+The production deployment is accessible at https://v37-bears-team-14.fly.dev/.
+This is the instance that backs the custom domain https://stack.cafe.
 
 ## Setup
 
