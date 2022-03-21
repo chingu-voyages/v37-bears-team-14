@@ -24,6 +24,7 @@ const Projects: FunctionComponent = () => {
       if (response.status === 200) {
         setLoading(false);
         const data = await response.json();
+
         if (!isEqual(projectCtx.projects, data)) {
           projectCtx.storeProjects(data);
         }
@@ -31,7 +32,8 @@ const Projects: FunctionComponent = () => {
         return response;
       }
     });
-  }, [projectCtx]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>

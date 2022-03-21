@@ -1,10 +1,10 @@
 import React, { FunctionComponent, useState, useEffect } from "react";
 import LoadingSpinner from "../Spinners/LoadingSpinner";
-
+import { useSession } from "../../hooks/session";
 import NewProjectForm from "./NewProjectForm";
 
 const NewProject: FunctionComponent = () => {
-  // const [isLoading, setIsLoading] = useState(true);
+  const { user } = useSession();
   const [techs, setTechs] = useState<any[]>([]);
   const [chosenTechs, setChosenTechs] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);

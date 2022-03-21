@@ -32,7 +32,7 @@ const ProjectPreview: FunctionComponent<Props> = ({ projects }) => {
                   </div>
                 ))}
                 {p.techs.length > 4 && (
-                  <span className="align-middle">{`+ ${
+                  <span className="m-1 align-middle self-center bg-lightGray p-[2px] rounded-md text-xs shadow-md font-bold">{`+ ${
                     p.techs.length - 4
                   } More`}</span>
                 )}

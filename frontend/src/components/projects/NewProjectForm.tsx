@@ -2,7 +2,7 @@ import React, { useState, forwardRef, useContext } from "react";
 import { Menu } from "@headlessui/react";
 import { Formik, Form, Field } from "formik";
 import ProjectContext from "../../store/project-context";
-
+import { useSession } from "../../hooks/session";
 import Alert from "../alerts/Alert";
 import { Tech } from "../../shared/Interfaces";
 import { ProjectFieldsSchema } from "../../shared/schemas/project.schema";
@@ -41,7 +41,7 @@ const NewProjectForm: React.FC<Props> = ({
   const [customOpen, setCustomOpen] = useState(false);
   const [projectSubmitted, setProjectSubmitted] = useState(false);
   const projectCtx = useContext<any>(ProjectContext);
-
+  const { user } = useSession();
   const CustomMenuButton = forwardRef<HTMLButtonElement>(
     ({ children }, ref) => (
       <button
@@ -85,6 +85,15 @@ const NewProjectForm: React.FC<Props> = ({
                   ...values,
                   techs: chosenTechs,
                   starrers: [],
+                  id: "1",
+                  members: [
+                    {
+                      id: "1",
+                      project: "1",
+                      roleName: "owner",
+                      user: user,
+                    },
+                  ],
                 });
                 setChosenTechs([]);
                 setProjectSubmitted(true);
