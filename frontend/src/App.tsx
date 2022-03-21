@@ -16,7 +16,7 @@ import ProjectSettingsTeamPage from "./components/project_page/pages/ProjectSett
 import ProjectSettingsHooksPage from "./components/project_page/pages/ProjectSettingsHooksPage";
 import ProjectApplicationPage from "./components/project_page/pages/ProjectApplicationPage";
 import UserPageLayout from "./components/user_page/UserPageLayout";
-import UserSettingsPage from "./components/user_page/UserSettingsPage";
+
 import ApplicationListPage from "./components/user_applications/pages/ApplicationListPage";
 import ApplicationEditPage from "./components/user_applications/pages/ApplicationEditPage";
 import DocumentPage from "./components/info/DocumentPage";
@@ -27,6 +27,7 @@ import teamMdUrl from "./content/team.md";
 import privacyMdUrl from "./content/privacy.md";
 import termsMdUrl from "./content/terms.md";
 import contactMdUrl from "./content/contact.md";
+import GraphPage from "./components/explore/GraphPage";
 
 /**
  * App defines the global layout with Navbar and all the application routes.
@@ -36,6 +37,7 @@ function App() {
     <>
       <Navbar />
       <Routes>
+        <Route path="/explore" element={<GraphPage />} />
         <Route path="/projects">
           <Route path="" element={<Projects />} />
           <Route path="search" element={<ProjectSearch />} />
@@ -71,7 +73,6 @@ function App() {
         </Route>
         <Route path="/user">
           <Route path=":username" element={<UserPageLayout />} />
-          <Route path="settings" element={<UserSettingsPage />} />
         </Route>
         <Route
           path="/about"

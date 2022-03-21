@@ -52,8 +52,15 @@ join projects as team members.
 - View latest updated projects
 - Search by name, description, and technology
 - Search metrics ([see dashboard snapshot](https://snapshots.raintank.io/dashboard/snapshot/7Fl3U1Vi9CTm07P8KmJiSDO61SlxXarq))
+#### Entity Relationship Explorer
+- Explore entity relationships with a graph visualizer
+- Model graph in API with node types
+  - Project
+  - User
+  - Tech
 #### Front Page
 - Call to action - Browse Projects
+- Call to action - Explore Relationships
 - Search term suggestions
   - Deep link to search automatically
 #### Administration

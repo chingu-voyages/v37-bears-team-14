@@ -1,3 +1,4 @@
+import Explore from "./Explore";
 import Hero from "./Hero";
 import TrendingSearches from "./TrendingSearches";
 
@@ -9,6 +10,7 @@ const FrontPage = () => {
           <Hero />
         </div>
       </div>
+      <Explore />
       <div className="mx-3 my-4 md:mx-8 md:my-12">
         <TrendingSearches />
       </div>

@@ -1,10 +1,10 @@
-import React, { useState, forwardRef } from "react";
+import React, { useState, forwardRef, useEffect } from "react";
 import { Menu } from "@headlessui/react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import Alert from "../alerts/Alert";
-import { Tech } from "../../shared/Interfaces";
-import { useSession } from "../../hooks/session";
+import Alert from "../../alerts/Alert";
+import { Tech } from "../../../shared/Interfaces";
+import { useSession } from "../../../hooks/session";
 
 interface Props {
   chosenTechs: Tech[];
@@ -17,6 +17,9 @@ interface Props {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   userForm: boolean;
   setuserForm: React.Dispatch<React.SetStateAction<boolean>>;
+  techUpdated: boolean;
+  setTechUpdated: React.Dispatch<React.SetStateAction<boolean>>;
+  initializeTechs: (techArray: object[]) => void;
 }
 
 interface FormValues {
@@ -41,6 +44,9 @@ const UpdateUserForm: React.FC<Props> = ({
   setLoading,
   userForm,
   setuserForm,
+  techUpdated,
+  setTechUpdated,
+  initializeTechs,
 }) => {
   const [customOpen, setCustomOpen] = useState(false);
   const [userUpdated, setuserUpdated] = useState(false);
@@ -57,13 +63,33 @@ const UpdateUserForm: React.FC<Props> = ({
       </button>
     )
   );
+  // Similar to componentDidMount and componentDidUpdate:
+  useEffect(() => {
+    // Update the document title using the browser API
+    let isMounted = false;
+
+    const fetchData = async () => {
+      if (!isMounted && !techUpdated) {
+        const resp = await fetch(`/api/v1/users/${user?.id}`);
+        const data = await resp.json();
+        initializeTechs(data.techs);
+        isMounted = true;
+        setTechUpdated(true);
+      }
+    };
+
+    fetchData();
+    return () => {
+      isMounted = true;
+    }; // cleanup
+  }, [initializeTechs, setTechUpdated, techUpdated, user?.id]);
 
   return (
     <>
       <Formik
         initialValues={{
-          username: "",
-          displayName: "",
+          username: user ? user.username : "",
+          displayName: user ? user.displayName : "",
           techs: [],
         }}
         validationSchema={UpdateUserSchema}
@@ -72,6 +98,7 @@ const UpdateUserForm: React.FC<Props> = ({
           values.techs = chosenTechs.map((t) => t.id);
           function updateUser(values: FormValues) {
             // setLoading(true);
+
             if (user && user.id) {
               fetch(`/api/v1/users/${user.id}`, {
                 method: "POST",
@@ -82,10 +109,9 @@ const UpdateUserForm: React.FC<Props> = ({
               }).then((response) => {
                 if (response.status === 200) {
                   // setLoading(false);
-                  resetForm();
-                  setTechs([...techs, ...chosenTechs]);
+                  //resetForm();
+
                   techs.sort((a: Tech, b: Tech) => (a.name > b.name ? 1 : -1));
-                  setChosenTechs([]);
                   setuserUpdated(true);
                   setTimeout(() => {
                     setuserUpdated(false);
@@ -123,6 +149,7 @@ const UpdateUserForm: React.FC<Props> = ({
               </label>
               <Field
                 name="username"
+                min="2"
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
             </div>
@@ -137,6 +164,7 @@ const UpdateUserForm: React.FC<Props> = ({
                 Display Name
               </label>
               <Field
+                min="2"
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline max-h-48"
                 name="displayName"
               />
@@ -239,6 +267,7 @@ const UpdateUserForm: React.FC<Props> = ({
           </Form>
         )}
       </Formik>
+
       {userUpdated && (
         <>
           <Alert message={"User updated"} />
