@@ -267,18 +267,16 @@ class ProjectController {
     userId: string,
     techId: string
   ): Promise<ProjectDoc[]> {
-    let userMembers = await this.memberModel.aggregate([
-      { $match: { user: new mongoose.Types.ObjectId(userId) } },
-      { $group: { _id: "$project" } },
-      { $group: { _id: null, projects: { $push: "$_id" } } },
-    ]);
+    const userMembers = await this.memberModel.find({ user: userId });
 
-    userMembers = userMembers[0].projects;
+    const userMembersIds = userMembers.map((m: any) => m.project);
+    // The `.map` turns the list of objects into a list of project IDs
 
     let userProjects = await this.projectModel.find({
-      _id: { $in: userMembers },
+      _id: { $in: userMembersIds },
       techs: techId,
     });
+
     return userProjects;
   }
 

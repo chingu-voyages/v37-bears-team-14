@@ -42,7 +42,7 @@ const UserPageLayout: FunctionComponent = () => {
         if (user.techs && user.techs.length > 0) {
           setSelectedTech(user.techs[0]);
           const resp = await fetch(
-            `/api/v1/projects/${user.id}/tech/${user.techs[0]?.id}`
+            `/api/v1/users/${user.id}/projects?techId=${user.techs[0]?.id}`
           );
           const data = await resp.json();
           setProjects(data);
@@ -80,8 +80,11 @@ const UserPageLayout: FunctionComponent = () => {
   const changeTech = async (tech?: Tech) => {
     setSelectedTech(tech);
 
-    const resp = await fetch(`/api/v1/projects/${user.id}/tech/${tech?.id}`);
+    const resp = await fetch(
+      `/api/v1/users/${user.id}/projects?techId=${tech?.id}`
+    );
     const data = await resp.json();
+
     setProjects(data);
   };
 

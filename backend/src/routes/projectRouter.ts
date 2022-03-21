@@ -300,14 +300,16 @@ projects.delete(
 );
 
 //Returns user projects that use a tech
-projects.get("/v1/projects/:userId/tech/:techId", async (req, res, next) => {
-  const userId = req.params.userId;
-  const techId = req.params.techId;
-  const userMembers = await projectController.findUserProjectsByTech(
-    userId.toString(),
-    techId.toString()
-  );
-  res.json(userMembers);
+projects.get("/v1/users/:userId/projects", async (req, res, next) => {
+  if (req.query["techId"]) {
+    const userId = req.params.userId;
+    const techId = req.query["techId"];
+    const userMembers = await projectController.findUserProjectsByTech(
+      userId.toString(),
+      techId.toString()
+    );
+    res.json(userMembers);
+  }
 });
 
 export default projects;
