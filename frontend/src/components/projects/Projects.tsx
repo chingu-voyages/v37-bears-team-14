@@ -8,15 +8,16 @@ import { Link } from "react-router-dom";
 import NewProject from "./NewProject";
 import ProjectContext from "../../store/project-context";
 import ProjectPreview from "./ProjectPreview";
-
 import isEqual from "react-fast-compare";
-
 import LoadingSpinner from "../Spinners/LoadingSpinner";
+import { useSession } from "../../hooks/session";
 
 const Projects: FunctionComponent = () => {
   const [loading, setLoading] = useState(false);
+  const { isLoggedIn } = useSession();
 
   const projectCtx = useContext<any>(ProjectContext);
+
   useEffect(() => {
     setLoading(true);
     fetch("api/v1/projects").then(async (response) => {
@@ -44,9 +45,13 @@ const Projects: FunctionComponent = () => {
                 <ProjectPreview projects={projectCtx.projects} />
               </main>
               <aside className="basis-1/4">
-                <NewProject />
+                {isLoggedIn && <NewProject />}
                 <Link to={"search"}>
-                  <div className="w-full bg-medGray border-t-[1px] border-mintGreen">
+                  <div
+                    className={`w-full bg-medGray ${
+                      isLoggedIn && "border-t-[1px] border-mintGreen"
+                    }`}
+                  >
                     <div className="p-1">
                       <span className="p-2 text-mintGreen">
                         Search Projects
@@ -54,6 +59,15 @@ const Projects: FunctionComponent = () => {
                     </div>
                   </div>
                 </Link>
+                {isLoggedIn && (
+                  <Link to={"my-projects"}>
+                    <div className="w-full bg-medGray border-t-[1px] border-mintGreen cursor-pointer">
+                      <div className="p-1">
+                        <span className="p-2 text-mintGreen">My Projects</span>
+                      </div>
+                    </div>
+                  </Link>
+                )}
               </aside>
             </div>
           </section>

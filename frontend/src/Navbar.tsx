@@ -64,7 +64,7 @@ const Navbar: FunctionComponent = () => {
             <div className="inline">
               <div className="absolute left-0 sm:hidden mt-8 w-48 bg-darkGray rounded-br-md overflow-hidden shadow-xl z-20 cursor-pointer">
                 <Link to="/projects">
-                  <span className="block px-4 py-2 text-sm text-mintGreen border-y-2 border-medGray hover:bg-gradient-to-br hover:from-purple-600 hover:to-blue-500 hover:text-white">
+                  <span className="block px-4 py-2 text-sm text-mintGreen border-b-[1px] border-medGray hover:bg-gradient-to-br hover:from-purple-600 hover:to-blue-500 hover:text-white">
                     Projects
                   </span>
                 </Link>
@@ -136,16 +136,15 @@ const Navbar: FunctionComponent = () => {
                 <div className="absolute right-0 mt-2 w-48 text-center bg-darkGray rounded-bl-md overflow-hidden shadow-xl z-20 cursor-pointer">
                   <span
                     onClick={() => logout()}
-                    className="block px-4 py-2 text-sm text-mintGreen border-b-2 border-medGray hover:bg-gradient-to-br hover:from-purple-600 hover:to-blue-500 hover:text-white"
+                    className="block px-4 py-2 text-sm text-mintGreen border-b-[1px] border-medGray hover:bg-gradient-to-br hover:from-purple-600 hover:to-blue-500 hover:text-white"
                   >
                     Sign Out
                   </span>
                   <Link to={`user/${currentSession.user.username}`}>
-                    <span className="block px-4 py-2 text-sm text-mintGreen hover:bg-gradient-to-br hover:from-purple-600 hover:to-blue-500 hover:text-white">
+                    <span className="block px-4 py-2 text-sm text-mintGreen border-b-[1px] border-medGray hover:bg-gradient-to-br hover:from-purple-600 hover:to-blue-500 hover:text-white">
                       View Profile
                     </span>
                   </Link>
-
                   {currentSession.user.isAdmin && (
                     <Link to="/admin">
                       <span className="block px-4 py-2 text-sm text-mintGreen hover:bg-gradient-to-br hover:from-purple-600 hover:to-blue-500 hover:text-white">

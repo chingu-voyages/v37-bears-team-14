@@ -224,14 +224,21 @@ projects.get("/v1/projects", async (req, res, next) => {
   res.json(projects);
 });
 
-// Returns the session user's projects
+// Returns users' projects
 projects.get("/v1/members", async (req: Request, res, next) => {
-  if (req.query["user"]) {
+  // return an error early if this is missing
+  if (!req.query["user"]) {
+    return res.status(400).json({ errors: ["missing_user"] });
+  }
+
+  try {
     const userId = req.query["user"];
     const userMembers = await projectController.findUserProjects(
       userId.toString()
     );
     res.json(userMembers);
+  } catch (err) {
+    next(err);
   }
 });
 
