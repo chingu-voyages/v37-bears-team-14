@@ -11,6 +11,7 @@ import ProjectPreview from "./ProjectPreview";
 import isEqual from "react-fast-compare";
 import LoadingSpinner from "../Spinners/LoadingSpinner";
 import { useSession } from "../../hooks/session";
+import { Transition } from "@headlessui/react";
 
 const Projects: FunctionComponent = () => {
   const [loading, setLoading] = useState(false);
@@ -37,10 +38,18 @@ const Projects: FunctionComponent = () => {
 
   return (
     <>
-      {loading ? (
-        <LoadingSpinner />
-      ) : (
-        <>
+      <Transition
+        show={!loading}
+        enter="transition-opacity duration-500"
+        enterFrom="opacity-0"
+        enterTo="opacity-100"
+        leave="transition-opacity duration-150"
+        leaveFrom="opacity-100"
+        leaveTo="opacity-0"
+      >
+        {loading ? (
+          <LoadingSpinner />
+        ) : (
           <section className="w-full">
             <div className="flex flex-col-reverse md:flex-row">
               <main className="basis-3/4">
@@ -73,8 +82,8 @@ const Projects: FunctionComponent = () => {
               </aside>
             </div>
           </section>
-        </>
-      )}
+        )}
+      </Transition>
     </>
   );
 };
