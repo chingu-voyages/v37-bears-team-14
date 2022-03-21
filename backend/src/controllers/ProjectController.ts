@@ -263,6 +263,22 @@ class ProjectController {
     ]);
     return userProjects;
   }
+  public async findUserProjectsByTech(
+    userId: string,
+    techId: string
+  ): Promise<ProjectDoc[]> {
+    const userMembers = await this.memberModel.find({ user: userId });
+
+    const userMembersIds = userMembers.map((m: any) => m.project);
+    // The `.map` turns the list of objects into a list of project IDs
+
+    let userProjects = await this.projectModel.find({
+      _id: { $in: userMembersIds },
+      techs: techId,
+    });
+
+    return userProjects;
+  }
 
   // Creating a project involves associating its creator.
   // params: fields to create the project with

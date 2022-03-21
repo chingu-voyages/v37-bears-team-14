@@ -145,11 +145,7 @@ const Navbar: FunctionComponent = () => {
                       View Profile
                     </span>
                   </Link>
-                  <Link to="/user/settings">
-                    <span className="block px-4 py-2 text-sm text-mintGreen hover:bg-gradient-to-br hover:from-purple-600 hover:to-blue-500 hover:text-white">
-                      Settings
-                    </span>
-                  </Link>
+
                   {currentSession.user.isAdmin && (
                     <Link to="/admin">
                       <span className="block px-4 py-2 text-sm text-mintGreen hover:bg-gradient-to-br hover:from-purple-600 hover:to-blue-500 hover:text-white">

@@ -6,10 +6,15 @@ import React, {
   SetStateAction,
 } from "react";
 import { useParams } from "react-router-dom";
-import { User } from "../../shared/Interfaces";
-import UserPageTech from "./UserPageTech";
+import { User, Tech, Project } from "../../shared/Interfaces";
 import LoadingSpinner from "../Spinners/LoadingSpinner";
 import UserNotFound from "./UserNotFound";
+import { useSession } from "../../hooks/session";
+import TechComponent from "./components/TechComponent";
+import TechSection from "./components/TechSection";
+import UserHeader from "./components/UserHeader";
+import UserUpdateButton from "./components/UserUpdateButton";
+import EmptyTechSection from "./components/EmptyTechSection";
 
 export interface UserPageContext {
   user: User;
@@ -22,7 +27,11 @@ const UserPageLayout: FunctionComponent = () => {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [user, setUser] = useState<null | User>(null);
-  //const [techs, setTechs] = useState();
+  const [selectedTech, setSelectedTech] = useState<Tech | null>();
+  const [search, setSearch] = useState("");
+  const [projects, setProjects] = useState<Project[] | null>();
+
+  const sessionUser = useSession().user;
 
   useEffect(() => {
     const getUser = async (username: string) => {
@@ -30,9 +39,14 @@ const UserPageLayout: FunctionComponent = () => {
       if (resp.status === 200) {
         const user = await resp.json();
         setUser(user);
-        //const arr = [a]
-        //if(user.techs)Object.keys(user.techs).forEach(key => arr.push({name: key, value: user.techs[key]}))
-        //setTechs(arr);
+        if (user.techs && user.techs.length > 0) {
+          setSelectedTech(user.techs[0]);
+          const resp = await fetch(
+            `/api/v1/users/${user.id}/projects?techId=${user.techs[0]?.id}`
+          );
+          const data = await resp.json();
+          setProjects(data);
+        }
       } else if (resp.status === 404) {
         setNotFound(true);
       } else {
@@ -63,30 +77,78 @@ const UserPageLayout: FunctionComponent = () => {
     return <UserNotFound />;
   }
 
+  const changeTech = async (tech?: Tech) => {
+    setSelectedTech(tech);
+
+    const resp = await fetch(
+      `/api/v1/users/${user.id}/projects?techId=${tech?.id}`
+    );
+    const data = await resp.json();
+
+    setProjects(data);
+  };
+
+  const filteredTechs =
+    search.length === 0
+      ? user.techs
+      : user.techs.filter((tech) =>
+          tech.name.toLowerCase().includes(search.toLowerCase())
+        );
+
   return (
     <section className="w-full">
-      <div className="py-1 mx-2 md:py-3 md:mx-8">
-        <h1 className="text-lg py-2 bold justify-center flex">
-          {user.displayName && user.displayName}
-        </h1>
-        <h4 className=" text-sm  text-slate-600 bold justify-center flex italic">
-          {user.username && user.username}
-        </h4>
-        <h1 className="py-4 text-lg flex justify-center">Tech Stack</h1>
+      <div className="container mx-auto h-screen py-16 px-8 relative">
+        <div className="flex w-full rounded-lg h-full lg:overflow-hidden overflow-auto lg:flex-row flex-col shadow-2xl">
+          <div className="lg:w-1/2 bg-white text-gray-800 flex flex-col">
+            <div className="p-8 shadow-md relative bg-white">
+              {user && <UserHeader userProps={user} />}
 
-        <ul>
-          {user &&
-            user.techs &&
-            user.techs.map((item, index) => (
-              <div key={index}>
-                <UserPageTech
-                  tech={JSON.parse(JSON.stringify(item))}
-                ></UserPageTech>
-                <hr></hr>
-                {/*<h1>{JSON.parse(JSON.stringify(item))["description"]}</h1>*/}
+              <div className="mt-6 flex">
+                {sessionUser && user && sessionUser.id === user.id && (
+                  <UserUpdateButton />
+                )}
+
+                <div className="relative ml-auto flex-1 pl-8 sm:block hidden">
+                  <input
+                    placeholder="Search"
+                    type="text"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="w-full border rounded border-gray-400 h-full focus:outline-none pl-4 pr-8 text-gray-700 text-sm text-gray-500"
+                  />
+                  <svg
+                    stroke="currentColor"
+                    className="w-4 h-4 absolute right-0 top-0 mt-3 mr-2 text-gray-500"
+                    stroke-width="2"
+                    fill="none"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle cx="11" cy="11" r="8" />
+                    <path d="M21 21l-4.35-4.35" />
+                  </svg>
+                </div>
               </div>
-            ))}
-        </ul>
+            </div>
+            <div className="overflow-auto flex-grow">
+              {user &&
+                user.techs &&
+                filteredTechs.map((item, index) => (
+                  <div key={index}>
+                    <TechComponent changeTech={changeTech} tech={item} />
+
+                    <hr></hr>
+                  </div>
+                ))}
+            </div>
+          </div>
+          {selectedTech ? (
+            <TechSection tech={selectedTech} projects={projects} />
+          ) : (
+            <EmptyTechSection />
+          )}
+        </div>
       </div>
     </section>
   );

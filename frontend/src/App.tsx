@@ -15,7 +15,7 @@ import ProjectSettingsTeamPage from "./components/project_page/pages/ProjectSett
 import ProjectSettingsHooksPage from "./components/project_page/pages/ProjectSettingsHooksPage";
 import ProjectApplicationPage from "./components/project_page/pages/ProjectApplicationPage";
 import UserPageLayout from "./components/user_page/UserPageLayout";
-import UserSettingsPage from "./components/user_page/UserSettingsPage";
+
 import ApplicationListPage from "./components/user_applications/pages/ApplicationListPage";
 import ApplicationEditPage from "./components/user_applications/pages/ApplicationEditPage";
 import DocumentPage from "./components/info/DocumentPage";
@@ -71,7 +71,6 @@ function App() {
         </Route>
         <Route path="/user">
           <Route path=":username" element={<UserPageLayout />} />
-          <Route path="settings" element={<UserSettingsPage />} />
         </Route>
         <Route
           path="/about"

@@ -136,9 +136,7 @@ class UserController {
   }
 
   async searchById(id: string) {
-    const user = await this.userModel
-      .findOne({ githubId: id })
-      .populate("techs");
+    const user = await this.userModel.findOne({ _id: id }).populate("techs");
     if (!user) {
       throw new NotFoundError("id", id);
     }
