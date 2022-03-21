@@ -1,17 +1,12 @@
 import { FunctionComponent } from "react";
 import { Field, Form, Formik } from "formik";
-import * as Yup from "yup";
 import { ProjectPageContext } from "../layouts/ProjectPageLayout";
+import { ProjectFieldsSchema } from "../../../shared/schemas/project.schema";
 
 interface ProjectSettingsFormValues {
   name: string;
   description: string;
 }
-
-const ProjectSettingsFormSchema = Yup.object().shape({
-  name: Yup.string().min(2, "Too Short!").max(50, "Too Long!"),
-  description: Yup.string().min(2, "Too Short!").max(50, "Too Long!"),
-});
 
 const ProjectSettingsForm: FunctionComponent<ProjectPageContext> = ({
   project,
@@ -23,7 +18,7 @@ const ProjectSettingsForm: FunctionComponent<ProjectPageContext> = ({
         name: project.name,
         description: project.description,
       }}
-      validationSchema={ProjectSettingsFormSchema}
+      validationSchema={ProjectFieldsSchema}
       onSubmit={(values: ProjectSettingsFormValues, { resetForm }) => {
         const saveProject = async () => {
           const resp = await fetch("/api/v1/projects/" + project.id, {

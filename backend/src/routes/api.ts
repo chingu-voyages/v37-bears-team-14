@@ -15,7 +15,9 @@ import UnauthorizedError from "../controllers/errors/UnauthorizedError";
 import FieldExistsError from "../controllers/errors/FieldExistsError";
 import InvalidChangeLastOwner from "../controllers/errors/InvalidChangeLastOwner";
 import computationRouter from "./computationRouter";
+import graphRouter from "./graphRouter";
 import projectRouter from "./projectRouter";
+import eventRouter from "./eventRouter";
 import applicationRouter from "./applicationRouter";
 import hookRouter from "./hookRouter";
 import MemberAlreadyExistsError from "../controllers/errors/MemberAlreadyExistsError";
@@ -33,9 +35,17 @@ const api = Router();
 
 api.use(computationRouter);
 
+// GRAPH
+
+api.use(graphRouter);
+
 // PROJECT
 
 api.use(projectRouter);
+
+// EVENTS
+
+api.use(eventRouter);
 
 // APPLICATION
 
@@ -163,9 +173,11 @@ api.post(
 
     if (params.username) {
       try {
-        const checkName = await userController.findDuplicate(params.username);
-        if (checkName) {
-          errors.push("Username already taken");
+        if (params.username !== req.user?.username) {
+          const checkName = await userController.findDuplicate(params.username);
+          if (checkName) {
+            errors.push("Username already taken");
+          }
         }
       } catch (err) {
         next(err);

@@ -306,4 +306,19 @@ projects.delete(
   }
 );
 
+//Returns user projects that use a tech
+projects.get("/v1/users/:userId/projects", async (req, res, next) => {
+  if (req.query["techId"]) {
+    const userId = req.params.userId;
+    const techId = req.query["techId"];
+    const userMembers = await projectController.findUserProjectsByTech(
+      userId.toString(),
+      techId.toString()
+    );
+    res.json(userMembers);
+  } else {
+    res.status(400).json({ errors: ["techId_missing"] });
+  }
+});
+
 export default projects;

@@ -5,6 +5,7 @@ import MemberList from "../../../components/MemberList";
 import useMember from "../../../hooks/useMember";
 import UpdateTechModal from "./UpdateTechModal";
 import EditLink from "../../../../controls/EditLink";
+import ProjectEventList from "./ProjectEventList";
 
 export interface ProjectLandingProps {
   project: Project;
@@ -48,6 +49,11 @@ const ProjectLanding: FunctionComponent<ProjectLandingProps> = ({
             onClose={() => setShowAddTech(false)}
           />
         )}
+      </div>
+
+      <div className="my-4 md:my-8">
+        <div className="font-bold my-1">Latest Events</div>
+        <ProjectEventList projectId={project.id} />
       </div>
     </div>
   );

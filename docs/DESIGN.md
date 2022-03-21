@@ -1,10 +1,10 @@
 # Design Document
 
-This is a living document that keeps a (best effort) record of the design decisions behind LinkUp, a platform for connecting developers to projects.
+This is a living document that keeps a (best effort) record of the design decisions behind StackCafe, a platform for connecting developers to projects based on technology match.
 
-## Architecture
+## Entities
 
-## Data Model
+These models back the core functionality of StackCafe.
 
 Projects are associated to users via a "member" resource.
 The member object allows users to be associated with multiple projects and
@@ -12,8 +12,7 @@ vice versa (projects can be associated with multiple users).
 
 Applications represent a User's request to be added as a Member to a Project.
 
-Search is an insert-only collection we don't plan to update the items of.
-It saves the metadata of project searches for downstream processing.
+![StackCafe Entity-Relationship Diagram](https://docs.google.com/drawings/d/e/2PACX-1vQrB5q6_zCuiX18aeSpizXlnK2iJTA1lREljC-PM9lpi9kU2adnYOV7Rxt310HQlMii_kGuEXJZpzgb/pub?w=960&h=720)
 
 ```
 User {
@@ -32,18 +31,6 @@ Project {
   description: string // short description
   techs: ObjectId[] // ref to Tech
   settingOpenRoles: string[] // default ["developer", "designer"]
-}
-
-Search {
-  query: string;
-  nameMatchesProjects: ObjectId[]; // ref to Project
-  descriptionMatchesProjects: ObjectId[]; // ref to Project
-  techMatchesProjects: ObjectId[]; // ref to Project
-  matchedTechs: ObjectId[]; // ref to Tech
-  mergedCount: number;
-  totalCount: number;
-  timeElapsedMs: number;
-  user: ObjectId | null; // ref to User, the logged-in user making the search
 }
 
 Member {
@@ -84,6 +71,28 @@ ProjectEvent {
   project: ObjectId // ref to Project
   user?: ObjectId // ref to User, missing if a user can't be associated.
   payload: string // JSON string of event payload
+}
+```
+
+## Interaction
+
+The Search model is an insert-only collection that stores information about
+user interaction with the project search. Of relevance are the search term,
+the number of matched projects per attribute of project, time elapsed,
+and whether the search was initiated by a logged-in user. This information
+is used for downstream processing.
+
+```
+Search {
+  query: string;
+  nameMatchesProjects: ObjectId[]; // ref to Project
+  descriptionMatchesProjects: ObjectId[]; // ref to Project
+  techMatchesProjects: ObjectId[]; // ref to Project
+  matchedTechs: ObjectId[]; // ref to Tech
+  mergedCount: number;
+  totalCount: number;
+  timeElapsedMs: number;
+  user: ObjectId | null; // ref to User, the logged-in user making the search
 }
 ```
 

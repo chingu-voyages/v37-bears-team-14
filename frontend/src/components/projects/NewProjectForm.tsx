@@ -2,10 +2,10 @@ import React, { useState, forwardRef, useContext } from "react";
 import { Menu } from "@headlessui/react";
 import { Formik, Form, Field } from "formik";
 import ProjectContext from "../../store/project-context";
-import * as Yup from "yup";
 
 import Alert from "../alerts/Alert";
 import { Tech } from "../../shared/Interfaces";
+import { ProjectFieldsSchema } from "../../shared/schemas/project.schema";
 
 interface Props {
   chosenTechs: Tech[];
@@ -25,11 +25,6 @@ interface FormValues {
   description: string;
   techs: string[];
 }
-
-const NewProjectSchema = Yup.object().shape({
-  name: Yup.string().min(2, "Too Short!").max(50, "Too Long!"),
-  description: Yup.string().min(2, "Too Short!").max(1000, "Too Long!"),
-});
 
 const NewProjectForm: React.FC<Props> = ({
   chosenTechs,
@@ -67,7 +62,7 @@ const NewProjectForm: React.FC<Props> = ({
           description: "",
           techs: [],
         }}
-        validationSchema={NewProjectSchema}
+        validationSchema={ProjectFieldsSchema}
         onSubmit={(values: FormValues, { resetForm }) => {
           // same shape as initial values
 
