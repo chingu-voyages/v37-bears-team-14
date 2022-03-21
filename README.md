@@ -91,7 +91,8 @@ We value:
 Because of our short sprint cycle and the practice of iteractive development,
 our approach optimizes for feature development velocity.
 We achieve this by using processes that help us to release to production often
-while at the same time using tools to help us build confidence in the quality of the software we write.
+while at the same time using tools like automated testing and monitoring
+to help us build confidence in the quality of the software we write.
 
 ### Velocity
 To deploy our changes and respond early, we have set up automatic releases into production
