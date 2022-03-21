@@ -309,6 +309,8 @@ projects.get("/v1/users/:userId/projects", async (req, res, next) => {
       techId.toString()
     );
     res.json(userMembers);
+  } else {
+    res.status(400).json({ errors: ["techId_missing"] });
   }
 });
 
