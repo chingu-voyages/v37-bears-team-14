@@ -1,19 +1,19 @@
 import React, { useState, forwardRef, useContext } from "react";
+import { toast } from "react-toastify";
 import { Menu } from "@headlessui/react";
 import { Formik, Form, Field } from "formik";
 import ProjectContext from "../../store/project-context";
-
-import Alert from "../alerts/Alert";
+import { useSession } from "../../hooks/session";
 import { Tech } from "../../shared/Interfaces";
 import { ProjectFieldsSchema } from "../../shared/schemas/project.schema";
 
 interface Props {
   chosenTechs: Tech[];
   setChosenTechs: React.Dispatch<React.SetStateAction<any[]>>;
-  removeTech: (e: any, chosenTech: object) => void;
+  removeTech: (chosenTech: Tech) => void;
   techs: Tech[];
   setTechs: React.Dispatch<React.SetStateAction<any[]>>;
-  chooseTech: (e: any, chosenTech: object) => void;
+  chooseTech: (chosenTech: Tech) => void;
   loading: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   projectForm: boolean;
@@ -39,9 +39,9 @@ const NewProjectForm: React.FC<Props> = ({
   setProjectForm,
 }) => {
   const [customOpen, setCustomOpen] = useState(false);
-  const [projectSubmitted, setProjectSubmitted] = useState(false);
-  const projectCtx = useContext<any>(ProjectContext);
 
+  const projectCtx = useContext<any>(ProjectContext);
+  const { user } = useSession();
   const CustomMenuButton = forwardRef<HTMLButtonElement>(
     ({ children }, ref) => (
       <button
@@ -63,43 +63,59 @@ const NewProjectForm: React.FC<Props> = ({
           techs: [],
         }}
         validationSchema={ProjectFieldsSchema}
-        onSubmit={(values: FormValues, { resetForm }) => {
+        onSubmit={(values: FormValues, { resetForm, setSubmitting }) => {
           // same shape as initial values
-
+          setSubmitting(true);
           values.techs = chosenTechs.map((t) => t.id);
           function postProject(values: FormValues) {
-            setLoading(true);
             fetch("api/v1/projects", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
               },
               body: JSON.stringify(values),
-            }).then((response) => {
-              if (response.status === 200) {
-                setLoading(false);
-                resetForm();
-                setTechs([...techs, ...chosenTechs]);
-                techs.sort((a: Tech, b: Tech) => (a.name > b.name ? 1 : -1));
-                projectCtx.addProject({
-                  ...values,
-                  techs: chosenTechs,
-                  starrers: [],
-                });
-                setChosenTechs([]);
-                setProjectSubmitted(true);
+            })
+              .then((response) => {
+                if (response.status === 200) {
+                  resetForm();
+                  setTechs([...techs, ...chosenTechs]);
+                  techs.sort((a: Tech, b: Tech) => (a.name > b.name ? 1 : -1));
+                  projectCtx.addProject({
+                    ...values,
+                    techs: chosenTechs,
+                    starrers: [],
+                    id: "1",
+                    members: [
+                      {
+                        id: "1",
+                        project: "1",
+                        roleName: "owner",
+                        user: user,
+                      },
+                    ],
+                  });
+                  setChosenTechs([]);
+                } else {
+                  console.error(
+                    "failed to post project",
+                    response.status,
+                    response.json()
+                  );
+                }
+              })
+              .then(() => {
+                setSubmitting(false);
                 setProjectForm(false);
-                setTimeout(() => {
-                  setProjectSubmitted(false);
-                }, 2000);
-              } else {
-                console.error(
-                  "failed to post project",
-                  response.status,
-                  response.json()
-                );
-              }
-            });
+                toast("Project Created", {
+                  position: "bottom-left",
+                  autoClose: 2000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                });
+              });
           }
           postProject(values);
         }}
@@ -149,7 +165,7 @@ const NewProjectForm: React.FC<Props> = ({
                 <div className="relative m-1" key={index}>
                   <div
                     className="absolute top-0 right-0 cursor-pointer bg-slate-300 border-white rounded-full"
-                    onClick={(e) => removeTech(e, tech)}
+                    onClick={() => removeTech(tech)}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -196,7 +212,7 @@ const NewProjectForm: React.FC<Props> = ({
                               {({ active }) => (
                                 <>
                                   <div
-                                    onClick={(e) => chooseTech(e, tech)}
+                                    onClick={() => chooseTech(tech)}
                                     className="flex justify-between items-center h-12 p-2 cursor-pointer hover:bg-neutral-300 align-baseline"
                                   >
                                     <img
@@ -239,11 +255,6 @@ const NewProjectForm: React.FC<Props> = ({
           </Form>
         )}
       </Formik>
-      {projectSubmitted && (
-        <>
-          <Alert message={"Project Submitted"} />
-        </>
-      )}
     </>
   );
 };

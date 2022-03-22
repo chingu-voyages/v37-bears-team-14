@@ -1,5 +1,5 @@
 import { useReducer } from "react";
-
+import { Project } from "../shared/Interfaces";
 import ProjectContext from "./project-context";
 
 enum ProjectActionKind {
@@ -33,14 +33,14 @@ export const ProjectProvider = (props: any) => {
     defaultProjectState
   );
 
-  const storeProjectsHandler = (projects: any) => {
+  const storeProjectsHandler = (projects: Project[]) => {
     dispatchProjectAction({
       type: "STORE_PROJECTS",
       projects,
     });
   };
 
-  const addProject = (project: any) => {
+  const addProject = (project: Project) => {
     dispatchProjectAction({
       type: "ADD_PROJECT",
       project,

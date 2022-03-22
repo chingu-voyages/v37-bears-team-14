@@ -29,12 +29,25 @@ import termsMdUrl from "./content/terms.md";
 import contactMdUrl from "./content/contact.md";
 import GraphPage from "./components/explore/GraphPage";
 
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 /**
  * App defines the global layout with Navbar and all the application routes.
  */
 function App() {
   return (
     <>
+      <ToastContainer
+        position="bottom-left"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <Navbar />
       <Routes>
         <Route path="/explore" element={<GraphPage />} />

@@ -15,7 +15,6 @@ type sessionData = {
   };
 };
 
-// : FunctionComponent<NavbarProps> { username, avatarURL }
 const blankUser = {
   isLoggedIn: false,
   user: {
@@ -49,17 +48,8 @@ const Navbar: FunctionComponent = () => {
 
   return (
     <>
-      <nav className="flex text-center sm:flex-row sm:text-left justify-between text-emerald-200 bg-gray-700 py-2 px-6 shadow h-[64px]">
+      <nav className="flex text-center sm:flex-row sm:text-left text-emerald-200 bg-gray-700 py-2 px-6 shadow h-[64px]">
         <div className="sm:hidden flex items-center">
-          <button
-            className="outline-none mobile-menu-button"
-            onClick={() => {
-              setMobileMenu(!mobileMenu);
-              setProfileDiv(false);
-            }}
-          >
-            <Hamburger />
-          </button>
           {mobileMenu && (
             <div className="inline">
               <div className="absolute left-0 sm:hidden mt-8 w-48 bg-darkGray rounded-br-md overflow-hidden shadow-xl z-20 cursor-pointer">
@@ -82,16 +72,23 @@ const Navbar: FunctionComponent = () => {
             </div>
           )}
         </div>
+        <div className="flex justify-start">
+          <button
+            className="outline-none mobile-menu-button sm:hidden"
+            onClick={() => {
+              setMobileMenu(!mobileMenu);
+              setProfileDiv(false);
+            }}
+          >
+            <Hamburger />
+          </button>
 
-        <div className="sm:inline-flex items-center justify-center">
-          <div className="flex justify-between content-center">
-            <Link to="/" className="hover:text-emerald-400">
-              <StackCafeIcon className="w-12" />
-            </Link>
-          </div>
+          <Link to="/" className="hover:text-emerald-400">
+            <StackCafeIcon className="w-12" />
+          </Link>
         </div>
 
-        <div className="inline-flex items-center justify-between content-center">
+        <div className="flex items-center grow justify-end">
           <div className="hidden sm:block">
             <Link to="/projects">
               <button className="relative inline-flex items-center mr-2 justify-center p-0.5 overflow-hidden text-sm font-medium text-emerald-200 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800">

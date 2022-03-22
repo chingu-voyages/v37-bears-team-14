@@ -2,9 +2,9 @@ import React, { FunctionComponent, useState, useEffect } from "react";
 import LoadingSpinner from "../Spinners/LoadingSpinner";
 
 import NewProjectForm from "./NewProjectForm";
+import { Transition } from "@headlessui/react";
 
 const NewProject: FunctionComponent = () => {
-  // const [isLoading, setIsLoading] = useState(true);
   const [techs, setTechs] = useState<any[]>([]);
   const [chosenTechs, setChosenTechs] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -34,13 +34,13 @@ const NewProject: FunctionComponent = () => {
     };
   }, []);
 
-  const chooseTech = (e: any, chosenTech: object) => {
+  const chooseTech = (chosenTech: object) => {
     const updatedTechs = techs.filter((tech) => tech !== chosenTech);
     setTechs(updatedTechs);
     setChosenTechs([...chosenTechs, chosenTech]);
   };
 
-  const removeTech = (e: any, chosenTech: object) => {
+  const removeTech = (chosenTech: object) => {
     const updatedChosenTechs = chosenTechs.filter(
       (tech) => tech !== chosenTech
     );
@@ -55,28 +55,36 @@ const NewProject: FunctionComponent = () => {
     ) : (
       <>
         <div className="fixed top-0 left-0 h-screen w-screen backdrop-blur-sm"></div>
-        <div className="fixed z-10 inset-0 overflow-y-auto max-w-3xl mx-auto">
-          {/* fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 */}
-          <NewProjectForm
-            chosenTechs={chosenTechs}
-            setChosenTechs={setChosenTechs}
-            removeTech={removeTech}
-            techs={techs}
-            setTechs={setTechs}
-            chooseTech={chooseTech}
-            loading={loading}
-            setLoading={setLoading}
-            projectForm={projectForm}
-            setProjectForm={setProjectForm}
-          />
-        </div>
+        <Transition.Child
+          enter="transition-opacity duration-500"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="transition-opacity duration-150"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <div className="fixed z-10 inset-0 overflow-y-auto max-w-3xl mx-auto">
+            <NewProjectForm
+              chosenTechs={chosenTechs}
+              setChosenTechs={setChosenTechs}
+              removeTech={removeTech}
+              techs={techs}
+              setTechs={setTechs}
+              chooseTech={chooseTech}
+              loading={loading}
+              setLoading={setLoading}
+              projectForm={projectForm}
+              setProjectForm={setProjectForm}
+            />
+          </div>
+        </Transition.Child>
       </>
     );
   }
 
   return (
     <>
-      {content}
+      <Transition show={projectForm}>{content}</Transition>
       <div className="w-full bg-medGray">
         <div
           className="p-1 cursor-pointer"
