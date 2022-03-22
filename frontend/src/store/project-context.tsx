@@ -1,4 +1,3 @@
-// ProjectContext is not currently being used, but is kept here for future reference incase it is useful.
 import { Project } from "../shared/Interfaces";
 import React from "react";
 

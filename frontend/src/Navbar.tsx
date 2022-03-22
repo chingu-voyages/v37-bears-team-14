@@ -15,7 +15,6 @@ type sessionData = {
   };
 };
 
-// : FunctionComponent<NavbarProps> { username, avatarURL }
 const blankUser = {
   isLoggedIn: false,
   user: {
