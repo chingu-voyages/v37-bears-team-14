@@ -108,7 +108,7 @@ const NewProjectForm: React.FC<Props> = ({
                 setProjectForm(false);
                 toast("Project Created", {
                   position: "bottom-left",
-                  autoClose: 5000,
+                  autoClose: 2000,
                   hideProgressBar: false,
                   closeOnClick: true,
                   pauseOnHover: true,

@@ -56,37 +56,36 @@ const NewProject: FunctionComponent = () => {
     ) : (
       <>
         <div className="fixed top-0 left-0 h-screen w-screen backdrop-blur-sm"></div>
-        <div className="fixed z-10 inset-0 overflow-y-auto max-w-3xl mx-auto">
-          <NewProjectForm
-            chosenTechs={chosenTechs}
-            setChosenTechs={setChosenTechs}
-            removeTech={removeTech}
-            techs={techs}
-            setTechs={setTechs}
-            chooseTech={chooseTech}
-            loading={loading}
-            setLoading={setLoading}
-            projectForm={projectForm}
-            setProjectForm={setProjectForm}
-          />
-        </div>
+        <Transition.Child
+          enter="transition-opacity duration-500"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="transition-opacity duration-150"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <div className="fixed z-10 inset-0 overflow-y-auto max-w-3xl mx-auto">
+            <NewProjectForm
+              chosenTechs={chosenTechs}
+              setChosenTechs={setChosenTechs}
+              removeTech={removeTech}
+              techs={techs}
+              setTechs={setTechs}
+              chooseTech={chooseTech}
+              loading={loading}
+              setLoading={setLoading}
+              projectForm={projectForm}
+              setProjectForm={setProjectForm}
+            />
+          </div>
+        </Transition.Child>
       </>
     );
   }
 
   return (
     <>
-      <Transition
-        show={projectForm}
-        enter="transition-opacity duration-500"
-        enterFrom="opacity-0"
-        enterTo="opacity-100"
-        leave="transition-opacity duration-150"
-        leaveFrom="opacity-100"
-        leaveTo="opacity-0"
-      >
-        {content}
-      </Transition>
+      <Transition show={projectForm}>{content}</Transition>
       <div className="w-full bg-medGray">
         <div
           className="p-1 cursor-pointer"
