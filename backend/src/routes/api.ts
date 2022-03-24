@@ -20,6 +20,7 @@ import projectRouter from "./projectRouter";
 import eventRouter from "./eventRouter";
 import applicationRouter from "./applicationRouter";
 import hookRouter from "./hookRouter";
+import notificationRouter from "./notificationRouter";
 import MemberAlreadyExistsError from "../controllers/errors/MemberAlreadyExistsError";
 import PendingApplicationExistsError from "../controllers/errors/PendingApplicationExistsError";
 
@@ -54,6 +55,10 @@ api.use("/v1/applications", applicationRouter);
 // HOOKS
 
 api.use("/v1/hooks", hookRouter);
+
+// NOTIFICATIONS
+
+api.use(notificationRouter);
 
 // TECH
 
