@@ -6,15 +6,18 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { SessionProvider } from "./hooks/session";
 import ProjectProvider from "./store/projectProvider";
+import { NotificationProvider } from "./components/notifications_page/useNotifications";
 
 ReactDOM.render(
   <React.StrictMode>
     <SessionProvider>
-      <ProjectProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </ProjectProvider>
+      <NotificationProvider>
+        <ProjectProvider>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </ProjectProvider>
+      </NotificationProvider>
     </SessionProvider>
   </React.StrictMode>,
   document.getElementById("root")

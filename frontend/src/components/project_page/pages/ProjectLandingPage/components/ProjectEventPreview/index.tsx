@@ -12,10 +12,7 @@ interface TimestampProps {
 
 const Timestamp: FC<TimestampProps> = ({ time, now }) => {
   return (
-    <div
-      title={moment(time).format()}
-      className="text-sm text-gray-500"
-    >
+    <div title={moment(time).format()} className="text-sm text-gray-500">
       {moment(time).from(now)}
     </div>
   );

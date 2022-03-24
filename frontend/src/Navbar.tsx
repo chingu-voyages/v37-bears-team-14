@@ -2,6 +2,7 @@ import React, { FunctionComponent, useState, useEffect } from "react";
 import StackCafeIcon from "./components/icons/StackCafeIcon";
 import Hamburger from "./components/icons/Hamburger";
 import { Link } from "react-router-dom";
+import BellIcon from "./components/icons/BellIcon";
 type sessionData = {
   isLoggedIn: boolean;
   user: {
@@ -54,20 +55,27 @@ const Navbar: FunctionComponent = () => {
             <div className="inline">
               <div className="absolute left-0 sm:hidden mt-8 w-48 bg-darkGray rounded-br-md overflow-hidden shadow-xl z-20 cursor-pointer">
                 <Link to="/projects">
-                  <span className="block px-4 py-2 text-sm text-mintGreen border-b-[1px] border-medGray hover:bg-gradient-to-br hover:from-purple-600 hover:to-blue-500 hover:text-white">
+                  <span className="block px-4 py-2 text-sm text-mintGreen border-t-2 border-medGray hover:bg-gradient-to-br hover:from-purple-600 hover:to-blue-500 hover:text-white">
                     Projects
                   </span>
                 </Link>
                 <Link to="/explore">
-                  <span className="block px-4 py-2 text-sm text-mintGreen border-b-2 border-medGray hover:bg-gradient-to-br hover:from-purple-600 hover:to-blue-500 hover:text-white">
+                  <span className="block px-4 py-2 text-sm text-mintGreen border-t-2 border-medGray hover:bg-gradient-to-br hover:from-purple-600 hover:to-blue-500 hover:text-white">
                     Explore
                   </span>
                 </Link>
                 <Link to="/applications">
-                  <span className="block px-4 py-2 text-sm text-mintGreen hover:bg-gradient-to-br hover:from-purple-600 hover:to-blue-500 hover:text-white">
+                  <span className="block px-4 py-2 text-sm text-mintGreen border-t-2 border-medGray hover:bg-gradient-to-br hover:from-purple-600 hover:to-blue-500 hover:text-white">
                     Applications
                   </span>
                 </Link>
+                {currentSession.user && currentSession.user.isAdmin && (
+                  <Link to="/notifications">
+                    <span className="block px-4 py-2 text-sm text-mintGreen border-t-2 border-medGray hover:bg-gradient-to-br hover:from-purple-600 hover:to-blue-500 hover:text-white">
+                      Notifications
+                    </span>
+                  </Link>
+                )}
               </div>
             </div>
           )}
@@ -113,6 +121,16 @@ const Navbar: FunctionComponent = () => {
                 </span>
               </button>
             </Link>
+
+            {currentSession.user && currentSession.user.isAdmin && (
+              <Link to="/notifications">
+                <button className="relative inline-flex items-center mr-2 justify-center p-0.5 overflow-hidden text-sm font-medium text-emerald-200 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800">
+                  <span className="relative px-3 py-2.5 transition-all ease-in duration-75 bg-gray-700 dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+                    <BellIcon className="inline w-4 h-4" />
+                  </span>
+                </button>
+              </Link>
+            )}
           </div>
           {currentSession.isLoggedIn ? (
             <div className="inline">

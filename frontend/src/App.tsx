@@ -31,6 +31,8 @@ import GraphPage from "./components/explore/GraphPage";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import NotificationListPage from "./components/notifications_page/NotificationListPage";
+import NotificationTestPage from "./components/admin/notifications/NotificationTestPage";
 /**
  * App defines the global layout with Navbar and all the application routes.
  */
@@ -79,8 +81,12 @@ function App() {
           <Route path="" element={<ApplicationListPage />} />
           <Route path=":applicationId" element={<ApplicationEditPage />} />
         </Route>
+        <Route path="notifications">
+          <Route path="" element={<NotificationListPage />} />
+        </Route>
         <Route path="admin" element={<AdminOutlet />}>
           <Route path="" element={<Navigate to="techs" />} />
+          <Route path="notifications" element={<NotificationTestPage />} />
           <Route path="techs" element={<TechListPage />} />
           <Route path="*" element={<div className="m-8">Page not found</div>} />
         </Route>
