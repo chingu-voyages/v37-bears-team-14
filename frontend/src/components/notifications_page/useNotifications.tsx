@@ -16,22 +16,11 @@ export function NotificationProvider(props: any) {
     if (!user) return;
 
     const fetchNotifications = async () => {
-      const getSession = async () => {
-        const resp = await fetch("/api/v1/notifications?to=" + user.id);
-        if (resp.status === 200) {
-          return await resp.json();
-        }
-        if (resp.status >= 400) {
-          console.error("Session fetch error", resp);
-        }
-        return { isLoggedIn: false, user: null };
-      };
-
-      try {
-        const notifications = await getSession();
-        setNotifications(notifications);
-      } catch (err) {
-        console.error(err);
+      const resp = await fetch("/api/v1/notifications?to=" + user.id);
+      if (resp.status === 200 || resp.status === 304) {
+        setNotifications(await resp.json());
+      } else {
+        console.error("Failed to get notifications", resp.status, resp);
       }
     };
 

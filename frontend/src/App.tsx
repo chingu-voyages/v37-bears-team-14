@@ -1,10 +1,12 @@
 import React from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
+import AdminOutlet from "./components/routing/AdminOutlet";
+import PrivateOutlet from "./components/routing/PrivateOutlet";
+
 import Navbar from "./Navbar";
 import Footer from "./components/formatting/Footer";
 import Projects from "./components/projects/Projects";
 import MyProjects from "./components/projects/MyProjects";
-import AdminOutlet from "./components/routing/AdminOutlet";
 import TechListPage from "./components/admin/techs/TechListPage";
 import ProjectPageLayout from "./components/project_page/layouts/ProjectPageLayout";
 import ProjectLandingPage from "./components/project_page/pages/ProjectLandingPage";
@@ -16,7 +18,8 @@ import ProjectSettingsTeamPage from "./components/project_page/pages/ProjectSett
 import ProjectSettingsHooksPage from "./components/project_page/pages/ProjectSettingsHooksPage";
 import ProjectApplicationPage from "./components/project_page/pages/ProjectApplicationPage";
 import UserPageLayout from "./components/user_page/UserPageLayout";
-
+import NotificationListPage from "./components/notifications_page/NotificationListPage";
+import NotificationTestPage from "./components/admin/notifications/NotificationTestPage";
 import ApplicationListPage from "./components/user_applications/pages/ApplicationListPage";
 import ApplicationEditPage from "./components/user_applications/pages/ApplicationEditPage";
 import DocumentPage from "./components/info/DocumentPage";
@@ -31,8 +34,7 @@ import GraphPage from "./components/explore/GraphPage";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import NotificationListPage from "./components/notifications_page/NotificationListPage";
-import NotificationTestPage from "./components/admin/notifications/NotificationTestPage";
+
 /**
  * App defines the global layout with Navbar and all the application routes.
  */
@@ -81,7 +83,7 @@ function App() {
           <Route path="" element={<ApplicationListPage />} />
           <Route path=":applicationId" element={<ApplicationEditPage />} />
         </Route>
-        <Route path="notifications">
+        <Route path="notifications" element={<PrivateOutlet />}>
           <Route path="" element={<NotificationListPage />} />
         </Route>
         <Route path="admin" element={<AdminOutlet />}>
