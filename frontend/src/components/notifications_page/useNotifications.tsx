@@ -12,7 +12,6 @@ export function NotificationProvider(props: any) {
   const { user } = useSession();
   const [notifications, setNotifications] = useState<INotification[]>([]);
 
-  console.log("notif", user);
   useEffect(() => {
     if (!user) return;
 
