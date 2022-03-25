@@ -36,7 +36,6 @@ class NotificationConsumer extends EventEmitter {
     });
     await this.consumer.run({
       eachMessage: async (payload) => {
-        // logger.info("consumed message " + JSON.stringify(payload));
         await this.eachMessageHandler(payload);
       },
     });
