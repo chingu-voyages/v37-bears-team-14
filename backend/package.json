@@ -1,4 +1,6 @@
 {
+  "name": "backend",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "start": "ts-node --transpile-only ./src/index.ts",
