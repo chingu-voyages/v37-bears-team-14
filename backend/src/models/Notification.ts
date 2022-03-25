@@ -10,7 +10,7 @@ export interface INotificationData {
 }
 
 export interface INotification {
-  to: IUser;
+  to: IUser | string;
   isRead: boolean;
   event: string;
   data: INotificationData;

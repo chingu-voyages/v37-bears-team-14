@@ -4,7 +4,7 @@ import { useNotifications } from "./useNotifications";
 import moment from "moment";
 
 const NotificationListPage = () => {
-  const notifications = useNotifications();
+  const { connected, notifications } = useNotifications();
 
   const mapNotification = (notification: INotification) => {
     switch (notification.event) {
@@ -42,6 +42,19 @@ const NotificationListPage = () => {
 
   return (
     <div className="mx-3 my-4 md:mx-8">
+      <div className="text-sm text-gray-500">
+        {connected ? (
+          <>
+            <div className="relative top-[0.05rem] inline-block rounded-full w-3 h-3 bg-emerald-600"></div>{" "}
+            <span className="">Connected</span>
+          </>
+        ) : (
+          <>
+            <div className="relative top-[0.05rem] inline-block rounded-full w-3 h-3 bg-amber-600"></div>{" "}
+            <span className="">Connecting...</span>
+          </>
+        )}
+      </div>
       {notifications.map(mapNotification)}
     </div>
   );
