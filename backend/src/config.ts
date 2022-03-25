@@ -10,13 +10,32 @@ export interface OptionalAppConfig {
   logtailToken?: string;
   nodeEnv?: string;
   jobTokens?: string[];
+  kafkaEnabled: boolean;
+  kafkaBrokers?: string[];
+  kafkaUsername?: string;
+  kafkaPassword?: string;
 }
 
 export function getOptionalConfig(env: NodeJS.ProcessEnv): OptionalAppConfig {
-  return {
+  const opts = {
     logtailToken: env["LOGTAIL_TOKEN"],
     nodeEnv: env["NODE_ENV"],
     jobTokens: env["JOB_TOKENS"] ? env["JOB_TOKENS"].split(";") : undefined,
+
+    kafkaBrokers: env["KAFKA_BROKERS"]
+      ? env["KAFKA_BROKERS"].split(",")
+      : undefined,
+    kafkaUsername: env["KAFKA_USERNAME"],
+    kafkaPassword: env["KAFKA_PASSWORD"],
+  };
+
+  return {
+    ...opts,
+    kafkaEnabled: !!(
+      opts.kafkaBrokers &&
+      opts.kafkaUsername &&
+      opts.kafkaPassword
+    ),
   };
 }
 

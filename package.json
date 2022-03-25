@@ -1,4 +1,5 @@
 {
+  "name": "StackCafe",
   "private": true,
   "scripts": {
     "start": "yarn --cwd backend start",
