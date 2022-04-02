@@ -1,0 +1,4 @@
+```
+(loadtable "spam/what")
+
+```

@@ -8,7 +8,8 @@
     "clean": "rm -rf ./backend/build",
     "test": "yarn --cwd backend test && TZ=UTC yarn --cwd frontend test --watchAll=false",
     "dev": "concurrently --kill-others-on-fail \"yarn --cwd backend dev\" \"yarn --cwd frontend start\"",
-    "fmt": "prettier --write ./backend ./frontend",
+    "dev:w": "concurrently --kill-others-on-fail \"yarn workspace backend dev\" \"yarn workspace frontend start\"",
+    "fmt": "prettier --write ./backend ./frontend ./konalang",
     "postinstall": "yarn --cwd backend install && yarn --cwd frontend install"
   },
   "devDependencies": {
@@ -17,5 +18,9 @@
   },
   "engines": {
     "node": "16.x"
-  }
+  },
+  "workspaces": [
+    "backend",
+    "konalang"
+  ]
 }

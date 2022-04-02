@@ -14,9 +14,11 @@
     "@types/express-session": "^1.17.4",
     "body-parser": "^1.19.1",
     "connect-mongo": "^4.6.0",
+    "csv-parse": "^5.0.4",
     "express": "^4.17.2",
     "express-session": "^1.17.2",
     "kafkajs": "^1.16.0",
+    "konalang": "0.1.0",
     "lodash": "^4.17.21",
     "mongoose": "^6.2.1",
     "mongoose-fuzzy-searching-v3": "^2.1.0",
@@ -28,10 +30,12 @@
     "winston-transport-logtail": "^1.0.2"
   },
   "devDependencies": {
+    "@types/glob": "^7.2.0",
     "@types/jest": "^27.4.0",
     "@types/lodash": "^4.14.178",
     "@types/passport": "^1.0.7",
     "@types/passport-github2": "^1.2.5",
+    "glob": "^7.2.0",
     "jest": "^27.5.1",
     "nodemon": "^2.0.15",
     "ts-jest": "^27.1.3"

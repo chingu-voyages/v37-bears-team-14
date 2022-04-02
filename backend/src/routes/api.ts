@@ -21,6 +21,7 @@ import eventRouter from "./eventRouter";
 import applicationRouter from "./applicationRouter";
 import hookRouter from "./hookRouter";
 import notificationRouter from "./notificationRouter";
+import testRouter from "./testRouter";
 import MemberAlreadyExistsError from "../controllers/errors/MemberAlreadyExistsError";
 import PendingApplicationExistsError from "../controllers/errors/PendingApplicationExistsError";
 
@@ -31,6 +32,8 @@ const userController = new UserController(User);
 /* API routes */
 
 const api = Router();
+
+api.use(testRouter);
 
 // COMPUTATION
 
