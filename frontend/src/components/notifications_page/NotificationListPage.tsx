@@ -24,7 +24,32 @@ const NotificationListPage = () => {
               </span>
             )}
             <div className="text-xs text-gray-500">
-              {moment(notification.createdAt).fromNow()}{" "}
+              {moment(notification.createdAt).fromNow()}
+            </div>
+          </div>
+        );
+      case "application_created":
+        const { project, application, user } = notification.data;
+        return (
+          <div key={notification.id} className="my-3">
+            <div>
+              <Link
+                className="text-emerald-600 hover:underline"
+                to={"/user/" + user?.username}
+              >
+                {user?.username}
+              </Link>{" "}
+              wants to apply to{" "}
+              <Link
+                className="text-emerald-600 hover:underline"
+                to={"/projects/" + project?.id}
+              >
+                {project?.name}
+              </Link>{" "}
+              as a <span>{application?.requestedRole}</span>.
+            </div>
+            <div className="text-xs text-gray-500">
+              {moment(notification.createdAt).fromNow()}
             </div>
           </div>
         );
@@ -40,7 +65,6 @@ const NotificationListPage = () => {
     }
   };
 
-  console.log("connected", connected);
   return (
     <div className="mx-3 my-4 md:mx-8">
       <div className="text-sm text-gray-500">
