@@ -120,6 +120,27 @@ export const createProjection = (): PipelineStage.Project => {
  * Creates a projection pipeline for the final Project search result item.
  * The projections replace the "_id" key to "id" to match the API schema.
  */
+export const createProjectionById = (): PipelineStage.Project => {
+  return {
+    $project: {
+      _id: 0,
+      id: "$_id",
+      createdAt: 1,
+      updatedAt: 1,
+      name: 1,
+      description: 1,
+      techs: 1,
+      members: 1,
+      starrers: 1,
+      settingOpenRoles: 1,
+    },
+  };
+};
+
+/**
+ * Creates a projection pipeline for the final Project search result item.
+ * The projections replace the "_id" key to "id" to match the API schema.
+ */
 export const createAddedFields = (
   matchType: Partial<MatchType>
 ): PipelineStage.AddFields => {

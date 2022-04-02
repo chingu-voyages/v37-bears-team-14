@@ -40,6 +40,7 @@ const NotificationListPage = () => {
     }
   };
 
+  console.log("connected", connected);
   return (
     <div className="mx-3 my-4 md:mx-8">
       <div className="text-sm text-gray-500">

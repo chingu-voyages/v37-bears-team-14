@@ -6,6 +6,7 @@ export interface IMember {
   project: IProject | ObjectId;
   user: IUser | ObjectId;
   roleName: string;
+  notificationPreference: string;
 }
 
 const MemberSchema = new Schema<IMember>(
@@ -25,6 +26,11 @@ const MemberSchema = new Schema<IMember>(
     roleName: {
       type: Schema.Types.String,
       indexed: true,
+    },
+    notificationPreference: {
+      type: Schema.Types.String,
+      enum: ["all", "none"],
+      default: "all",
     },
   },
   {

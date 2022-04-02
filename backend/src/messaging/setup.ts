@@ -29,7 +29,10 @@ if (config.kafkaEnabled) {
     ssl: true,
   });
 
-  const consumer = kafkaSingleton.consumer({ groupId: "web-notifications" });
+  // flyAllocId is set by hosting platform in production environments.
+  const machineId = config.flyAllocId || ("" + Math.random()).slice(-6);
+  const groupId = "web-notifications-" + machineId;
+  const consumer = kafkaSingleton.consumer({ groupId });
   notificationConsumerSingleton = new NotificationConsumer(
     consumer,
     Notification,
