@@ -112,6 +112,7 @@ class ApplicationController {
       logger.error("Failed to notify project owners!", {
         application: application._id,
         project,
+        user,
       });
     }
   }
