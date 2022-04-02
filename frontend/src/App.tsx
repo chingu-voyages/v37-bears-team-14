@@ -3,7 +3,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import AdminOutlet from "./components/routing/AdminOutlet";
 import PrivateOutlet from "./components/routing/PrivateOutlet";
 
-import Navbar from "./Navbar";
+import Navbar from "./components/navbar/Navbar";
 import Footer from "./components/formatting/Footer";
 import Projects from "./components/projects/Projects";
 import MyProjects from "./components/projects/MyProjects";
