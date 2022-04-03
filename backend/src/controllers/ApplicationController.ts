@@ -1,5 +1,7 @@
 import { pick } from "lodash";
 import { Document, Model } from "mongoose";
+import { ObjectId } from "mongodb";
+import { getNotificationService } from "../messaging/setup";
 import { IApplication } from "../models/Application";
 import { IMember } from "../models/Member";
 import { IProject } from "../models/Project";
@@ -8,6 +10,7 @@ import MemberAlreadyExistsError from "./errors/MemberAlreadyExistsError";
 import NotFoundError from "./errors/NotFoundError";
 import PendingApplicationExistsError from "./errors/PendingApplicationExistsError";
 import UnauthorizedError from "./errors/UnauthorizedError";
+import logger from "../logger";
 
 export type ApplicationDoc = IApplication &
   Document<unknown, any, IApplication>;
@@ -75,10 +78,43 @@ class ApplicationController {
       throw new PendingApplicationExistsError();
     }
 
-    const application = await this.applicationModel.create(params);
+    const application: ApplicationDoc = await this.applicationModel.create(
+      params
+    );
     await application.populate("project");
     await application.populate("user");
+
+    this.notifyNewApplication(application, params.project, params.user);
     return application;
+  }
+
+  async notifyNewApplication(
+    application: ApplicationDoc,
+    project: string,
+    user: string
+  ) {
+    try {
+      const owners = await this.memberModel.find({
+        project,
+        roleName: "owner",
+      });
+      const ownersToNotify = owners.filter((m) =>
+        ["all"].includes(m.notificationPreference)
+      );
+
+      getNotificationService().notifyApplicationCreated(
+        ownersToNotify.map((o) => o.user as any),
+        application._id as any,
+        new ObjectId(project) as any,
+        new ObjectId(user) as any
+      );
+    } catch (err) {
+      logger.error("Failed to notify project owners!", {
+        application: application._id,
+        project,
+        user,
+      });
+    }
   }
 
   async updateApplication(

@@ -24,7 +24,32 @@ const NotificationListPage = () => {
               </span>
             )}
             <div className="text-xs text-gray-500">
-              {moment(notification.createdAt).fromNow()}{" "}
+              {moment(notification.createdAt).fromNow()}
+            </div>
+          </div>
+        );
+      case "application_created":
+        const { project, application, user } = notification.data;
+        return (
+          <div key={notification.id} className="my-3">
+            <div>
+              <Link
+                className="text-emerald-600 hover:underline"
+                to={"/user/" + user?.username}
+              >
+                {user?.username}
+              </Link>{" "}
+              wants to apply to{" "}
+              <Link
+                className="text-emerald-600 hover:underline"
+                to={"/projects/" + project?.id}
+              >
+                {project?.name}
+              </Link>{" "}
+              as a <span>{application?.requestedRole}</span>.
+            </div>
+            <div className="text-xs text-gray-500">
+              {moment(notification.createdAt).fromNow()}
             </div>
           </div>
         );
@@ -39,6 +64,27 @@ const NotificationListPage = () => {
         );
     }
   };
+
+  if (notifications.length < 1) {
+    return (
+      <div className="mx-3 my-4 md:mx-8">
+        <div className="text-sm text-gray-500">
+          {connected ? (
+            <>
+              <div className="relative top-[0.05rem] inline-block rounded-full w-3 h-3 bg-emerald-600"></div>{" "}
+              <span className="">Connected</span>
+            </>
+          ) : (
+            <>
+              <div className="relative top-[0.05rem] inline-block rounded-full w-3 h-3 bg-amber-600"></div>{" "}
+              <span className="">Connecting...</span>
+            </>
+          )}
+        </div>
+        <div className="my-3 text-gray-500">No notifications.</div>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-3 my-4 md:mx-8">

@@ -21,6 +21,7 @@ import {
   createAddedFields,
   createJoins,
   createProjection,
+  createProjectionById,
   createQuery,
   mergeResults,
 } from "./projects/searchHelpers";
@@ -98,7 +99,7 @@ class ProjectController {
     const project = await this.projectModel.aggregate([
       { $match: { _id: new mongoose.Types.ObjectId(id) } },
       ...createJoins(),
-      createProjection(),
+      createProjectionById(),
       { $limit: 1 },
     ]);
     if (project.length === 0) {

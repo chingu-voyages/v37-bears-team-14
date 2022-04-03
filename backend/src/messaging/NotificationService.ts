@@ -8,6 +8,7 @@ export type NotificationDoc = INotification &
 
 enum NotificationEventType {
   TEST = "test",
+  APPLICATION_CREATED = "application_created",
 }
 
 export interface NotificationCreateParams {
@@ -74,6 +75,25 @@ class NotificationService {
       },
     ]);
     return notifications[0];
+  }
+
+  async notifyApplicationCreated(
+    to: string[],
+    application: ObjectId,
+    project: ObjectId,
+    user: ObjectId
+  ): Promise<NotificationDoc[]> {
+    return await this.notify(
+      to.map((to) => ({
+        to,
+        event: NotificationEventType.APPLICATION_CREATED,
+        data: {
+          application,
+          project,
+          user,
+        },
+      }))
+    );
   }
 }
 

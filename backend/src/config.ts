@@ -14,6 +14,7 @@ export interface OptionalAppConfig {
   kafkaBrokers?: string[];
   kafkaUsername?: string;
   kafkaPassword?: string;
+  flyAllocId?: string;
 }
 
 export function getOptionalConfig(env: NodeJS.ProcessEnv): OptionalAppConfig {
@@ -27,6 +28,7 @@ export function getOptionalConfig(env: NodeJS.ProcessEnv): OptionalAppConfig {
       : undefined,
     kafkaUsername: env["KAFKA_USERNAME"],
     kafkaPassword: env["KAFKA_PASSWORD"],
+    flyAllocId: env["FLY_ALLOC_ID"],
   };
 
   return {
