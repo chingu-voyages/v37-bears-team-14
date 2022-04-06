@@ -12,6 +12,7 @@ import { IMember } from "../models/Member";
 import { IProject } from "../models/Project";
 import { IUser } from "../models/User";
 import { ITech } from "../models/Tech";
+import { IComment } from "../models/Comment";
 import NotFoundError from "./errors/NotFoundError";
 import UnexpectedError from "./errors/UnexpectedError";
 import UnauthorizedError from "./errors/UnauthorizedError";
@@ -40,6 +41,7 @@ export interface MemberUpdateParams {
 }
 
 export type ProjectDoc = IProject & Document<unknown, any, IProject>;
+export type CommentDoc = IComment & Document<unknown, any, IProject>;
 export type MemberDoc = IMember & Document<unknown, any, IProject>;
 
 export type MatchType = {
@@ -84,9 +86,9 @@ interface SaveSearchParams {
 class ProjectController {
   constructor(
     private projectModel: Model<IProject>,
-    // private projectMatchModel: Model<IProjectMatch>,
     private userModel: Model<IUser>,
     private memberModel: Model<IMember>,
+    private commentModel: Model<IComment>,
     private techModel: Model<ITech>,
     private searchModel: Model<ISearch>,
     private createSession: () => Promise<ClientSession>
@@ -242,6 +244,17 @@ class ProjectController {
     ]);
 
     return projects;
+  }
+
+  public async addComment(comment: Comment) {
+    await this.commentModel.create(comment);
+  }
+
+  public async getComments(projectId: string) {
+    const comments = await this.commentModel
+      .find({ project: projectId })
+      .populate("user");
+    return comments;
   }
 
   public async findUserProjects(userId: string): Promise<ProjectDoc[]> {
