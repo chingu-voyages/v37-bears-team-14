@@ -134,6 +134,7 @@ projects.post("/v1/projects/:id/comment", async (req: Request, res, next) => {
 //get project's comments
 projects.get("/v1/projects/:id/comments", async (req: Request, res, next) => {
   const comments = await projectController.getComments(req.params["id"]);
+
   res.json(comments);
 });
 

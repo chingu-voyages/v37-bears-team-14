@@ -253,9 +253,85 @@ class ProjectController {
   public async getComments(projectId: string) {
     const comments = await this.commentModel
       .find({ project: projectId })
-      .populate("user");
+      .populate("user")
+      .sort({ postedDate: 1 })
+      .lean()
+      .exec()
+      .then((comments) => {
+        let rec = (comment: any, threads: any) => {
+          for (var thread in threads) {
+            var value = threads[thread];
+
+            if (thread.toString() === comment.parentId.toString()) {
+              value.children[comment._id] = comment;
+              return;
+            }
+
+            if (value.children) {
+              rec(comment, value.children);
+            }
+          }
+        };
+        let threads = {} as any,
+          comment;
+        for (let i = 0; i < comments.length; i++) {
+          comment = comments[i];
+          comment["children"] = {};
+          let parentId = comment.parentId;
+          if (!parentId) {
+            const idString = comment._id.toString();
+            threads[idString] = comment;
+            continue;
+          }
+          rec(comment, threads);
+        }
+
+        return {
+          count: comments.length,
+          comments: threads,
+        };
+      });
+
     return comments;
   }
+  // const comments = await this.commentModel
+  //   .find({ project: projectId })
+  //   .populate("user");
+  // let rec = (comment: any, threads: any) => {
+  //   for (var thread in threads) {
+  //     var value = threads[thread];
+
+  //     if (thread.toString() === comment.parentId.toString()) {
+  //       value.children[comment._id] = comment;
+  //       console.log(value.children);
+  //       return;
+  //     }
+
+  //     if (value.children) {
+  //       rec(comment, value.children);
+  //     }
+  //   }
+  // };
+  // let threads = {} as any,
+  //   comment;
+  // for (let i = 0; i < comments.length; i++) {
+  //   comment = comments[i];
+
+  //   comment.children = {} as any;
+
+  //   let parentId = comment.parentId;
+  //   if (!parentId) {
+  //     threads[comment._id.toString()] = comment;
+
+  //     continue;
+  //   }
+  //   rec(comment, threads);
+  // }
+
+  // return {
+  //   count: comments.length,
+  //   comments: threads,
+  // };
 
   public async findUserProjects(userId: string): Promise<ProjectDoc[]> {
     let userMembers = await this.memberModel.aggregate([

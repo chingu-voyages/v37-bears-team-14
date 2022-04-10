@@ -6,6 +6,7 @@ export interface IComment {
   project: IProject | ObjectId;
   user: IUser | ObjectId;
   depth: number;
+  children?: any;
   commentText: string;
   parentId: ObjectId | null;
   postedDate: Date;

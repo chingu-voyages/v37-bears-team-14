@@ -26,6 +26,7 @@ export interface Comment {
   project: string;
   user: User;
   depth: number;
+  children: any[];
   commentText: string;
   parentId: string | null;
   postedDate: Date;

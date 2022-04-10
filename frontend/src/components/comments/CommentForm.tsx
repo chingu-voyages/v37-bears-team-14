@@ -10,10 +10,13 @@ interface Props {
 const CommentForm: React.FC<Props> = ({ comment, project }) => {
   const [replyField, setReplyField] = useState(false);
   const { isLoggedIn, user } = useSession();
-  console.log(comment);
+  let marginleft = (comment.depth - 1) * 5 + "%";
   return (
     <>
-      <div className="p-2 rounded-lg border-2 border-slate-500 mt-2 mb-2 flex">
+      <div
+        className="p-2 rounded-lg border-2 border-slate-500 mt-2 mb-2 flex"
+        style={{ marginLeft: marginleft }}
+      >
         <div>
           <img
             src={comment.user.avatarUrl}

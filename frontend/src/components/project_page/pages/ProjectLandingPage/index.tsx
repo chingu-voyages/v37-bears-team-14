@@ -9,17 +9,47 @@ import ApplyButtonContainer from "../../components/ApplyFlow/ApplyButtonContaine
 import StarButton from "./components/StarButton";
 
 const ProjectLandingPage = () => {
-  const [comments, setComments] = useState<Comment[]>([]);
+  const [comments, setComments] = useState<any>([]);
+  const [commentCount, setCommentCount] = useState(0);
   const { project, setProject } = useOutletContext<ProjectPageContext>();
 
   useEffect(() => {
     fetch(`/api/v1/projects/${project.id}/comments`).then(async (response) => {
       if (response.status === 200) {
-        const data = await response.json();
-        setComments(data);
+        const data: any = await response.json();
+        const commentsArray: Comment[] = [];
+        let comment: Comment;
+        //@ts-ignore
+        for (comment of Object.values(data.comments)) {
+          commentsArray.push(comment);
+        }
+        setComments(commentsArray);
+        setCommentCount(data.count);
       }
     });
   }, []);
+
+  const displayComments = (allComments: any) => {
+    let comments: any = [];
+
+    //@ts-ignore
+    for (let comment of Object.values(allComments)) {
+      comments.push(
+        //@ts-ignore
+        <CommentForm comment={comment} key={comment.id} project={project} />
+      );
+      //@ts-ignore
+      if (comment.children && Object.keys(comment.children).length > 0) {
+        //@ts-ignore
+        let replies = displayComments(comment.children);
+        comments = comments.concat(replies);
+      }
+    }
+    console.log(comments);
+    return comments;
+  };
+
+  let commentsToDisplay = displayComments(comments);
 
   return (
     <>
@@ -36,9 +66,10 @@ const ProjectLandingPage = () => {
       </div>
       <NewComment project={project} />
       <div className="mb-2">
-        {comments.map((c) => (
+        {commentsToDisplay}
+        {/* {comments.comments.map((c: any) => (
           <CommentForm comment={c} project={project} />
-        ))}
+        ))} */}
       </div>
     </>
   );
