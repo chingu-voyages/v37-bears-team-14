@@ -51,6 +51,18 @@ code {
     @apply bg-red-500 text-white active:bg-red-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150;
   }
 
+  .orange-badge-btn {
+    @apply inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-amber-100 bg-amber-500 rounded;
+  }
+
+  .red-badge-btn {
+    @apply inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-500 rounded;
+  }
+
+  .trans-btn {
+    @apply text-slate-600 font-bold rounded-lg box-border border-2 text-sm px-5 py-2.5 text-center mr-2 mb-2 ease-linear transition-all duration-150;
+  }
+
   .no-first-margin > :first-child {
     margin-left: 0 !important;
   }

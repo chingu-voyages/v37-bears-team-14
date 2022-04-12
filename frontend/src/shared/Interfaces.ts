@@ -23,6 +23,7 @@ export interface ProjectResult {
 
 export interface Comment {
   id: string;
+  _id: string | null;
   project: string;
   user: User;
   depth: number;

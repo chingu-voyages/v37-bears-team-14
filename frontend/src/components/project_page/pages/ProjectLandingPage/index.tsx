@@ -13,7 +13,7 @@ const ProjectLandingPage = () => {
   const [commentCount, setCommentCount] = useState(0);
   const { project, setProject } = useOutletContext<ProjectPageContext>();
 
-  useEffect(() => {
+  const getData = () => {
     fetch(`/api/v1/projects/${project.id}/comments`).then(async (response) => {
       if (response.status === 200) {
         const data: any = await response.json();
@@ -23,11 +23,28 @@ const ProjectLandingPage = () => {
         for (comment of Object.values(data.comments)) {
           commentsArray.push(comment);
         }
-        setComments(commentsArray);
+        setComments(
+          commentsArray.sort(function (a, b) {
+            //@ts-ignore
+            return new Date(b.updatedAt) - new Date(a.updatedAt);
+          })
+        );
         setCommentCount(data.count);
       }
     });
+  };
+  useEffect(() => {
+    getData();
   }, []);
+
+  const refreshComments = (newComment: any) => {
+    if (newComment.depth === 1) {
+      setComments([newComment, ...comments]);
+    } else {
+      console.log(comments);
+      console.log(newComment);
+    }
+  };
 
   const displayComments = (allComments: any) => {
     let comments: any = [];
@@ -36,7 +53,14 @@ const ProjectLandingPage = () => {
     for (let comment of Object.values(allComments)) {
       comments.push(
         //@ts-ignore
-        <CommentForm comment={comment} key={comment.id} project={project} />
+        <CommentForm
+          //@ts-ignore
+          comment={comment}
+          //@ts-ignore
+          key={comment._id}
+          project={project}
+          refreshComments={getData}
+        />
       );
       //@ts-ignore
       if (comment.children && Object.keys(comment.children).length > 0) {
@@ -45,7 +69,7 @@ const ProjectLandingPage = () => {
         comments = comments.concat(replies);
       }
     }
-    console.log(comments);
+
     return comments;
   };
 
@@ -64,13 +88,8 @@ const ProjectLandingPage = () => {
           </div>
         </aside>
       </div>
-      <NewComment project={project} />
-      <div className="mb-2">
-        {commentsToDisplay}
-        {/* {comments.comments.map((c: any) => (
-          <CommentForm comment={c} project={project} />
-        ))} */}
-      </div>
+      <NewComment project={project} refreshComments={getData} />
+      <div className="mb-2">{commentsToDisplay}</div>
     </>
   );
 };
