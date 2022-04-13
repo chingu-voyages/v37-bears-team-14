@@ -1,32 +1,34 @@
 import { FC, MouseEventHandler } from "react";
-import PencilAltIcon from "../icons/PencilAltIcon";
+import CommentIcon from "../icons/CommentIcon";
 
-interface EditLinkProps {
+interface CommentLinkProps {
   onClick: MouseEventHandler<HTMLDivElement>;
   disabled?: boolean;
+  text: string;
   classes?: string;
 }
 
-const EditLink: FC<EditLinkProps> = ({
+const CommentLink: FC<CommentLinkProps> = ({
   onClick,
   disabled = false,
+  text,
   classes,
 }) => {
   return (
     <div
       onClick={onClick}
       className={
-        " mx-2 inline cursor-pointer text-slate-600 hover:text-slate-900 active:text-slate-600 " +
+        " mr-1 inline cursor-pointer text-slate-600 hover:text-slate-900 active:text-slate-600 " +
         (!disabled
           ? ""
           : "opacity-40 hover:text-slate-600 cursor-not-allowed") +
         classes
       }
     >
-      <PencilAltIcon className="p-1 h-6 inline" />{" "}
-      <span className="text-sm font-medium">Edit</span>
+      <CommentIcon className="p-1 pl-0 h-6 inline" />{" "}
+      <span className="text-sm font-medium">{text}</span>
     </div>
   );
 };
 
-export default EditLink;
+export default CommentLink;

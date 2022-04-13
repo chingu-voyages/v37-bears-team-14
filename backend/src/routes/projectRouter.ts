@@ -130,7 +130,14 @@ projects.post("/v1/projects/:id/comment", async (req: Request, res, next) => {
   await projectController.addComment(req.body);
   return res.json(req.body);
 });
-
+//edit comment
+projects.post(
+  "/v1/projects/:id/comment/edit",
+  async (req: Request, res, next) => {
+    await projectController.editComment(req.body);
+    return res.json(req.body);
+  }
+);
 //get project's comments
 projects.get("/v1/projects/:id/comments", async (req: Request, res, next) => {
   const comments = await projectController.getComments(req.params["id"]);

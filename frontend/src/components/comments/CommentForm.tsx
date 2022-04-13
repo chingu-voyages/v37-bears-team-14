@@ -3,8 +3,11 @@ import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import moment from "moment";
 import EditLink from "../controls/EditLink";
+import DeleteLink from "../controls/DeleteLink";
+import CommentLink from "../controls/CommentLink";
 import { Comment, Project } from "../../shared/Interfaces";
 import { useSession } from "../../hooks/session";
+
 interface Props {
   comment: Comment;
   project: Project;
@@ -17,8 +20,13 @@ const CommentForm: React.FC<Props> = ({
 }) => {
   const [replyField, setReplyField] = useState(false);
   const [editField, setEditField] = useState(false);
+  const [deleteMessage, setDeleteMessage] = useState(false);
   const { isLoggedIn, user } = useSession();
   let marginleft = (comment.depth - 1) * 5 + "%";
+
+  const deleteComment = (Comment: Comment) => {
+    console.log(comment);
+  };
   return (
     <>
       <div
@@ -44,6 +52,7 @@ const CommentForm: React.FC<Props> = ({
           {editField ? (
             <Formik
               initialValues={{
+                _id: comment._id,
                 commentText: comment.commentText,
                 project: project.id,
                 user: user!.id,
@@ -54,9 +63,12 @@ const CommentForm: React.FC<Props> = ({
                 commentText: Yup.string().max(1000, "Too Long!"),
               })}
               onSubmit={(values, { setSubmitting }) => {
+                //edit comment
+                //console.log(values);
+                //values._id = comment._id;
                 values.user = user!.id;
                 values.project = project!.id;
-                fetch(`/api/v1/projects/${project.id}/comment`, {
+                fetch(`/api/v1/projects/${project.id}/comment/edit`, {
                   method: "POST",
                   headers: {
                     "Content-Type": "application/json",
@@ -64,7 +76,7 @@ const CommentForm: React.FC<Props> = ({
                   body: JSON.stringify(values),
                 }).then(() => {
                   values.commentText = "";
-                  setReplyField(false);
+                  setEditField(false);
                   setSubmitting(false);
                   refreshComments();
                 });
@@ -91,7 +103,7 @@ const CommentForm: React.FC<Props> = ({
                     value={values.commentText}
                     rows="1"
                     placeholder="Add a comment"
-                    className="appearance-none border-b-2 border-medGray bg-XLightGray w-full py-2 px-3 text-gray-700 leading-tight resize-none focus:outline-none focus:shadow-outline"
+                    className="appearance-none border-b-2 border-medGray bg-XLightGray w-full pt-2 pb-1 px-3 text-gray-700 leading-tight resize-none focus:outline-none focus:shadow-outline"
                   />
                   {errors.commentText &&
                     touched.commentText &&
@@ -115,7 +127,38 @@ const CommentForm: React.FC<Props> = ({
               )}
             </Formik>
           ) : (
-            <div className="mb-2">{comment.commentText}</div>
+            <>
+              <div className="mb-2">{comment.commentText}</div>
+              {deleteMessage && (
+                <>
+                  <div className="mb-2">
+                    <span className="p-1 shrink bg-lightGray text-medGray font-bold rounded">
+                      Are you sure you want to delete this comment?
+                    </span>
+                    <br />
+                    <span className="text-xs">
+                      *Deleting a comment will delete all replys to the deleted
+                      comment
+                    </span>
+                  </div>
+                  <div className="flex">
+                    <button
+                      type="submit"
+                      className="orange-badge-btn mr-1 disabled:opacity-50"
+                      onClick={() => deleteComment(comment)}
+                    >
+                      Delete
+                    </button>
+                    <button
+                      onClick={() => setDeleteMessage(false)}
+                      className="red-badge-btn"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </>
+              )}
+            </>
           )}
 
           {replyField && isLoggedIn ? (
@@ -168,7 +211,7 @@ const CommentForm: React.FC<Props> = ({
                     value={values.commentText}
                     rows="1"
                     placeholder="Add a comment"
-                    className="appearance-none border-b-2 border-medGray bg-XLightGray w-full py-2 px-3 text-gray-700 leading-tight resize-none focus:outline-none focus:shadow-outline"
+                    className="appearance-none border-b-2 border-medGray bg-XLightGray w-full pt-2 pb-1 px-3 text-gray-700 leading-tight resize-none focus:outline-none focus:shadow-outline"
                   />
                   {errors.commentText &&
                     touched.commentText &&
@@ -192,15 +235,12 @@ const CommentForm: React.FC<Props> = ({
               )}
             </Formik>
           ) : (
-            !editField && (
+            !editField &&
+            !deleteMessage && (
               <div className="flex">
-                <button
-                  onClick={() => setReplyField(true)}
-                  className="orange-badge-btn disabled:opacity-50"
-                >
-                  Reply
-                </button>
+                <CommentLink onClick={() => setReplyField(true)} text="Reply" />
                 <EditLink onClick={() => setEditField(true)} />
+                <DeleteLink onClick={() => setDeleteMessage(true)} />
               </div>
             )
           )}

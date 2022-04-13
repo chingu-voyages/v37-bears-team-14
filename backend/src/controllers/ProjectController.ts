@@ -246,8 +246,19 @@ class ProjectController {
     return projects;
   }
 
-  public async addComment(comment: Comment) {
+  public async addComment(comment: IComment) {
     await this.commentModel.create(comment);
+  }
+
+  public async editComment(comment: IComment) {
+    await this.commentModel.findOneAndUpdate(
+      { _id: comment._id },
+      {
+        $set: {
+          commentText: comment.commentText,
+        },
+      }
+    );
   }
 
   public async getComments(projectId: string) {
@@ -279,7 +290,7 @@ class ProjectController {
           comment["children"] = {};
           let parentId = comment.parentId;
           if (!parentId) {
-            const idString = comment._id.toString();
+            const idString = comment._id!.toString();
             threads[idString] = comment;
             continue;
           }
