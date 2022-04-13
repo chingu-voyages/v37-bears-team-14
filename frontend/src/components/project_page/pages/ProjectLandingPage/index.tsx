@@ -89,7 +89,7 @@ const ProjectLandingPage = () => {
         </aside>
       </div>
       <NewComment project={project} refreshComments={getData} />
-      <div className="mb-2">{commentsToDisplay}</div>
+      <div className="pb-1">{commentsToDisplay}</div>
     </>
   );
 };

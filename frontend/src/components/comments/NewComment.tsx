@@ -60,7 +60,7 @@ const NewComment: React.FC<Props> = ({ project, refreshComments }) => {
                 value={values.commentText}
                 rows="1"
                 placeholder="Add a comment"
-                className="appearance-none border-b-2 border-darkGray bg-XLightGray w-full py-2 px-3 text-gray-700 leading-tight resize-none focus:outline-none focus:shadow-outline"
+                className="appearance-none border-b-2 border-medGray bg-XLightGray w-full py-2 px-3 text-gray-700 leading-tight resize-none focus:outline-none focus:shadow-outline focus:border-blue-500"
                 onFocus={() => setFocused(true)}
               />
               <div className="text-xs leading-tight">
@@ -71,14 +71,14 @@ const NewComment: React.FC<Props> = ({ project, refreshComments }) => {
               {focused && (
                 <div className="flex justify-end">
                   <button
-                    className="trans-btn"
+                    className="trans-btn mb-0"
                     onClick={() => setFocused(false)}
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="main-btn disabled:opacity-50 mr-0"
+                    className="main-btn disabled:opacity-50 mr-0 mb-0"
                     disabled={isSubmitting || !dirty}
                   >
                     Submit

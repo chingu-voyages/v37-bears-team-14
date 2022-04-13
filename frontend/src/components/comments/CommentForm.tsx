@@ -16,12 +16,13 @@ const CommentForm: React.FC<Props> = ({
   refreshComments,
 }) => {
   const [replyField, setReplyField] = useState(false);
+  const [editField, setEditField] = useState(false);
   const { isLoggedIn, user } = useSession();
   let marginleft = (comment.depth - 1) * 5 + "%";
   return (
     <>
       <div
-        className="p-2 rounded-lg border-2 border-slate-500 mt-2 mb-2 flex"
+        className="p-2 rounded-lg border-2 border-medGray mt-1 mb-2 flex"
         style={{ marginLeft: marginleft }}
       >
         <div>
@@ -40,7 +41,83 @@ const CommentForm: React.FC<Props> = ({
               {moment(comment.postedDate).fromNow()}
             </div>
           </div>
-          <div className="mb-2">{comment.commentText}</div>
+          {editField ? (
+            <Formik
+              initialValues={{
+                commentText: comment.commentText,
+                project: project.id,
+                user: user!.id,
+                parentId: comment._id,
+                depth: comment.depth + 1,
+              }}
+              validationSchema={Yup.object().shape({
+                commentText: Yup.string().max(1000, "Too Long!"),
+              })}
+              onSubmit={(values, { setSubmitting }) => {
+                values.user = user!.id;
+                values.project = project!.id;
+                fetch(`/api/v1/projects/${project.id}/comment`, {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(values),
+                }).then(() => {
+                  values.commentText = "";
+                  setReplyField(false);
+                  setSubmitting(false);
+                  refreshComments();
+                });
+              }}
+            >
+              {({
+                values,
+                errors,
+                touched,
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                isSubmitting,
+                dirty,
+
+                /* and other goodies */
+              }) => (
+                <Form onSubmit={handleSubmit}>
+                  <Field
+                    as="textarea"
+                    name="commentText"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.commentText}
+                    rows="1"
+                    placeholder="Add a comment"
+                    className="appearance-none border-b-2 border-medGray bg-XLightGray w-full py-2 px-3 text-gray-700 leading-tight resize-none focus:outline-none focus:shadow-outline"
+                  />
+                  {errors.commentText &&
+                    touched.commentText &&
+                    errors.commentText}
+                  <div className="flex">
+                    <button
+                      type="submit"
+                      className="orange-badge-btn mr-1 disabled:opacity-50"
+                      disabled={isSubmitting || !dirty}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => setEditField(false)}
+                      className="red-badge-btn"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </Form>
+              )}
+            </Formik>
+          ) : (
+            <div className="mb-2">{comment.commentText}</div>
+          )}
+
           {replyField && isLoggedIn ? (
             <Formik
               initialValues={{
@@ -91,7 +168,7 @@ const CommentForm: React.FC<Props> = ({
                     value={values.commentText}
                     rows="1"
                     placeholder="Add a comment"
-                    className="appearance-none border-b-2 border-darkGray bg-XLightGray w-full py-2 px-3 text-gray-700 leading-tight resize-none focus:outline-none focus:shadow-outline"
+                    className="appearance-none border-b-2 border-medGray bg-XLightGray w-full py-2 px-3 text-gray-700 leading-tight resize-none focus:outline-none focus:shadow-outline"
                   />
                   {errors.commentText &&
                     touched.commentText &&
@@ -115,15 +192,17 @@ const CommentForm: React.FC<Props> = ({
               )}
             </Formik>
           ) : (
-            <div className="flex">
-              <button
-                onClick={() => setReplyField(true)}
-                className="orange-badge-btn disabled:opacity-50"
-              >
-                reply
-              </button>
-              <EditLink onClick={() => setReplyField(false)} />
-            </div>
+            !editField && (
+              <div className="flex">
+                <button
+                  onClick={() => setReplyField(true)}
+                  className="orange-badge-btn disabled:opacity-50"
+                >
+                  Reply
+                </button>
+                <EditLink onClick={() => setEditField(true)} />
+              </div>
+            )
           )}
         </div>
       </div>
