@@ -18,6 +18,8 @@ import UnexpectedError from "./errors/UnexpectedError";
 import UnauthorizedError from "./errors/UnauthorizedError";
 import FieldExistsError from "./errors/FieldExistsError";
 import InvalidChangeLastOwner from "./errors/InvalidChangeLastOwner";
+const jp = require("jsonpath");
+//import { jsonpath } from "jsonpath";
 import {
   createAddedFields,
   createJoins,
@@ -259,6 +261,15 @@ class ProjectController {
         },
       }
     );
+  }
+
+  public async deleteComment(comment: IComment) {
+    console.log(comment._id);
+    const commentIds = jp.query(comment, "$.._id");
+
+    await this.commentModel.deleteMany({
+      _id: commentIds,
+    });
   }
 
   public async getComments(projectId: string) {

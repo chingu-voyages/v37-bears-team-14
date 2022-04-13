@@ -138,6 +138,15 @@ projects.post(
     return res.json(req.body);
   }
 );
+
+projects.post(
+  "/v1/projects/:id/comment/delete",
+  async (req: Request, res, next) => {
+    //console.log(req.body);
+    await projectController.deleteComment(req.body);
+    return res.json(req.body);
+  }
+);
 //get project's comments
 projects.get("/v1/projects/:id/comments", async (req: Request, res, next) => {
   const comments = await projectController.getComments(req.params["id"]);

@@ -24,8 +24,18 @@ const CommentForm: React.FC<Props> = ({
   const { isLoggedIn, user } = useSession();
   let marginleft = (comment.depth - 1) * 5 + "%";
 
-  const deleteComment = (Comment: Comment) => {
-    console.log(comment);
+  const deleteComment = (comment: Comment) => {
+    fetch(`/api/v1/projects/${project.id}/comment/delete`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(comment),
+    }).then(() => {
+      setDeleteMessage(false);
+
+      refreshComments();
+    });
   };
   return (
     <>
