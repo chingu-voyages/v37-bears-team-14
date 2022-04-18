@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, ReactElement } from "react";
 import { useOutletContext } from "react-router-dom";
 import { ProjectPageContext } from "../../layouts/ProjectPageLayout";
 import ProjectShowcase from "./components/ProjectShowcase";
@@ -8,6 +8,10 @@ import NewComment from "../../../comments/NewComment";
 import ApplyButtonContainer from "../../components/ApplyFlow/ApplyButtonContainer";
 import StarButton from "./components/StarButton";
 
+interface CommentData {
+  count: number;
+  comments: Comment[];
+}
 const ProjectLandingPage = () => {
   const [comments, setComments] = useState<any>([]);
   const [commentCount, setCommentCount] = useState(0);
@@ -16,17 +20,18 @@ const ProjectLandingPage = () => {
   const getData = () => {
     fetch(`/api/v1/projects/${project.id}/comments`).then(async (response) => {
       if (response.status === 200) {
-        const data: any = await response.json();
+        const data: CommentData = await response.json();
         const commentsArray: Comment[] = [];
         let comment: Comment;
-        //@ts-ignore
+
         for (comment of Object.values(data.comments)) {
           commentsArray.push(comment);
         }
         setComments(
           commentsArray.sort(function (a, b) {
-            //@ts-ignore
-            return new Date(b.updatedAt) - new Date(a.updatedAt);
+            return (
+              new Date(b.updatedAt).valueOf() - new Date(a.updatedAt).valueOf()
+            );
           })
         );
         setCommentCount(data.count);
@@ -37,34 +42,30 @@ const ProjectLandingPage = () => {
     getData();
   }, []);
 
-  const refreshComments = (newComment: any) => {
-    if (newComment.depth === 1) {
-      setComments([newComment, ...comments]);
-    } else {
-      console.log(comments);
-      console.log(newComment);
-    }
-  };
+  // const refreshComments = (newComment: any) => {
+  //   if (newComment.depth === 1) {
+  //     setComments([newComment, ...comments]);
+  //   } else {
+  //     console.log(comments);
+  //     console.log(newComment);
+  //   }
+  // };
 
-  const displayComments = (allComments: any) => {
-    let comments: any = [];
+  const displayComments = (allComments: Comment[]) => {
+    let comments: ReactElement[] = [];
+    //console.log(allComments);
 
-    //@ts-ignore
     for (let comment of Object.values(allComments)) {
       comments.push(
-        //@ts-ignore
         <CommentForm
-          //@ts-ignore
           comment={comment}
-          //@ts-ignore
           key={comment._id}
           project={project}
           refreshComments={getData}
         />
       );
-      //@ts-ignore
+
       if (comment.children && Object.keys(comment.children).length > 0) {
-        //@ts-ignore
         let replies = displayComments(comment.children);
         comments = comments.concat(replies);
       }

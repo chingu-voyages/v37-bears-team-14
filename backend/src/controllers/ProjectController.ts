@@ -264,11 +264,20 @@ class ProjectController {
   }
 
   public async deleteComment(comment: IComment) {
-    console.log(comment._id);
-    const commentIds = jp.query(comment, "$.._id");
+    let idsArray = [];
+    idsArray.push(comment._id);
+    let rec = (comment: IComment) => {
+      for (let child in comment.children) {
+        idsArray.push(comment.children[child]._id);
+        if (comment.children[child].children) {
+          rec(comment.children[child]);
+        }
+      }
+    };
+    rec(comment);
 
     await this.commentModel.deleteMany({
-      _id: commentIds,
+      _id: idsArray,
     });
   }
 

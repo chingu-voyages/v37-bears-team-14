@@ -142,7 +142,6 @@ projects.post(
 projects.post(
   "/v1/projects/:id/comment/delete",
   async (req: Request, res, next) => {
-    //console.log(req.body);
     await projectController.deleteComment(req.body);
     return res.json(req.body);
   }

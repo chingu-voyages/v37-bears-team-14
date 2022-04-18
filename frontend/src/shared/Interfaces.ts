@@ -31,6 +31,7 @@ export interface Comment {
   commentText: string;
   parentId: string | null;
   postedDate: Date;
+  updatedAt: string;
 }
 
 export interface Tech {
