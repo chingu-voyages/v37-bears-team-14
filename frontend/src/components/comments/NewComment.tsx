@@ -28,7 +28,6 @@ const NewComment: React.FC<Props> = ({ project, refreshComments }) => {
           onSubmit={(values, { setSubmitting }) => {
             values.user = user!.id;
             values.project = project!.id;
-            console.log(values);
             fetch(`/api/v1/projects/${project.id}/comment`, {
               method: "POST",
               headers: {

@@ -74,7 +74,7 @@ const CommentForm: React.FC<Props> = ({
               })}
               onSubmit={(values, { setSubmitting }) => {
                 //edit comment
-
+                comment.commentText = values.commentText;
                 values.user = user!.id;
                 values.project = project!.id;
                 fetch(`/api/v1/projects/${project.id}/comment/edit`, {

@@ -3,15 +3,11 @@ import { useOutletContext } from "react-router-dom";
 import { ProjectPageContext } from "../../layouts/ProjectPageLayout";
 import ProjectShowcase from "./components/ProjectShowcase";
 import CommentForm from "../../../comments/CommentForm";
-import { Comment } from "../../../../shared/Interfaces";
+import { Comment, CommentData } from "../../../../shared/Interfaces";
 import NewComment from "../../../comments/NewComment";
 import ApplyButtonContainer from "../../components/ApplyFlow/ApplyButtonContainer";
 import StarButton from "./components/StarButton";
 
-interface CommentData {
-  count: number;
-  comments: Comment[];
-}
 const ProjectLandingPage = () => {
   const [comments, setComments] = useState<any>([]);
   const [commentCount, setCommentCount] = useState(0);
@@ -42,18 +38,8 @@ const ProjectLandingPage = () => {
     getData();
   }, []);
 
-  // const refreshComments = (newComment: any) => {
-  //   if (newComment.depth === 1) {
-  //     setComments([newComment, ...comments]);
-  //   } else {
-  //     console.log(comments);
-  //     console.log(newComment);
-  //   }
-  // };
-
   const displayComments = (allComments: Comment[]) => {
     let comments: ReactElement[] = [];
-    //console.log(allComments);
 
     for (let comment of Object.values(allComments)) {
       comments.push(

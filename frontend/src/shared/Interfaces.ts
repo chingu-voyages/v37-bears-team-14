@@ -34,6 +34,11 @@ export interface Comment {
   updatedAt: string;
 }
 
+export interface CommentData {
+  count: number;
+  comments: Comment[];
+}
+
 export interface Tech {
   id: string;
   name: string;
