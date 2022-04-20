@@ -29,7 +29,10 @@ interface FormValues {
 }
 
 const UpdateUserSchema = Yup.object().shape({
-  username: Yup.string().min(2, "Too Short!").max(50, "Too Long!"),
+  username: Yup.string()
+    .min(2, "Too Short!")
+    .max(50, "Too Long!")
+    .matches(/^[a-zA-Z0-9]+$/, "Please use alphanumeric symbols"),
   displayName: Yup.string().min(2, "Too Short!").max(50, "Too Long!"),
 });
 
