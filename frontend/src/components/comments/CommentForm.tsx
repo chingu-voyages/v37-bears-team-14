@@ -7,6 +7,7 @@ import DeleteLink from "../controls/DeleteLink";
 import CommentLink from "../controls/CommentLink";
 import { Comment, Project } from "../../shared/Interfaces";
 import { useSession } from "../../hooks/session";
+import { Link } from "react-router-dom";
 
 interface Props {
   comment: Comment;
@@ -22,7 +23,7 @@ const CommentForm: React.FC<Props> = ({
   const [editField, setEditField] = useState(false);
   const [deleteMessage, setDeleteMessage] = useState(false);
   const { isLoggedIn, user } = useSession();
-
+  console.log(user);
   let marginleft = (comment.depth - 1) * 5 + "%";
 
   const deleteComment = (comment: Comment) => {
@@ -45,16 +46,21 @@ const CommentForm: React.FC<Props> = ({
         style={{ marginLeft: marginleft }}
       >
         <div>
-          <img
-            src={comment.user.avatarUrl}
-            className="rounded-full border-gray-100 shadow-sm w-12 h-12 inline cursor-pointer border-transparent border-4"
-            alt=""
-          />
+          <Link to={`/user/${comment.user?.username}`}>
+            <img
+              src={comment.user.avatarUrl}
+              className="rounded-full border-gray-100 shadow-sm w-12 h-12 inline cursor-pointer border-transparent border-4"
+              alt=""
+            />
+          </Link>
         </div>
+
         <div className="grow ml-2">
           <div className="flex items-baseline">
             <div className="font-bold float-left">
-              {comment.user.displayName}
+              <Link to={`/user/${comment.user?.username}`}>
+                {comment.user.displayName}
+              </Link>
             </div>
             <div className="ml-2 text-xs">
               {moment(comment.postedDate).fromNow()}
