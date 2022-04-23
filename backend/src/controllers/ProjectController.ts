@@ -18,8 +18,7 @@ import UnexpectedError from "./errors/UnexpectedError";
 import UnauthorizedError from "./errors/UnauthorizedError";
 import FieldExistsError from "./errors/FieldExistsError";
 import InvalidChangeLastOwner from "./errors/InvalidChangeLastOwner";
-const jp = require("jsonpath");
-//import { jsonpath } from "jsonpath";
+
 import {
   createAddedFields,
   createJoins,
@@ -289,6 +288,13 @@ class ProjectController {
       .lean()
       .exec()
       .then((comments) => {
+        comments.map((c) => {
+          c.id = c._id;
+          delete c._id;
+          const { _id, ...otherProps } = c.user;
+          const newObj = { id: _id, ...otherProps };
+          c.user = newObj;
+        });
         let rec = (comment: any, threads: any) => {
           for (var thread in threads) {
             var value = threads[thread];
@@ -310,7 +316,7 @@ class ProjectController {
           comment["children"] = {};
           let parentId = comment.parentId;
           if (!parentId) {
-            const idString = comment._id!.toString();
+            const idString = comment.id!.toString();
             threads[idString] = comment;
             continue;
           }

@@ -45,7 +45,7 @@ const ProjectLandingPage = () => {
       comments.push(
         <CommentForm
           comment={comment}
-          key={comment._id}
+          key={comment.id}
           project={project}
           refreshComments={getData}
         />

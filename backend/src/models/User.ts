@@ -2,6 +2,8 @@ import { Model, ObjectId, model, Schema } from "mongoose";
 import { ITech } from "./Tech";
 
 export interface IUser {
+  id?: string;
+  _id?: string;
   displayName: string | null;
   username: string | null;
   githubId: number | null;

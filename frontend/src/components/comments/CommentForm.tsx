@@ -22,6 +22,8 @@ const CommentForm: React.FC<Props> = ({
   const [editField, setEditField] = useState(false);
   const [deleteMessage, setDeleteMessage] = useState(false);
   const { isLoggedIn, user } = useSession();
+  console.log("user", user);
+  console.log("comment", comment);
   let marginleft = (comment.depth - 1) * 5 + "%";
 
   const deleteComment = (comment: Comment) => {
@@ -62,11 +64,11 @@ const CommentForm: React.FC<Props> = ({
           {editField ? (
             <Formik
               initialValues={{
-                _id: comment._id,
+                id: comment.id,
                 commentText: comment.commentText,
                 project: project.id,
                 user: user!.id,
-                parentId: comment._id,
+                parentId: comment.id,
                 depth: comment.depth + 1,
               }}
               validationSchema={Yup.object().shape({
@@ -176,7 +178,7 @@ const CommentForm: React.FC<Props> = ({
                 commentText: "",
                 project: project.id,
                 user: user!.id,
-                parentId: comment._id,
+                parentId: comment.id,
                 depth: comment.depth + 1,
               }}
               validationSchema={Yup.object().shape({
@@ -245,11 +247,16 @@ const CommentForm: React.FC<Props> = ({
             </Formik>
           ) : (
             !editField &&
-            !deleteMessage && (
+            !deleteMessage &&
+            isLoggedIn && (
               <div className="flex">
                 <CommentLink onClick={() => setReplyField(true)} text="Reply" />
-                <EditLink onClick={() => setEditField(true)} />
-                <DeleteLink onClick={() => setDeleteMessage(true)} />
+                {comment.user.id === user!.id && (
+                  <>
+                    <EditLink onClick={() => setEditField(true)} />
+                    <DeleteLink onClick={() => setDeleteMessage(true)} />
+                  </>
+                )}
               </div>
             )
           )}
