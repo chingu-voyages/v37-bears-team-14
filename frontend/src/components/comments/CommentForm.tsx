@@ -23,7 +23,7 @@ const CommentForm: React.FC<Props> = ({
   const [editField, setEditField] = useState(false);
   const [deleteMessage, setDeleteMessage] = useState(false);
   const { isLoggedIn, user } = useSession();
-  console.log(user);
+
   let marginleft = (comment.depth - 1) * 5 + "%";
 
   const deleteComment = (comment: Comment) => {
