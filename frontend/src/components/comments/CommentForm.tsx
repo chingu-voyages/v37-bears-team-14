@@ -42,7 +42,7 @@ const CommentForm: React.FC<Props> = ({
   return (
     <>
       <div
-        className="p-2 rounded-lg border-2 border-medGray mt-1 mb-2 flex"
+        className="p-2 rounded-lg border-2 border-medGray mt-1 mb-2 flex shadow"
         style={{ marginLeft: marginleft }}
       >
         <div>

@@ -10,7 +10,6 @@ import StarButton from "./components/StarButton";
 
 const ProjectLandingPage = () => {
   const [comments, setComments] = useState<any>([]);
-  const [commentCount, setCommentCount] = useState(0);
   const { project, setProject } = useOutletContext<ProjectPageContext>();
 
   const getData = () => {
@@ -30,12 +29,12 @@ const ProjectLandingPage = () => {
             );
           })
         );
-        setCommentCount(data.count);
       }
     });
   };
   useEffect(() => {
     getData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const displayComments = (allComments: Comment[]) => {
