@@ -144,7 +144,9 @@ const CommentForm: React.FC<Props> = ({
             </Formik>
           ) : (
             <>
-              <div className="mb-2">{comment.commentText}</div>
+              <div className="mb-2">
+                {comment.deleted ? "*Deleted*" : comment.commentText}
+              </div>
               {deleteMessage && (
                 <>
                   <div className="mb-2">
@@ -152,10 +154,6 @@ const CommentForm: React.FC<Props> = ({
                       Are you sure you want to delete this comment?
                     </span>
                     <br />
-                    <span className="text-xs">
-                      *Deleting a comment will delete all replys to the deleted
-                      comment
-                    </span>
                   </div>
                   <div className="flex">
                     <button
@@ -253,7 +251,8 @@ const CommentForm: React.FC<Props> = ({
           ) : (
             !editField &&
             !deleteMessage &&
-            isLoggedIn && (
+            isLoggedIn &&
+            !comment.deleted && (
               <div className="flex">
                 <CommentLink onClick={() => setReplyField(true)} text="Reply" />
                 {comment.user.id === user!.id && (

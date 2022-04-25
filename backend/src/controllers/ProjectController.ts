@@ -263,21 +263,12 @@ class ProjectController {
   }
 
   public async deleteComment(comment: IComment) {
-    let idsArray = [];
-    idsArray.push(comment._id);
-    let rec = (comment: IComment) => {
-      for (let child in comment.children) {
-        idsArray.push(comment.children[child]._id);
-        if (comment.children[child].children) {
-          rec(comment.children[child]);
-        }
-      }
-    };
-    rec(comment);
-
-    await this.commentModel.deleteMany({
-      _id: idsArray,
-    });
+    await this.commentModel.findOneAndUpdate(
+      {
+        _id: comment.id,
+      },
+      { deleted: true }
+    );
   }
 
   public async getComments(projectId: string) {
@@ -295,12 +286,12 @@ class ProjectController {
           const newObj = { id: _id, ...otherProps };
           c.user = newObj;
         });
-        let rec = (comment: any, threads: any) => {
+        let rec = (comment: IComment, threads: any) => {
           for (var thread in threads) {
             var value = threads[thread];
 
-            if (thread.toString() === comment.parentId.toString()) {
-              value.children[comment._id] = comment;
+            if (thread.toString() === comment.parentId!.toString()) {
+              value.children[comment.id!] = comment;
               return;
             }
 

@@ -23,12 +23,12 @@ export interface ProjectResult {
 
 export interface Comment {
   id: string;
-  _id: string | null;
   project: string;
   user: User;
   depth: number;
   children: any[];
   commentText: string;
+  deleted: boolean;
   parentId: string | null;
   postedDate: Date;
   updatedAt: string;
