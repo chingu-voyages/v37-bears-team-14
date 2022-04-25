@@ -1,13 +1,13 @@
 import { FC, MouseEventHandler } from "react";
-import PencilAltIcon from "../icons/PencilAltIcon";
+import TrashIcon from "../icons/TrashIcon";
 
-interface EditLinkProps {
+interface DeleteLinkProps {
   onClick: MouseEventHandler<HTMLDivElement>;
   disabled?: boolean;
   classes?: string;
 }
 
-const EditLink: FC<EditLinkProps> = ({
+const DeleteLink: FC<DeleteLinkProps> = ({
   onClick,
   disabled = false,
   classes,
@@ -23,10 +23,10 @@ const EditLink: FC<EditLinkProps> = ({
         classes
       }
     >
-      <PencilAltIcon className="p-1 h-6 inline" />{" "}
-      <span className="text-sm font-medium">Edit</span>
+      <TrashIcon className="p-1 h-6 inline" />{" "}
+      <span className="text-sm font-medium">Delete</span>
     </div>
   );
 };
 
-export default EditLink;
+export default DeleteLink;

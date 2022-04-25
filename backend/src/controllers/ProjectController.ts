@@ -12,11 +12,13 @@ import { IMember } from "../models/Member";
 import { IProject } from "../models/Project";
 import { IUser } from "../models/User";
 import { ITech } from "../models/Tech";
+import { IComment } from "../models/Comment";
 import NotFoundError from "./errors/NotFoundError";
 import UnexpectedError from "./errors/UnexpectedError";
 import UnauthorizedError from "./errors/UnauthorizedError";
 import FieldExistsError from "./errors/FieldExistsError";
 import InvalidChangeLastOwner from "./errors/InvalidChangeLastOwner";
+
 import {
   createAddedFields,
   createJoins,
@@ -40,6 +42,7 @@ export interface MemberUpdateParams {
 }
 
 export type ProjectDoc = IProject & Document<unknown, any, IProject>;
+export type CommentDoc = IComment & Document<unknown, any, IProject>;
 export type MemberDoc = IMember & Document<unknown, any, IProject>;
 
 export type MatchType = {
@@ -84,9 +87,9 @@ interface SaveSearchParams {
 class ProjectController {
   constructor(
     private projectModel: Model<IProject>,
-    // private projectMatchModel: Model<IProjectMatch>,
     private userModel: Model<IUser>,
     private memberModel: Model<IMember>,
+    private commentModel: Model<IComment>,
     private techModel: Model<ITech>,
     private searchModel: Model<ISearch>,
     private createSession: () => Promise<ClientSession>
@@ -242,6 +245,91 @@ class ProjectController {
     ]);
 
     return projects;
+  }
+
+  public async addComment(comment: IComment) {
+    await this.commentModel.create(comment);
+  }
+
+  public async editComment(comment: IComment) {
+    await this.commentModel.findOneAndUpdate(
+      { _id: comment._id },
+      {
+        $set: {
+          commentText: comment.commentText,
+        },
+      }
+    );
+  }
+
+  public async deleteComment(comment: IComment) {
+    let idsArray = [];
+    idsArray.push(comment._id);
+    let rec = (comment: IComment) => {
+      for (let child in comment.children) {
+        idsArray.push(comment.children[child]._id);
+        if (comment.children[child].children) {
+          rec(comment.children[child]);
+        }
+      }
+    };
+    rec(comment);
+
+    await this.commentModel.deleteMany({
+      _id: idsArray,
+    });
+  }
+
+  public async getComments(projectId: string) {
+    const comments = await this.commentModel
+      .find({ project: projectId })
+      .populate("user")
+      .sort({ postedDate: 1 })
+      .lean()
+      .exec()
+      .then((comments) => {
+        comments.map((c) => {
+          c.id = c._id;
+          delete c._id;
+          const { _id, ...otherProps } = c.user;
+          const newObj = { id: _id, ...otherProps };
+          c.user = newObj;
+        });
+        let rec = (comment: any, threads: any) => {
+          for (var thread in threads) {
+            var value = threads[thread];
+
+            if (thread.toString() === comment.parentId.toString()) {
+              value.children[comment._id] = comment;
+              return;
+            }
+
+            if (value.children) {
+              rec(comment, value.children);
+            }
+          }
+        };
+        let threads = {} as any,
+          comment;
+        for (let i = 0; i < comments.length; i++) {
+          comment = comments[i];
+          comment["children"] = {};
+          let parentId = comment.parentId;
+          if (!parentId) {
+            const idString = comment.id!.toString();
+            threads[idString] = comment;
+            continue;
+          }
+          rec(comment, threads);
+        }
+
+        return {
+          count: comments.length,
+          comments: threads,
+        };
+      });
+
+    return comments;
   }
 
   public async findUserProjects(userId: string): Promise<ProjectDoc[]> {

@@ -6,7 +6,7 @@ import ProjectController, {
 } from "../controllers/ProjectController";
 import Member from "../models/Member";
 import Project from "../models/Project";
-
+import Comment from "../models/Comment";
 import User from "../models/User";
 import Tech from "../models/Tech";
 import Search from "../models/Search";
@@ -16,6 +16,7 @@ const projectController = new ProjectController(
   Project,
   User,
   Member,
+  Comment,
   Tech,
   Search,
   () => startSession()
@@ -124,6 +125,34 @@ projects.post(
     }
   }
 );
+//add comment
+projects.post("/v1/projects/:id/comment", async (req: Request, res, next) => {
+  await projectController.addComment(req.body);
+  return res.json(req.body);
+});
+//edit comment
+projects.post(
+  "/v1/projects/:id/comment/edit",
+  async (req: Request, res, next) => {
+    await projectController.editComment(req.body);
+    return res.json(req.body);
+  }
+);
+
+projects.post(
+  "/v1/projects/:id/comment/delete",
+  async (req: Request, res, next) => {
+    await projectController.deleteComment(req.body);
+    return res.json(req.body);
+  }
+);
+//get project's comments
+projects.get("/v1/projects/:id/comments", async (req: Request, res, next) => {
+  const comments = await projectController.getComments(req.params["id"]);
+
+  res.json(comments);
+});
+
 // Star Project
 projects.post("/v1/projects/:id/star", async (req: Request, res, next) => {
   await projectController.addStarrer(req.body.user.id, req.body.project);
@@ -135,7 +164,6 @@ projects.post("/v1/projects/:id/unstar", async (req: Request, res, next) => {
   await projectController.removeStarrer(req.body.user.id, req.body.project);
   res.json({ ok: true });
 });
-
 //Get Starred Projects
 projects.get("/v1/projects/get-starred", async (req: Request, res, next) => {
   let starred;

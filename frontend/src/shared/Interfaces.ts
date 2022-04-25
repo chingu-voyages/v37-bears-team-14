@@ -21,6 +21,24 @@ export interface ProjectResult {
   settingOpenRoles: string[];
 }
 
+export interface Comment {
+  id: string;
+  _id: string | null;
+  project: string;
+  user: User;
+  depth: number;
+  children: any[];
+  commentText: string;
+  parentId: string | null;
+  postedDate: Date;
+  updatedAt: string;
+}
+
+export interface CommentData {
+  count: number;
+  comments: Comment[];
+}
+
 export interface Tech {
   id: string;
   name: string;
