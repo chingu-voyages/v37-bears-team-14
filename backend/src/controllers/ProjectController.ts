@@ -253,7 +253,7 @@ class ProjectController {
 
   public async editComment(comment: IComment) {
     await this.commentModel.findOneAndUpdate(
-      { _id: comment._id },
+      { _id: comment.id },
       {
         $set: {
           commentText: comment.commentText,
