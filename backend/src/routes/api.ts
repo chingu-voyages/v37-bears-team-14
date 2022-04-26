@@ -166,8 +166,9 @@ api.post(
       errors.push("username_missing_and_techs_missing_and_displayname_missing");
     } else if (params.username && params.username.length < 1) {
       errors.push("usernamename_too_short");
+    } else if (!params.username?.match(/^[a-zA-Z0-9]+$/)) {
+      errors.push("Please use alphanumeric symbols");
     }
-
     if (undefined !== params.techs) {
       if (!Array.isArray(params.techs)) {
         errors.push("techs_not_array");
