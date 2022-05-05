@@ -155,10 +155,10 @@ const UpdateUserForm: React.FC<Props> = ({
                 min="2"
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
+              {errors.username && touched.username ? (
+                <div className="text-red-700">{errors.username}</div>
+              ) : null}
             </div>
-            {errors.username && touched.username ? (
-              <div>{errors.username}</div>
-            ) : null}
             <div className="mb-6">
               <label
                 htmlFor="displayName"
