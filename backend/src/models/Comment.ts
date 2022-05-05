@@ -12,6 +12,7 @@ export interface IComment {
   commentText: string;
   parentId: ObjectId | null;
   postedDate: Date;
+  deleted: boolean;
   notificationPreference: string;
 }
 
@@ -36,6 +37,10 @@ const CommentSchema = new Schema<IComment>(
     commentText: {
       type: String,
       required: true,
+    },
+    deleted: {
+      type: Boolean,
+      default: false,
     },
     parentId: {
       type: Schema.Types.ObjectId,

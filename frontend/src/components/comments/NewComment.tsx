@@ -37,6 +37,7 @@ const NewComment: React.FC<Props> = ({ project, refreshComments }) => {
             }).then(() => {
               values.commentText = "";
               setSubmitting(false);
+              setFocused(false);
               refreshComments();
             });
           }}
