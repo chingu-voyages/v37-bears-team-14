@@ -1,7 +1,9 @@
 import { FC, useEffect, useState } from "react";
 import { ProjectEvent } from "../../../../../shared/EventInterfaces";
 import LoadingSpinner from "../../../../Spinners/LoadingSpinner";
+import ChevronDownIcon from "../../../../icons/ChevronDownIcon";
 import ProjectEventPreview from "./ProjectEventPreview";
+import { Transition } from "@headlessui/react";
 
 interface ProjectEventListProps {
   projectId: string;
@@ -40,28 +42,52 @@ const ProjectEventList: FC<ProjectEventListProps> = ({ projectId }) => {
     <>
       <div
         className={`relative ${
-          !expanded && "max-h-32"
-        } overflow-hidden border-2 border-black rounded shadow`}
+          !expanded ? "h-32" : "h-96"
+        } border-[1px] border-black box-content rounded shadow transition-height duration-500 ease-in-out`}
       >
-        {!expanded && (
-          <div className="absolute h-full w-full bg-gradient-to-t from-white"></div>
-        )}
+        {/* {!expanded && ()} */}
+        <Transition
+          show={!expanded}
+          enter="transition-opacity duration-500"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="transition-opacity duration-500"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <div className="absolute h-full w-full bg-gradient-to-t from-medGray rounded"></div>
+        </Transition>
+
         <div
-          className="absolute right-0 bottom-0 bg-black text-white p-1 cursor-pointer"
+          className="absolute right-0 bottom-0 bg-black text-white p-1 cursor-pointer rounded-tl"
           onClick={() => setExpanded(!expanded)}
         >
-          {!expanded ? "View All" : "Collapse"}
+          <div className="flex items-center">
+            <span>{!expanded ? "View All" : "Collapse"}</span>
+            <ChevronDownIcon
+              className={`h-5 w-5 ${
+                expanded && "rotate-180"
+              } transition-all duration-500 ease-in-out`}
+            />
+          </div>
         </div>
-        {(() => {
-          const options = [];
+        <div
+          className={`${
+            !expanded ? "h-32 overflow-hidden" : "h-96 overflow-y-scroll"
+          } transition-height duration-500 ease-in-out`}
+        >
+          {(() => {
+            const options = [];
 
-          for (let i = 0; i <= 50; i++) {
-            options.push(<option value={i}>{i}</option>);
-          }
+            for (let i = 0; i <= 50; i++) {
+              options.push(<div key={i}>{i}</div>);
+            }
 
-          return options;
-        })()}
+            return options;
+          })()}
+        </div>
       </div>
+
       {/* {events.map((event) => (
         <div key={event.id} className="my-1">
           <ProjectEventPreview event={event} now={new Date()} />
