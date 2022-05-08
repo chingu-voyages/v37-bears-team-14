@@ -12,6 +12,7 @@ const RECOGNIZED_EVENTS = ["repo_push", "repo_pull_request"];
 const ProjectEventList: FC<ProjectEventListProps> = ({ projectId }) => {
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState<ProjectEvent[]>([]);
+  const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
     const getEvents = async () => {
@@ -37,11 +38,35 @@ const ProjectEventList: FC<ProjectEventListProps> = ({ projectId }) => {
 
   return (
     <>
-      {events.map((event) => (
+      <div
+        className={`relative ${
+          !expanded && "max-h-32"
+        } overflow-hidden border-2 border-black rounded shadow`}
+      >
+        {!expanded && (
+          <div className="absolute h-full w-full bg-gradient-to-t from-white"></div>
+        )}
+        <div
+          className="absolute right-0 bottom-0 bg-black text-white p-1 cursor-pointer"
+          onClick={() => setExpanded(!expanded)}
+        >
+          {!expanded ? "View All" : "Collapse"}
+        </div>
+        {(() => {
+          const options = [];
+
+          for (let i = 0; i <= 50; i++) {
+            options.push(<option value={i}>{i}</option>);
+          }
+
+          return options;
+        })()}
+      </div>
+      {/* {events.map((event) => (
         <div key={event.id} className="my-1">
           <ProjectEventPreview event={event} now={new Date()} />
         </div>
-      ))}
+      ))} */}
     </>
   );
 };
