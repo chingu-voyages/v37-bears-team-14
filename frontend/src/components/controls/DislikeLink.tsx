@@ -6,6 +6,7 @@ interface DislikeLinkProps {
   onClick: MouseEventHandler<HTMLDivElement>;
   disabled?: boolean;
   filled: boolean;
+  text: string;
   classes?: string;
 }
 
@@ -13,6 +14,7 @@ const DislikeLink: FC<DislikeLinkProps> = ({
   onClick,
   disabled = false,
   filled,
+  text,
   classes,
 }) => {
   return (
@@ -30,7 +32,8 @@ const DislikeLink: FC<DislikeLinkProps> = ({
         <ThumbsDownFilledIcon className="p-1 pl-0 h-6 inline" />
       ) : (
         <ThumbsDownIcon className="p-1 pl-0 h-6 inline" />
-      )}{" "}
+      )}
+      <span className="text-sm font-bold">{text}</span>{" "}
     </div>
   );
 };

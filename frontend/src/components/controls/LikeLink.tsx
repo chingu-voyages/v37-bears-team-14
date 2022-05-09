@@ -5,6 +5,7 @@ import ThumbsUpFilledIcon from "../icons/ThumbsUpFilledIcon";
 interface LikeLinkProps {
   onClick: MouseEventHandler<HTMLDivElement>;
   filled: boolean;
+  text: string;
   disabled?: boolean;
   classes?: string;
 }
@@ -13,6 +14,7 @@ const LikeLink: FC<LikeLinkProps> = ({
   onClick,
   disabled = false,
   filled,
+  text,
   classes,
 }) => {
   return (
@@ -30,7 +32,8 @@ const LikeLink: FC<LikeLinkProps> = ({
         <ThumbsUpFilledIcon className="p-1 pl-0 h-6 inline" />
       ) : (
         <ThumbsUpIcon className="p-1 pl-0 h-6 inline" />
-      )}{" "}
+      )}
+      <span className="text-sm font-bold">{text}</span>{" "}
     </div>
   );
 };

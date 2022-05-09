@@ -88,7 +88,7 @@ const CommentForm: React.FC<Props> = ({
     setCommentDislikes((dislikes) => [...dislikes, user!.id]);
   };
   const removeDislike = (currentComment: Comment) => {
-    fetch(`/api/v1/projects/${project.id}/comment/removeLike`, {
+    fetch(`/api/v1/projects/${project.id}/comment/removeDislike`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -318,20 +318,33 @@ const CommentForm: React.FC<Props> = ({
             !comment.deleted && (
               <div className="flex">
                 <LikeLink
-                  onClick={() =>
-                    commentLikes.includes(user!.id)
-                      ? removeLike(comment)
-                      : likeComment(comment)
-                  }
+                  onClick={() => {
+                    if (commentLikes.includes(user!.id)) {
+                      removeLike(comment);
+                    } else {
+                      commentDislikes.includes(user!.id) &&
+                        removeDislike(comment);
+
+                      likeComment(comment);
+                    }
+                  }}
                   filled={commentLikes.includes(user!.id)}
+                  text={commentLikes.length.toString()}
+                  classes={"mr-2"}
                 />
                 <DislikeLink
-                  onClick={() =>
-                    commentDislikes.includes(user!.id)
-                      ? removeDislike(comment)
-                      : dislikeComment(comment)
-                  }
+                  onClick={() => {
+                    if (commentDislikes.includes(user!.id)) {
+                      removeDislike(comment);
+                    } else {
+                      commentLikes.includes(user!.id) && removeLike(comment);
+
+                      dislikeComment(comment);
+                    }
+                  }}
                   filled={commentDislikes.includes(user!.id)}
+                  text={commentDislikes.length.toString()}
+                  classes={"mr-2"}
                 />
                 <CommentLink onClick={() => setReplyField(true)} text="Reply" />
                 {comment.user.id === user!.id && (
