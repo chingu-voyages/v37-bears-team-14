@@ -5,6 +5,8 @@ import moment from "moment";
 import EditLink from "../controls/EditLink";
 import DeleteLink from "../controls/DeleteLink";
 import CommentLink from "../controls/CommentLink";
+import LikeLink from "../controls/LikeLink";
+import DislikeLink from "../controls/DislikeLink";
 import { Comment, Project } from "../../shared/Interfaces";
 import { useSession } from "../../hooks/session";
 import { Link } from "react-router-dom";
@@ -23,7 +25,7 @@ const CommentForm: React.FC<Props> = ({
   const [editField, setEditField] = useState(false);
   const [deleteMessage, setDeleteMessage] = useState(false);
   const { isLoggedIn, user } = useSession();
-
+  console.log(comment);
   let marginleft = (comment.depth - 1) * 5 + "%";
 
   const deleteComment = (comment: Comment) => {
@@ -39,6 +41,21 @@ const CommentForm: React.FC<Props> = ({
       refreshComments();
     });
   };
+
+  const likeComment = (comment: Comment) => {
+    fetch(`/api/v1/projects/${project.id}/comment/like`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        comment: comment,
+        user: user,
+      }),
+    });
+  };
+
+  const dislikeComment = (comment: Comment) => {};
   return (
     <>
       <div
@@ -254,6 +271,11 @@ const CommentForm: React.FC<Props> = ({
             isLoggedIn &&
             !comment.deleted && (
               <div className="flex">
+                <LikeLink
+                  onClick={() => likeComment(comment)}
+                  filled={comment.likes.includes(user!.id)}
+                />
+                <DislikeLink onClick={() => dislikeComment(comment)} />
                 <CommentLink onClick={() => setReplyField(true)} text="Reply" />
                 {comment.user.id === user!.id && (
                   <>

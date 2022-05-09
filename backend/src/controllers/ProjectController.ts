@@ -271,6 +271,17 @@ class ProjectController {
     );
   }
 
+  public async likeComment(comment: IComment, user: IUser) {
+    await this.commentModel.findOneAndUpdate(
+      {
+        _id: comment.id,
+      },
+      {
+        $push: { likes: user.id },
+      }
+    );
+  }
+
   public async getComments(projectId: string) {
     const comments = await this.commentModel
       .find({ project: projectId })

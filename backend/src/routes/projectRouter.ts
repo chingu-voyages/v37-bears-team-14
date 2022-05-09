@@ -138,7 +138,7 @@ projects.post(
     return res.json(req.body);
   }
 );
-
+//delete comment
 projects.post(
   "/v1/projects/:id/comment/delete",
   async (req: Request, res, next) => {
@@ -146,6 +146,15 @@ projects.post(
     return res.json(req.body);
   }
 );
+//like comment
+projects.post(
+  "/v1/projects/:id/comment/like",
+  async (req: Request, res, next) => {
+    await projectController.likeComment(req.body.comment, req.body.user);
+    return res.json(req.body);
+  }
+);
+//dislike comment
 //get project's comments
 projects.get("/v1/projects/:id/comments", async (req: Request, res, next) => {
   const comments = await projectController.getComments(req.params["id"]);
