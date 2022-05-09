@@ -59,7 +59,7 @@ const ProjectEventList: FC<ProjectEventListProps> = ({ projectId }) => {
         </Transition>
 
         <div
-          className="absolute right-0 bottom-0 bg-black text-white p-1 cursor-pointer rounded-tl"
+          className="absolute right-0 bottom-0 bg-gradient-to-br transition-all duration-1000 from-purple-600 to-blue-500 bg-size-200 bg-pos-0 hover:bg-pos-100 text-white p-1 cursor-pointer rounded-tl"
           onClick={() => setExpanded(!expanded)}
         >
           <div className="flex items-center">
@@ -80,7 +80,11 @@ const ProjectEventList: FC<ProjectEventListProps> = ({ projectId }) => {
             const options = [];
 
             for (let i = 0; i <= 50; i++) {
-              options.push(<div key={i}>{i}</div>);
+              options.push(
+                <div key={i} className="ml-2">
+                  {i}
+                </div>
+              );
             }
 
             return options;
@@ -89,7 +93,7 @@ const ProjectEventList: FC<ProjectEventListProps> = ({ projectId }) => {
       </div>
 
       {/* {events.map((event) => (
-        <div key={event.id} className="my-1">
+        <div key={event.id} className="my-1 ml-2">
           <ProjectEventPreview event={event} now={new Date()} />
         </div>
       ))} */}
