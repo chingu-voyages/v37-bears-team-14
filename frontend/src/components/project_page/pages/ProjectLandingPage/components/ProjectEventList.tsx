@@ -76,7 +76,12 @@ const ProjectEventList: FC<ProjectEventListProps> = ({ projectId }) => {
             !expanded ? "h-32 overflow-hidden" : "h-96 overflow-y-scroll"
           } transition-height duration-500 ease-in-out`}
         >
-          {(() => {
+          {events.map((event) => (
+            <div key={event.id} className="my-1 ml-2">
+              <ProjectEventPreview event={event} now={new Date()} />
+            </div>
+          ))}
+          {/* {(() => {
             const options = [];
 
             for (let i = 0; i <= 50; i++) {
@@ -88,15 +93,9 @@ const ProjectEventList: FC<ProjectEventListProps> = ({ projectId }) => {
             }
 
             return options;
-          })()}
+          })()} */}
         </div>
       </div>
-
-      {/* {events.map((event) => (
-        <div key={event.id} className="my-1 ml-2">
-          <ProjectEventPreview event={event} now={new Date()} />
-        </div>
-      ))} */}
     </>
   );
 };
