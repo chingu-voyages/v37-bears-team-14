@@ -282,6 +282,35 @@ class ProjectController {
     );
   }
 
+  public async removeCommentLike(comment: IComment, user: IUser) {
+    await this.commentModel.findOneAndUpdate(
+      { _id: comment.id },
+      {
+        $pull: { likes: user.id },
+      }
+    );
+  }
+
+  public async dislikeComment(comment: IComment, user: IUser) {
+    await this.commentModel.findOneAndUpdate(
+      {
+        _id: comment.id,
+      },
+      {
+        $push: { dislikes: user.id },
+      }
+    );
+  }
+
+  public async removeCommentDislike(comment: IComment, user: IUser) {
+    await this.commentModel.findOneAndUpdate(
+      { _id: comment.id },
+      {
+        $pull: { dislikes: user.id },
+      }
+    );
+  }
+
   public async getComments(projectId: string) {
     const comments = await this.commentModel
       .find({ project: projectId })

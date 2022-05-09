@@ -1,16 +1,18 @@
 import { FC, MouseEventHandler } from "react";
 import ThumbsDownIcon from "../icons/ThumbsDownIcon";
+import ThumbsDownFilledIcon from "../icons/ThumbsDownFilledIcon";
 
-interface LikeLinkProps {
+interface DislikeLinkProps {
   onClick: MouseEventHandler<HTMLDivElement>;
   disabled?: boolean;
+  filled: boolean;
   classes?: string;
 }
 
-const DislikeLink: FC<LikeLinkProps> = ({
+const DislikeLink: FC<DislikeLinkProps> = ({
   onClick,
   disabled = false,
-
+  filled,
   classes,
 }) => {
   return (
@@ -24,7 +26,11 @@ const DislikeLink: FC<LikeLinkProps> = ({
         classes
       }
     >
-      <ThumbsDownIcon className="p-1 pl-0 h-6 inline" />{" "}
+      {filled ? (
+        <ThumbsDownFilledIcon className="p-1 pl-0 h-6 inline" />
+      ) : (
+        <ThumbsDownIcon className="p-1 pl-0 h-6 inline" />
+      )}{" "}
     </div>
   );
 };

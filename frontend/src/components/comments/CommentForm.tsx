@@ -25,6 +25,10 @@ const CommentForm: React.FC<Props> = ({
   const [editField, setEditField] = useState(false);
   const [deleteMessage, setDeleteMessage] = useState(false);
   const { isLoggedIn, user } = useSession();
+  const [commentLikes, setCommentLikes] = useState<string[]>(comment.likes);
+  const [commentDislikes, setCommentDislikes] = useState<string[]>(
+    comment.dislikes
+  );
   console.log(comment);
   let marginleft = (comment.depth - 1) * 5 + "%";
 
@@ -42,8 +46,22 @@ const CommentForm: React.FC<Props> = ({
     });
   };
 
-  const likeComment = (comment: Comment) => {
+  const likeComment = (currentComment: Comment) => {
     fetch(`/api/v1/projects/${project.id}/comment/like`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        comment: currentComment,
+        user: user,
+      }),
+    });
+    setCommentLikes((likes) => [...likes, user!.id]);
+  };
+
+  const removeLike = (comment: Comment) => {
+    fetch(`/api/v1/projects/${project.id}/comment/removeLike`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -53,9 +71,37 @@ const CommentForm: React.FC<Props> = ({
         user: user,
       }),
     });
+    setCommentLikes((likes) => likes.filter((userId) => userId !== user!.id));
   };
 
-  const dislikeComment = (comment: Comment) => {};
+  const dislikeComment = (currentComment: Comment) => {
+    fetch(`/api/v1/projects/${project.id}/comment/dislike`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        comment: currentComment,
+        user: user,
+      }),
+    });
+    setCommentDislikes((dislikes) => [...dislikes, user!.id]);
+  };
+  const removeDislike = (currentComment: Comment) => {
+    fetch(`/api/v1/projects/${project.id}/comment/removeLike`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        comment: currentComment,
+        user: user,
+      }),
+    });
+    setCommentDislikes((dislikes) =>
+      dislikes.filter((userId) => userId !== user!.id)
+    );
+  };
   return (
     <>
       <div
@@ -272,10 +318,21 @@ const CommentForm: React.FC<Props> = ({
             !comment.deleted && (
               <div className="flex">
                 <LikeLink
-                  onClick={() => likeComment(comment)}
-                  filled={comment.likes.includes(user!.id)}
+                  onClick={() =>
+                    commentLikes.includes(user!.id)
+                      ? removeLike(comment)
+                      : likeComment(comment)
+                  }
+                  filled={commentLikes.includes(user!.id)}
                 />
-                <DislikeLink onClick={() => dislikeComment(comment)} />
+                <DislikeLink
+                  onClick={() =>
+                    commentDislikes.includes(user!.id)
+                      ? removeDislike(comment)
+                      : dislikeComment(comment)
+                  }
+                  filled={commentDislikes.includes(user!.id)}
+                />
                 <CommentLink onClick={() => setReplyField(true)} text="Reply" />
                 {comment.user.id === user!.id && (
                   <>

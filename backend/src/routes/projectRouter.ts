@@ -154,7 +154,33 @@ projects.post(
     return res.json(req.body);
   }
 );
+//remove comment like
+projects.post(
+  "/v1/projects/:id/comment/removeLike",
+  async (req: Request, res, next) => {
+    await projectController.removeCommentLike(req.body.comment, req.body.user);
+    return res.json(req.body);
+  }
+);
 //dislike comment
+projects.post(
+  "/v1/projects/:id/comment/dislike",
+  async (req: Request, res, next) => {
+    await projectController.dislikeComment(req.body.comment, req.body.user);
+    return res.json(req.body);
+  }
+);
+//remove comment dislike
+projects.post(
+  "/v1/projects/:id/comment/removeDislike",
+  async (req: Request, res, next) => {
+    await projectController.removeCommentDislike(
+      req.body.comment,
+      req.body.user
+    );
+    return res.json(req.body);
+  }
+);
 //get project's comments
 projects.get("/v1/projects/:id/comments", async (req: Request, res, next) => {
   const comments = await projectController.getComments(req.params["id"]);
