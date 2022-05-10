@@ -45,7 +45,6 @@ const ProjectEventList: FC<ProjectEventListProps> = ({ projectId }) => {
           !expanded ? "h-32" : "h-96"
         } border-[1px] border-black box-content rounded shadow transition-height duration-500 ease-in-out`}
       >
-        {/* {!expanded && ()} */}
         <Transition
           show={!expanded}
           enter="transition-opacity duration-500"
@@ -81,19 +80,6 @@ const ProjectEventList: FC<ProjectEventListProps> = ({ projectId }) => {
               <ProjectEventPreview event={event} now={new Date()} />
             </div>
           ))}
-          {/* {(() => {
-            const options = [];
-
-            for (let i = 0; i <= 50; i++) {
-              options.push(
-                <div key={i} className="ml-2">
-                  {i}
-                </div>
-              );
-            }
-
-            return options;
-          })()} */}
         </div>
       </div>
     </>
