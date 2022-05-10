@@ -17,6 +17,9 @@ module.exports = {
         "pos-0": "0% 0%",
         "pos-100": "100% 100%",
       },
+      transitionProperty: {
+        height: "height",
+      },
     },
   },
   plugins: [],
