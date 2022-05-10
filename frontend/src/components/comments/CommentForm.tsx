@@ -16,6 +16,9 @@ interface Props {
   project: Project;
   refreshComments: () => void;
 }
+
+type LikeType = "like" | "dislike";
+type RemoveType = "removeLike" | "removeDislike";
 const CommentForm: React.FC<Props> = ({
   comment,
   project,
@@ -46,8 +49,8 @@ const CommentForm: React.FC<Props> = ({
     });
   };
 
-  const likeComment = (currentComment: Comment) => {
-    fetch(`/api/v1/projects/${project.id}/comment/like`, {
+  const likeDislikeComment = (currentComment: Comment, likeType: LikeType) => {
+    fetch(`/api/v1/projects/${project.id}/comment/${likeType}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -57,11 +60,13 @@ const CommentForm: React.FC<Props> = ({
         user: user,
       }),
     });
-    setCommentLikes((likes) => [...likes, user!.id]);
+    likeType === "like"
+      ? setCommentLikes((likes) => [...likes, user!.id])
+      : setCommentDislikes((dislikes) => [...dislikes, user!.id]);
   };
 
-  const removeLike = (comment: Comment) => {
-    fetch(`/api/v1/projects/${project.id}/comment/removeLike`, {
+  const removeLikeDislike = (comment: Comment, removeType: RemoveType) => {
+    fetch(`/api/v1/projects/${project.id}/comment/${removeType}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -71,36 +76,13 @@ const CommentForm: React.FC<Props> = ({
         user: user,
       }),
     });
-    setCommentLikes((likes) => likes.filter((userId) => userId !== user!.id));
-  };
-
-  const dislikeComment = (currentComment: Comment) => {
-    fetch(`/api/v1/projects/${project.id}/comment/dislike`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        comment: currentComment,
-        user: user,
-      }),
-    });
-    setCommentDislikes((dislikes) => [...dislikes, user!.id]);
-  };
-  const removeDislike = (currentComment: Comment) => {
-    fetch(`/api/v1/projects/${project.id}/comment/removeDislike`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        comment: currentComment,
-        user: user,
-      }),
-    });
-    setCommentDislikes((dislikes) =>
-      dislikes.filter((userId) => userId !== user!.id)
-    );
+    removeType === "removeLike"
+      ? setCommentLikes((likes) =>
+          likes.filter((userId) => userId !== user!.id)
+        )
+      : setCommentDislikes((dislikes) =>
+          dislikes.filter((userId) => userId !== user!.id)
+        );
   };
   return (
     <>
@@ -320,12 +302,12 @@ const CommentForm: React.FC<Props> = ({
                 <LikeLink
                   onClick={() => {
                     if (commentLikes.includes(user!.id)) {
-                      removeLike(comment);
+                      removeLikeDislike(comment, "removeLike");
                     } else {
                       commentDislikes.includes(user!.id) &&
-                        removeDislike(comment);
+                        removeLikeDislike(comment, "removeDislike");
 
-                      likeComment(comment);
+                      likeDislikeComment(comment, "like");
                     }
                   }}
                   filled={commentLikes.includes(user!.id)}
@@ -335,11 +317,12 @@ const CommentForm: React.FC<Props> = ({
                 <DislikeLink
                   onClick={() => {
                     if (commentDislikes.includes(user!.id)) {
-                      removeDislike(comment);
+                      removeLikeDislike(comment, "removeDislike");
                     } else {
-                      commentLikes.includes(user!.id) && removeLike(comment);
+                      commentLikes.includes(user!.id) &&
+                        removeLikeDislike(comment, "removeLike");
 
-                      dislikeComment(comment);
+                      likeDislikeComment(comment, "dislike");
                     }
                   }}
                   filled={commentDislikes.includes(user!.id)}
