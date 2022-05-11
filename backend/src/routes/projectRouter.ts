@@ -7,9 +7,12 @@ import ProjectController, {
 import Member from "../models/Member";
 import Project from "../models/Project";
 import Comment from "../models/Comment";
+import CommentLike from "../models/CommentLike";
+import CommentDislike from "../models/CommentDislike";
 import User from "../models/User";
 import Tech from "../models/Tech";
 import Search from "../models/Search";
+import logger from "../logger";
 
 /* dependencies */
 const projectController = new ProjectController(
@@ -17,6 +20,8 @@ const projectController = new ProjectController(
   User,
   Member,
   Comment,
+  CommentLike,
+  CommentDislike,
   Tech,
   Search,
   () => startSession()
@@ -150,7 +155,11 @@ projects.post(
 projects.post(
   "/v1/projects/:id/comment/like",
   async (req: Request, res, next) => {
-    await projectController.likeComment(req.body.comment, req.body.user);
+    await projectController.likeComment(
+      req.body.comment,
+      req.body.user,
+      req.body.project
+    );
     return res.json(req.body);
   }
 );
@@ -166,7 +175,11 @@ projects.post(
 projects.post(
   "/v1/projects/:id/comment/dislike",
   async (req: Request, res, next) => {
-    await projectController.dislikeComment(req.body.comment, req.body.user);
+    await projectController.dislikeComment(
+      req.body.comment,
+      req.body.user,
+      req.body.project
+    );
     return res.json(req.body);
   }
 );
@@ -184,7 +197,6 @@ projects.post(
 //get project's comments
 projects.get("/v1/projects/:id/comments", async (req: Request, res, next) => {
   const comments = await projectController.getComments(req.params["id"]);
-
   res.json(comments);
 });
 

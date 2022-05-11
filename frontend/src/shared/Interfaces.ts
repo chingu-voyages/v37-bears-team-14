@@ -29,6 +29,7 @@ export interface Comment {
   children: any[];
   commentText: string;
   likes: string[];
+  likes2?: string[];
   dislikes: string[];
   deleted: boolean;
   parentId: string | null;

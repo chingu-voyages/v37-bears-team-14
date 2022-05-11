@@ -58,6 +58,7 @@ const CommentForm: React.FC<Props> = ({
       body: JSON.stringify({
         comment: currentComment,
         user: user,
+        project: project,
       }),
     });
     likeType === "like"

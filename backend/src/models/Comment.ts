@@ -11,6 +11,7 @@ export interface IComment {
   children?: any;
   commentText: string;
   likes: ObjectId[];
+  likes2?: string[];
   dislikes: ObjectId[];
   parentId: ObjectId | null;
   postedDate: Date;
