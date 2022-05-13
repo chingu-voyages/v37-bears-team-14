@@ -359,9 +359,11 @@ class ProjectController {
             .lean();
           c.likes2 = [];
           likes.map((l) => {
-            c.likes2?.push(l.user.toString());
+            c.likes2!.push(l.user.toString());
           });
+          logger.info(JSON.stringify(c));
         });
+
         let rec = (comment: IComment, threads: any) => {
           for (var thread in threads) {
             var value = threads[thread];
@@ -381,6 +383,7 @@ class ProjectController {
 
         for (let i = 0; i < comments.length; i++) {
           comment = comments[i];
+          logger.info(JSON.stringify(comment));
           comment["children"] = {};
           let parentId = comment.parentId;
           if (!parentId) {
