@@ -29,9 +29,7 @@ export interface Comment {
   children: any[];
   commentText: string;
   likes: string[];
-  likess?: string[];
   dislikes: string[];
-  dislikess?: string[];
   deleted: boolean;
   parentId: string | null;
   postedDate: Date;

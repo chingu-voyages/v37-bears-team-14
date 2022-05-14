@@ -11,7 +11,6 @@ export interface IComment {
   children?: any;
   commentText: string;
   likes: ObjectId[];
-  likes2?: string[];
   dislikes: ObjectId[];
   parentId: ObjectId | null;
   postedDate: Date;
@@ -40,12 +39,6 @@ const CommentSchema = new Schema<IComment>(
     commentText: {
       type: String,
       required: true,
-    },
-    likes: {
-      type: [{ type: Schema.Types.ObjectId, ref: "user" }],
-    },
-    dislikes: {
-      type: [{ type: Schema.Types.ObjectId, ref: "user" }],
     },
     deleted: {
       type: Boolean,

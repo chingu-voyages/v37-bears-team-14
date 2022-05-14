@@ -29,6 +29,10 @@ import {
   createQuery,
   mergeResults,
 } from "./projects/searchHelpers";
+import {
+  createLikeDislikeJoins,
+  createLikeDislikeProjection,
+} from "./comments/likeDislikeHelpers";
 import { TechDoc } from "./TechController";
 import { ISearch } from "../models/Search";
 
@@ -276,14 +280,6 @@ class ProjectController {
   }
 
   public async likeComment(comment: IComment, user: IUser, project: IProject) {
-    await this.commentModel.findOneAndUpdate(
-      {
-        _id: comment.id,
-      },
-      {
-        $push: { likes: user.id },
-      }
-    );
     await this.commentLikeModel.create({
       project: project.id,
       user: user.id,
@@ -292,12 +288,6 @@ class ProjectController {
   }
 
   public async removeCommentLike(comment: IComment, user: IUser) {
-    await this.commentModel.findOneAndUpdate(
-      { _id: comment.id },
-      {
-        $pull: { likes: user.id },
-      }
-    );
     await this.commentLikeModel.deleteOne({
       comment: comment.id,
       user: user.id,
@@ -309,14 +299,6 @@ class ProjectController {
     user: IUser,
     project: IProject
   ) {
-    await this.commentModel.findOneAndUpdate(
-      {
-        _id: comment.id,
-      },
-      {
-        $push: { dislikes: user.id },
-      }
-    );
     await this.commentDislikeModel.create({
       project: project.id,
       user: user.id,
@@ -325,12 +307,6 @@ class ProjectController {
   }
 
   public async removeCommentDislike(comment: IComment, user: IUser) {
-    await this.commentModel.findOneAndUpdate(
-      { _id: comment.id },
-      {
-        $pull: { dislikes: user.id },
-      }
-    );
     await this.commentDislikeModel.deleteOne({
       comment: comment.id,
       user: user.id,
@@ -341,90 +317,14 @@ class ProjectController {
     const comments = await this.commentModel
       .aggregate([
         { $match: { project: new mongoose.Types.ObjectId(projectId) } },
-        {
-          $lookup: {
-            from: "commentlikes",
-            localField: "_id",
-            foreignField: "comment",
-            as: "likess",
-            pipeline: [
-              {
-                $project: {
-                  _id: 0,
-                  id: "$_id",
-                  project: 1,
-                  user: 1,
-                  comment: 1,
-                },
-              },
-            ],
-          },
-        },
-        {
-          $lookup: {
-            from: "commentdislikes",
-            localField: "_id",
-            foreignField: "comment",
-            as: "dislikess",
-            pipeline: [
-              {
-                $project: {
-                  _id: 0,
-                  id: "$_id",
-                  project: 1,
-                  user: 1,
-                  comment: 1,
-                },
-              },
-            ],
-          },
-        },
-        {
-          $lookup: {
-            from: "users",
-            localField: "user",
-            foreignField: "_id",
-            as: "user",
-            pipeline: [
-              {
-                $project: {
-                  _id: 0,
-                  id: "$_id",
-                  githubId: 1,
-                  isAdmin: 1,
-                  avatarUrl: 1,
-                  username: 1,
-                  displayName: 1,
-                  techs: 1,
-                },
-              },
-            ],
-          },
-        },
-        {
-          $project: {
-            _id: 0,
-            id: "$_id",
-            project: 1,
-            user: { $arrayElemAt: ["$user", 0] },
-            depth: 1,
-            commentText: 1,
-            likes: 1,
-            dislikes: 1,
-            likess: 1,
-            deleted: 1,
-            parentId: 1,
-            postedDate: 1,
-            createdAt: 1,
-            updatedAt: 1,
-          },
-        },
+        ...createLikeDislikeJoins(),
+        createLikeDislikeProjection(),
       ])
       .sort({ postedDate: 1 })
       .then((comments) => {
         comments.map(async (c) => {
-          if (c.likess) c.likess = c.likess.map((l: any) => l.user);
-          if (c.dislikess) c.dislikess = c.dislikess.map((l: any) => l.user);
+          if (c.likes) c.likes = c.likes.map((l: any) => l.user);
+          if (c.dislikes) c.dislikes = c.dislikes.map((l: any) => l.user);
         });
 
         let rec = (comment: IComment, threads: any) => {
