@@ -339,29 +339,92 @@ class ProjectController {
 
   public async getComments(projectId: string) {
     const comments = await this.commentModel
-      .find({ project: projectId })
-      .populate("user")
+      .aggregate([
+        { $match: { project: new mongoose.Types.ObjectId(projectId) } },
+        {
+          $lookup: {
+            from: "commentlikes",
+            localField: "_id",
+            foreignField: "comment",
+            as: "likess",
+            pipeline: [
+              {
+                $project: {
+                  _id: 0,
+                  id: "$_id",
+                  project: 1,
+                  user: 1,
+                  comment: 1,
+                },
+              },
+            ],
+          },
+        },
+        {
+          $lookup: {
+            from: "commentdislikes",
+            localField: "_id",
+            foreignField: "comment",
+            as: "dislikess",
+            pipeline: [
+              {
+                $project: {
+                  _id: 0,
+                  id: "$_id",
+                  project: 1,
+                  user: 1,
+                  comment: 1,
+                },
+              },
+            ],
+          },
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "user",
+            foreignField: "_id",
+            as: "user",
+            pipeline: [
+              {
+                $project: {
+                  _id: 0,
+                  id: "$_id",
+                  githubId: 1,
+                  isAdmin: 1,
+                  avatarUrl: 1,
+                  username: 1,
+                  displayName: 1,
+                  techs: 1,
+                },
+              },
+            ],
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            id: "$_id",
+            project: 1,
+            user: { $arrayElemAt: ["$user", 0] },
+            depth: 1,
+            commentText: 1,
+            likes: 1,
+            dislikes: 1,
+            likess: 1,
+            deleted: 1,
+            parentId: 1,
+            postedDate: 1,
+            createdAt: 1,
+            updatedAt: 1,
+          },
+        },
+      ])
       .sort({ postedDate: 1 })
-      .lean()
-      .exec()
       .then((comments) => {
         comments.map(async (c) => {
-          c.id = c._id;
-          delete c._id;
-          const { _id, ...otherProps } = c.user;
-          const newObj = { id: _id, ...otherProps };
-          c.user = newObj;
-
-          const likes = await this.commentLikeModel
-            .find({
-              comment: c.id,
-            })
-            .lean();
-          c.likes2 = [];
-          likes.map((l) => {
-            c.likes2!.push(l.user.toString());
-          });
-          logger.info(JSON.stringify(c));
+          if (c.likess) c.likess = c.likess.map((l: any) => l.user);
+          if (c.dislikess) c.dislikess = c.dislikess.map((l: any) => l.user);
         });
 
         let rec = (comment: IComment, threads: any) => {
@@ -383,7 +446,7 @@ class ProjectController {
 
         for (let i = 0; i < comments.length; i++) {
           comment = comments[i];
-          logger.info(JSON.stringify(comment));
+
           comment["children"] = {};
           let parentId = comment.parentId;
           if (!parentId) {
