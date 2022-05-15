@@ -27,7 +27,7 @@ const projectReducer = (state: any, action: any) => {
   }
 };
 
-export const ProjectProvider = (props: any) => {
+const ProjectProvider = (props: any) => {
   const [projectState, dispatchProjectAction] = useReducer(
     projectReducer,
     defaultProjectState
