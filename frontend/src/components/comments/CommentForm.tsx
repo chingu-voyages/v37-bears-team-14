@@ -32,7 +32,7 @@ const CommentForm: React.FC<Props> = ({
   const [commentDislikes, setCommentDislikes] = useState<string[]>(
     comment.dislikes
   );
-  console.log(comment);
+
   let marginleft = (comment.depth - 1) * 5 + "%";
 
   const deleteComment = (comment: Comment) => {

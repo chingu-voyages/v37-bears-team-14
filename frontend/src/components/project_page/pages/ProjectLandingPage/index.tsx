@@ -1,4 +1,4 @@
-import { useEffect, useState, ReactElement } from "react";
+import { useEffect, useState, ReactElement, useContext } from "react";
 import { useOutletContext } from "react-router-dom";
 import { ProjectPageContext } from "../../layouts/ProjectPageLayout";
 import ProjectShowcase from "./components/ProjectShowcase";
@@ -7,30 +7,33 @@ import { Comment, CommentData } from "../../../../shared/Interfaces";
 import NewComment from "../../../comments/NewComment";
 import ApplyButtonContainer from "../../components/ApplyFlow/ApplyButtonContainer";
 import StarButton from "./components/StarButton";
+import ProjectContext from "../../../../store/project-context";
 
 const ProjectLandingPage = () => {
   const [comments, setComments] = useState<any>([]);
   const { project, setProject } = useOutletContext<ProjectPageContext>();
-
+  const projectCtx = useContext(ProjectContext);
   const getData = () => {
-    fetch(`/api/v1/projects/${project.id}/comments`).then(async (response) => {
-      if (response.status === 200) {
-        const data: CommentData = await response.json();
-        const commentsArray: Comment[] = [];
-        let comment: Comment;
+    console.log(projectCtx.refreshComments(project));
+    projectCtx.refreshComments(project);
+    // fetch(`/api/v1/projects/${project.id}/comments`).then(async (response) => {
+    //   if (response.status === 200) {
+    //     const data: CommentData = await response.json();
+    //     const commentsArray: Comment[] = [];
+    //     let comment: Comment;
 
-        for (comment of Object.values(data.comments)) {
-          commentsArray.push(comment);
-        }
-        setComments(
-          commentsArray.sort(function (a, b) {
-            return (
-              new Date(b.updatedAt).valueOf() - new Date(a.updatedAt).valueOf()
-            );
-          })
-        );
-      }
-    });
+    //     for (comment of Object.values(data.comments)) {
+    //       commentsArray.push(comment);
+    //     }
+    //     setComments(
+    //       commentsArray.sort(function (a, b) {
+    //         return (
+    //           new Date(b.updatedAt).valueOf() - new Date(a.updatedAt).valueOf()
+    //         );
+    //       })
+    //     );
+    //   }
+    // });
   };
   useEffect(() => {
     getData();
@@ -59,7 +62,7 @@ const ProjectLandingPage = () => {
     return comments;
   };
 
-  let commentsToDisplay = displayComments(comments);
+  let commentsToDisplay = displayComments(projectCtx.comments);
 
   return (
     <>

@@ -1,11 +1,13 @@
-import { Project } from "../shared/Interfaces";
+import { Project, Comment } from "../shared/Interfaces";
 import React from "react";
 
 const ProjectContext = React.createContext({
   storeProjects: (projects: Project[]) => {},
   addProject: (project: Project) => {},
+  refreshComments: (project: Project): any => {},
   projects: [],
   project: {},
+  comments: [],
 });
 
 export default ProjectContext;
