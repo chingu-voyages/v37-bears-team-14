@@ -1,21 +1,21 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { Comment, Project, User } from "../../shared/Interfaces";
+import ProjectContext from "../../store/project-context";
 interface Props {
   comment: Comment;
   project: Project;
   user: User;
-  refreshComments: () => void;
   setReplyField: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const ReplyForm: React.FC<Props> = ({
   comment,
   project,
   user,
-  refreshComments,
   setReplyField,
 }) => {
+  const projectCtx = useContext(ProjectContext);
   return (
     <Formik
       initialValues={{
@@ -41,7 +41,7 @@ const ReplyForm: React.FC<Props> = ({
           values.commentText = "";
           setReplyField(false);
           setSubmitting(false);
-          refreshComments();
+          projectCtx.refreshComments(project);
         });
       }}
     >

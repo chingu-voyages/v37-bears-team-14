@@ -60,11 +60,10 @@ const ProjectProvider = (props: any) => {
     });
   };
 
-  const refreshCommentsHandler = async (project: Project) => {
+  const refreshCommentsHandler = (project: Project) => {
     const newComments = async () => {
       const response = await fetch(`/api/v1/projects/${project.id}/comments`);
       if (response.status === 200) {
-        console.log("here");
         const data: CommentData = await response.json();
         const commentsArray: Comment[] = [];
         let comment: Comment;
@@ -86,10 +85,6 @@ const ProjectProvider = (props: any) => {
         r,
       });
     });
-    // dispatchProjectAction({
-    //   type: "REFRESH_COMMENTS",
-    //   newComments,
-    // });
   };
 
   const projectContext = {

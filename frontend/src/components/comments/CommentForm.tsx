@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import moment from "moment";
@@ -10,20 +10,17 @@ import DislikeLink from "../controls/DislikeLink";
 import { Comment, Project } from "../../shared/Interfaces";
 import { useSession } from "../../hooks/session";
 import { Link } from "react-router-dom";
+import ProjectContext from "../../store/project-context";
+import ReplyForm from "./ReplyForm";
 
 interface Props {
   comment: Comment;
   project: Project;
-  refreshComments: () => void;
 }
 
 type LikeType = "like" | "dislike";
 type RemoveType = "removeLike" | "removeDislike";
-const CommentForm: React.FC<Props> = ({
-  comment,
-  project,
-  refreshComments,
-}) => {
+const CommentForm: React.FC<Props> = ({ comment, project }) => {
   const [replyField, setReplyField] = useState(false);
   const [editField, setEditField] = useState(false);
   const [deleteMessage, setDeleteMessage] = useState(false);
@@ -32,6 +29,7 @@ const CommentForm: React.FC<Props> = ({
   const [commentDislikes, setCommentDislikes] = useState<string[]>(
     comment.dislikes
   );
+  const projectCtx = useContext(ProjectContext);
 
   let marginleft = (comment.depth - 1) * 5 + "%";
 
@@ -45,7 +43,7 @@ const CommentForm: React.FC<Props> = ({
     }).then(() => {
       setDeleteMessage(false);
 
-      refreshComments();
+      projectCtx.refreshComments(project);
     });
   };
 
@@ -140,7 +138,7 @@ const CommentForm: React.FC<Props> = ({
                   values.commentText = "";
                   setEditField(false);
                   setSubmitting(false);
-                  refreshComments();
+                  projectCtx.refreshComments(project);
                 });
               }}
             >
@@ -221,80 +219,86 @@ const CommentForm: React.FC<Props> = ({
             </>
           )}
 
-          {replyField && isLoggedIn ? (
-            <Formik
-              initialValues={{
-                commentText: "",
-                project: project.id,
-                user: user!.id,
-                parentId: comment.id,
-                depth: comment.depth + 1,
-              }}
-              validationSchema={Yup.object().shape({
-                commentText: Yup.string().max(1000, "Too Long!"),
-              })}
-              onSubmit={(values, { setSubmitting }) => {
-                values.user = user!.id;
-                values.project = project!.id;
-                fetch(`/api/v1/projects/${project.id}/comment`, {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify(values),
-                }).then(() => {
-                  values.commentText = "";
-                  setReplyField(false);
-                  setSubmitting(false);
-                  refreshComments();
-                });
-              }}
-            >
-              {({
-                values,
-                errors,
-                touched,
-                handleChange,
-                handleBlur,
-                handleSubmit,
-                isSubmitting,
-                dirty,
-
-                /* and other goodies */
-              }) => (
-                <Form onSubmit={handleSubmit}>
-                  <Field
-                    as="textarea"
-                    name="commentText"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.commentText}
-                    rows="1"
-                    placeholder="Add a comment"
-                    className="appearance-none border-b-2 border-medGray bg-XLightGray w-full pt-2 pb-1 px-3 text-gray-700 leading-tight resize-none focus:outline-none focus:shadow-outline"
-                  />
-                  {errors.commentText &&
-                    touched.commentText &&
-                    errors.commentText}
-                  <div className="flex">
-                    <button
-                      type="submit"
-                      className="orange-badge-btn mr-1 disabled:opacity-50"
-                      disabled={isSubmitting || !dirty}
-                    >
-                      Reply
-                    </button>
-                    <button
-                      onClick={() => setReplyField(false)}
-                      className="red-badge-btn"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </Form>
-              )}
-            </Formik>
+          {replyField && isLoggedIn && user ? (
+            <ReplyForm
+              comment={comment}
+              project={project}
+              user={user}
+              setReplyField={setReplyField}
+            />
           ) : (
+            // <Formik
+            //   initialValues={{
+            //     commentText: "",
+            //     project: project.id,
+            //     user: user!.id,
+            //     parentId: comment.id,
+            //     depth: comment.depth + 1,
+            //   }}
+            //   validationSchema={Yup.object().shape({
+            //     commentText: Yup.string().max(1000, "Too Long!"),
+            //   })}
+            //   onSubmit={(values, { setSubmitting }) => {
+            //     values.user = user!.id;
+            //     values.project = project!.id;
+            //     fetch(`/api/v1/projects/${project.id}/comment`, {
+            //       method: "POST",
+            //       headers: {
+            //         "Content-Type": "application/json",
+            //       },
+            //       body: JSON.stringify(values),
+            //     }).then(() => {
+            //       values.commentText = "";
+            //       setReplyField(false);
+            //       setSubmitting(false);
+            //       projectCtx.refreshComments(project);
+            //     });
+            //   }}
+            // >
+            //   {({
+            //     values,
+            //     errors,
+            //     touched,
+            //     handleChange,
+            //     handleBlur,
+            //     handleSubmit,
+            //     isSubmitting,
+            //     dirty,
+
+            //     /* and other goodies */
+            //   }) => (
+            //     <Form onSubmit={handleSubmit}>
+            //       <Field
+            //         as="textarea"
+            //         name="commentText"
+            //         onChange={handleChange}
+            //         onBlur={handleBlur}
+            //         value={values.commentText}
+            //         rows="1"
+            //         placeholder="Add a comment"
+            //         className="appearance-none border-b-2 border-medGray bg-XLightGray w-full pt-2 pb-1 px-3 text-gray-700 leading-tight resize-none focus:outline-none focus:shadow-outline"
+            //       />
+            //       {errors.commentText &&
+            //         touched.commentText &&
+            //         errors.commentText}
+            //       <div className="flex">
+            //         <button
+            //           type="submit"
+            //           className="orange-badge-btn mr-1 disabled:opacity-50"
+            //           disabled={isSubmitting || !dirty}
+            //         >
+            //           Reply
+            //         </button>
+            //         <button
+            //           onClick={() => setReplyField(false)}
+            //           className="red-badge-btn"
+            //         >
+            //           Cancel
+            //         </button>
+            //       </div>
+            //     </Form>
+            //   )}
+            // </Formik>
             !editField &&
             !deleteMessage &&
             isLoggedIn &&

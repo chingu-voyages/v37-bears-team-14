@@ -6,7 +6,7 @@ import * as Yup from "yup";
 
 interface Props {
   project: Project;
-  refreshComments: () => void;
+  refreshComments: (project: Project) => void;
 }
 const NewComment: React.FC<Props> = ({ project, refreshComments }) => {
   const { isLoggedIn, user } = useSession();
@@ -38,7 +38,7 @@ const NewComment: React.FC<Props> = ({ project, refreshComments }) => {
               values.commentText = "";
               setSubmitting(false);
               setFocused(false);
-              refreshComments();
+              refreshComments(project);
             });
           }}
         >
