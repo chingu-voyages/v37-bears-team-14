@@ -7,19 +7,20 @@ interface Props {
   comment: Comment;
   project: Project;
   user: User;
-  setReplyField: React.Dispatch<React.SetStateAction<boolean>>;
+  setEditField: React.Dispatch<React.SetStateAction<boolean>>;
 }
-const ReplyForm: React.FC<Props> = ({
+const EditForm: React.FC<Props> = ({
   comment,
   project,
   user,
-  setReplyField,
+  setEditField,
 }) => {
   const projectCtx = useContext(ProjectContext);
   return (
     <Formik
       initialValues={{
-        commentText: "",
+        id: comment.id,
+        commentText: comment.commentText,
         project: project.id,
         user: user!.id,
         parentId: comment.id,
@@ -29,9 +30,11 @@ const ReplyForm: React.FC<Props> = ({
         commentText: Yup.string().max(1000, "Too Long!"),
       })}
       onSubmit={(values, { setSubmitting }) => {
+        //edit comment
+        comment.commentText = values.commentText;
         values.user = user!.id;
         values.project = project!.id;
-        fetch(`/api/v1/projects/${project.id}/comment`, {
+        fetch(`/api/v1/projects/${project.id}/comment/edit`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -39,7 +42,7 @@ const ReplyForm: React.FC<Props> = ({
           body: JSON.stringify(values),
         }).then(() => {
           values.commentText = "";
-          setReplyField(false);
+          setEditField(false);
           setSubmitting(false);
           projectCtx.refreshComments(project);
         });
@@ -66,7 +69,7 @@ const ReplyForm: React.FC<Props> = ({
             value={values.commentText}
             rows="1"
             placeholder="Add a comment"
-            className="replyField"
+            className="editField"
           />
           {errors.commentText && touched.commentText && errors.commentText}
           <div className="flex">
@@ -75,10 +78,10 @@ const ReplyForm: React.FC<Props> = ({
               className="orange-badge-btn mr-1 disabled:opacity-50"
               disabled={isSubmitting || !dirty}
             >
-              Reply
+              Edit
             </button>
             <button
-              onClick={() => setReplyField(false)}
+              onClick={() => setEditField(false)}
               className="red-badge-btn"
             >
               Cancel
@@ -90,4 +93,4 @@ const ReplyForm: React.FC<Props> = ({
   );
 };
 
-export default ReplyForm;
+export default EditForm;

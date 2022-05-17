@@ -30,8 +30,6 @@ const projectReducer = (state: any, action: any) => {
         comments: state.comments,
       };
     case ProjectActionKind.RefreshComments:
-      console.log(action.r);
-
       return {
         projects: state.projects,
         project: state.project,

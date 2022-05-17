@@ -1,4 +1,4 @@
-import { Project, Comment } from "../shared/Interfaces";
+import { Project } from "../shared/Interfaces";
 import React from "react";
 
 const ProjectContext = React.createContext({
