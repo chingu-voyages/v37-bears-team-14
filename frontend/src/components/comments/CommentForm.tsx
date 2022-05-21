@@ -1,28 +1,34 @@
-import React, { useState } from "react";
-import { Formik, Form, Field } from "formik";
-import * as Yup from "yup";
+import React, { useState, useContext } from "react";
 import moment from "moment";
 import EditLink from "../controls/EditLink";
 import DeleteLink from "../controls/DeleteLink";
 import CommentLink from "../controls/CommentLink";
+import LikeLink from "../controls/LikeLink";
+import DislikeLink from "../controls/DislikeLink";
 import { Comment, Project } from "../../shared/Interfaces";
 import { useSession } from "../../hooks/session";
 import { Link } from "react-router-dom";
+import ProjectContext from "../../store/project-context";
+import ReplyForm from "./ReplyForm";
+import EditForm from "./EditForm";
 
 interface Props {
   comment: Comment;
   project: Project;
-  refreshComments: () => void;
 }
-const CommentForm: React.FC<Props> = ({
-  comment,
-  project,
-  refreshComments,
-}) => {
+
+type LikeType = "like" | "dislike";
+type RemoveType = "removeLike" | "removeDislike";
+const CommentForm: React.FC<Props> = ({ comment, project }) => {
   const [replyField, setReplyField] = useState(false);
   const [editField, setEditField] = useState(false);
   const [deleteMessage, setDeleteMessage] = useState(false);
   const { isLoggedIn, user } = useSession();
+  const [commentLikes, setCommentLikes] = useState<string[]>(comment.likes);
+  const [commentDislikes, setCommentDislikes] = useState<string[]>(
+    comment.dislikes
+  );
+  const projectCtx = useContext(ProjectContext);
 
   let marginleft = (comment.depth - 1) * 5 + "%";
 
@@ -36,20 +42,56 @@ const CommentForm: React.FC<Props> = ({
     }).then(() => {
       setDeleteMessage(false);
 
-      refreshComments();
+      projectCtx.refreshComments(project);
     });
+  };
+
+  const likeDislikeComment = (currentComment: Comment, likeType: LikeType) => {
+    fetch(`/api/v1/projects/${project.id}/comment/${likeType}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        comment: currentComment,
+        user: user,
+        project: project,
+      }),
+    });
+    likeType === "like"
+      ? setCommentLikes((likes) => [...likes, user!.id])
+      : setCommentDislikes((dislikes) => [...dislikes, user!.id]);
+    projectCtx.refreshComments(project);
+  };
+
+  const removeLikeDislike = (comment: Comment, removeType: RemoveType) => {
+    fetch(`/api/v1/projects/${project.id}/comment/${removeType}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        comment: comment,
+        user: user,
+      }),
+    });
+    removeType === "removeLike"
+      ? setCommentLikes((likes) =>
+          likes.filter((userId) => userId !== user!.id)
+        )
+      : setCommentDislikes((dislikes) =>
+          dislikes.filter((userId) => userId !== user!.id)
+        );
+    projectCtx.refreshComments(project);
   };
   return (
     <>
-      <div
-        className="p-2 rounded-lg border-2 border-medGray mt-1 mb-2 flex shadow"
-        style={{ marginLeft: marginleft }}
-      >
+      <div className="commentAvatarWrapper" style={{ marginLeft: marginleft }}>
         <div>
           <Link to={`/user/${comment.user?.username}`}>
             <img
               src={comment.user.avatarUrl}
-              className="rounded-full border-gray-100 shadow-sm w-12 h-12 inline cursor-pointer border-transparent border-4"
+              className="commentAvatar"
               alt=""
             />
           </Link>
@@ -66,82 +108,13 @@ const CommentForm: React.FC<Props> = ({
               {moment(comment.postedDate).fromNow()}
             </div>
           </div>
-          {editField ? (
-            <Formik
-              initialValues={{
-                id: comment.id,
-                commentText: comment.commentText,
-                project: project.id,
-                user: user!.id,
-                parentId: comment.id,
-                depth: comment.depth + 1,
-              }}
-              validationSchema={Yup.object().shape({
-                commentText: Yup.string().max(1000, "Too Long!"),
-              })}
-              onSubmit={(values, { setSubmitting }) => {
-                //edit comment
-                comment.commentText = values.commentText;
-                values.user = user!.id;
-                values.project = project!.id;
-                fetch(`/api/v1/projects/${project.id}/comment/edit`, {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify(values),
-                }).then(() => {
-                  values.commentText = "";
-                  setEditField(false);
-                  setSubmitting(false);
-                  refreshComments();
-                });
-              }}
-            >
-              {({
-                values,
-                errors,
-                touched,
-                handleChange,
-                handleBlur,
-                handleSubmit,
-                isSubmitting,
-                dirty,
-
-                /* and other goodies */
-              }) => (
-                <Form onSubmit={handleSubmit}>
-                  <Field
-                    as="textarea"
-                    name="commentText"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.commentText}
-                    rows="1"
-                    placeholder="Add a comment"
-                    className="appearance-none border-b-2 border-medGray bg-XLightGray w-full pt-2 pb-1 px-3 text-gray-700 leading-tight resize-none focus:outline-none focus:shadow-outline"
-                  />
-                  {errors.commentText &&
-                    touched.commentText &&
-                    errors.commentText}
-                  <div className="flex">
-                    <button
-                      type="submit"
-                      className="orange-badge-btn mr-1 disabled:opacity-50"
-                      disabled={isSubmitting || !dirty}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => setEditField(false)}
-                      className="red-badge-btn"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </Form>
-              )}
-            </Formik>
+          {editField && user ? (
+            <EditForm
+              comment={comment}
+              project={project}
+              user={user}
+              setEditField={setEditField}
+            />
           ) : (
             <>
               <div className="mb-2">
@@ -150,7 +123,7 @@ const CommentForm: React.FC<Props> = ({
               {deleteMessage && (
                 <>
                   <div className="mb-2">
-                    <span className="p-1 shrink bg-lightGray text-medGray font-bold rounded">
+                    <span className="commentDeleteMessage">
                       Are you sure you want to delete this comment?
                     </span>
                     <br />
@@ -175,85 +148,49 @@ const CommentForm: React.FC<Props> = ({
             </>
           )}
 
-          {replyField && isLoggedIn ? (
-            <Formik
-              initialValues={{
-                commentText: "",
-                project: project.id,
-                user: user!.id,
-                parentId: comment.id,
-                depth: comment.depth + 1,
-              }}
-              validationSchema={Yup.object().shape({
-                commentText: Yup.string().max(1000, "Too Long!"),
-              })}
-              onSubmit={(values, { setSubmitting }) => {
-                values.user = user!.id;
-                values.project = project!.id;
-                fetch(`/api/v1/projects/${project.id}/comment`, {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify(values),
-                }).then(() => {
-                  values.commentText = "";
-                  setReplyField(false);
-                  setSubmitting(false);
-                  refreshComments();
-                });
-              }}
-            >
-              {({
-                values,
-                errors,
-                touched,
-                handleChange,
-                handleBlur,
-                handleSubmit,
-                isSubmitting,
-                dirty,
-
-                /* and other goodies */
-              }) => (
-                <Form onSubmit={handleSubmit}>
-                  <Field
-                    as="textarea"
-                    name="commentText"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.commentText}
-                    rows="1"
-                    placeholder="Add a comment"
-                    className="appearance-none border-b-2 border-medGray bg-XLightGray w-full pt-2 pb-1 px-3 text-gray-700 leading-tight resize-none focus:outline-none focus:shadow-outline"
-                  />
-                  {errors.commentText &&
-                    touched.commentText &&
-                    errors.commentText}
-                  <div className="flex">
-                    <button
-                      type="submit"
-                      className="orange-badge-btn mr-1 disabled:opacity-50"
-                      disabled={isSubmitting || !dirty}
-                    >
-                      Reply
-                    </button>
-                    <button
-                      onClick={() => setReplyField(false)}
-                      className="red-badge-btn"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </Form>
-              )}
-            </Formik>
+          {replyField && isLoggedIn && user ? (
+            <ReplyForm
+              comment={comment}
+              project={project}
+              user={user}
+              setReplyField={setReplyField}
+            />
           ) : (
             !editField &&
             !deleteMessage &&
             isLoggedIn &&
             !comment.deleted && (
               <div className="flex">
+                <LikeLink
+                  onClick={() => {
+                    if (commentLikes.includes(user!.id)) {
+                      removeLikeDislike(comment, "removeLike");
+                    } else {
+                      commentDislikes.includes(user!.id) &&
+                        removeLikeDislike(comment, "removeDislike");
+
+                      likeDislikeComment(comment, "like");
+                    }
+                  }}
+                  filled={commentLikes.includes(user!.id)}
+                  text={commentLikes.length.toString()}
+                  classes={"mr-2"}
+                />
+                <DislikeLink
+                  onClick={() => {
+                    if (commentDislikes.includes(user!.id)) {
+                      removeLikeDislike(comment, "removeDislike");
+                    } else {
+                      commentLikes.includes(user!.id) &&
+                        removeLikeDislike(comment, "removeLike");
+
+                      likeDislikeComment(comment, "dislike");
+                    }
+                  }}
+                  filled={commentDislikes.includes(user!.id)}
+                  text={commentDislikes.length.toString()}
+                  classes={"mr-2"}
+                />
                 <CommentLink onClick={() => setReplyField(true)} text="Reply" />
                 {comment.user.id === user!.id && (
                   <>

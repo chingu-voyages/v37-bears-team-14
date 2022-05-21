@@ -7,9 +7,12 @@ import ProjectController, {
 import Member from "../models/Member";
 import Project from "../models/Project";
 import Comment from "../models/Comment";
+import CommentLike from "../models/CommentLike";
+import CommentDislike from "../models/CommentDislike";
 import User from "../models/User";
 import Tech from "../models/Tech";
 import Search from "../models/Search";
+import logger from "../logger";
 
 /* dependencies */
 const projectController = new ProjectController(
@@ -17,6 +20,8 @@ const projectController = new ProjectController(
   User,
   Member,
   Comment,
+  CommentLike,
+  CommentDislike,
   Tech,
   Search,
   () => startSession()
@@ -138,7 +143,7 @@ projects.post(
     return res.json(req.body);
   }
 );
-
+//delete comment
 projects.post(
   "/v1/projects/:id/comment/delete",
   async (req: Request, res, next) => {
@@ -146,10 +151,52 @@ projects.post(
     return res.json(req.body);
   }
 );
+//like comment
+projects.post(
+  "/v1/projects/:id/comment/like",
+  async (req: Request, res, next) => {
+    await projectController.likeComment(
+      req.body.comment,
+      req.body.user,
+      req.body.project
+    );
+    return res.json(req.body);
+  }
+);
+//remove comment like
+projects.post(
+  "/v1/projects/:id/comment/removeLike",
+  async (req: Request, res, next) => {
+    await projectController.removeCommentLike(req.body.comment, req.body.user);
+    return res.json(req.body);
+  }
+);
+//dislike comment
+projects.post(
+  "/v1/projects/:id/comment/dislike",
+  async (req: Request, res, next) => {
+    await projectController.dislikeComment(
+      req.body.comment,
+      req.body.user,
+      req.body.project
+    );
+    return res.json(req.body);
+  }
+);
+//remove comment dislike
+projects.post(
+  "/v1/projects/:id/comment/removeDislike",
+  async (req: Request, res, next) => {
+    await projectController.removeCommentDislike(
+      req.body.comment,
+      req.body.user
+    );
+    return res.json(req.body);
+  }
+);
 //get project's comments
 projects.get("/v1/projects/:id/comments", async (req: Request, res, next) => {
   const comments = await projectController.getComments(req.params["id"]);
-
   res.json(comments);
 });
 

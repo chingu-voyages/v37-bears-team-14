@@ -28,6 +28,8 @@ export interface Comment {
   depth: number;
   children: any[];
   commentText: string;
+  likes: string[];
+  dislikes: string[];
   deleted: boolean;
   parentId: string | null;
   postedDate: Date;

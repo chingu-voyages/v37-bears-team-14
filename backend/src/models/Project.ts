@@ -2,6 +2,7 @@ import { model, ObjectId, Schema } from "mongoose";
 import { ITech } from "./Tech";
 
 export interface IProject {
+  id: string;
   name: string;
   description: null | string;
   techs: ObjectId[] | ITech[];

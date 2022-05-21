@@ -66,6 +66,21 @@ code {
   .no-first-margin > :first-child {
     margin-left: 0 !important;
   }
+  .replyField {
+    @apply appearance-none border-b-2 border-medGray bg-XLightGray w-full pt-2 pb-1 px-3 text-gray-700 leading-tight resize-none focus:outline-none;
+  }
+  .editField {
+    @apply appearance-none border-b-2 border-medGray bg-XLightGray w-full pt-2 pb-1 px-3 text-gray-700 leading-tight resize-none focus:outline-none;
+  }
+  .commentAvatar {
+    @apply rounded-full border-gray-100 shadow-sm w-12 h-12 inline cursor-pointer border-transparent border-4;
+  }
+  .commentAvatarWrapper {
+    @apply p-2 rounded-lg border-2 border-medGray mt-1 mb-2 flex shadow;
+  }
+  .commentDeleteMessage {
+    @apply p-1 shrink bg-lightGray text-medGray font-bold rounded;
+  }
 }
 
 .sk-folding-cube {

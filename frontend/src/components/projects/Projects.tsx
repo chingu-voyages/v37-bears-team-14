@@ -8,7 +8,6 @@ import { Link } from "react-router-dom";
 import NewProject from "./NewProject";
 import ProjectContext from "../../store/project-context";
 import ProjectPreview from "./ProjectPreview";
-import isEqual from "react-fast-compare";
 import LoadingSpinner from "../Spinners/LoadingSpinner";
 import { useSession } from "../../hooks/session";
 import { Transition } from "@headlessui/react";
@@ -25,10 +24,7 @@ const Projects: FunctionComponent = () => {
       if (response.status === 200) {
         setLoading(false);
         const data = await response.json();
-
-        if (!isEqual(projectCtx.projects, data)) {
-          projectCtx.storeProjects(data);
-        }
+        projectCtx.storeProjects(data);
 
         return response;
       }

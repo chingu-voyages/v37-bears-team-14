@@ -13,6 +13,8 @@ import { IProject } from "../models/Project";
 import { IUser } from "../models/User";
 import { ITech } from "../models/Tech";
 import { IComment } from "../models/Comment";
+import { ICommentLike } from "../models/CommentLike";
+import { ICommentDislike } from "../models/CommentDislike";
 import NotFoundError from "./errors/NotFoundError";
 import UnexpectedError from "./errors/UnexpectedError";
 import UnauthorizedError from "./errors/UnauthorizedError";
@@ -27,6 +29,10 @@ import {
   createQuery,
   mergeResults,
 } from "./projects/searchHelpers";
+import {
+  createLikeDislikeJoins,
+  createLikeDislikeProjection,
+} from "./comments/likeDislikeHelpers";
 import { TechDoc } from "./TechController";
 import { ISearch } from "../models/Search";
 
@@ -90,6 +96,8 @@ class ProjectController {
     private userModel: Model<IUser>,
     private memberModel: Model<IMember>,
     private commentModel: Model<IComment>,
+    private commentLikeModel: Model<ICommentLike>,
+    private commentDislikeModel: Model<ICommentDislike>,
     private techModel: Model<ITech>,
     private searchModel: Model<ISearch>,
     private createSession: () => Promise<ClientSession>
@@ -271,21 +279,54 @@ class ProjectController {
     );
   }
 
+  public async likeComment(comment: IComment, user: IUser, project: IProject) {
+    await this.commentLikeModel.create({
+      project: project.id,
+      user: user.id,
+      comment: comment.id,
+    });
+  }
+
+  public async removeCommentLike(comment: IComment, user: IUser) {
+    await this.commentLikeModel.deleteOne({
+      comment: comment.id,
+      user: user.id,
+    });
+  }
+
+  public async dislikeComment(
+    comment: IComment,
+    user: IUser,
+    project: IProject
+  ) {
+    await this.commentDislikeModel.create({
+      project: project.id,
+      user: user.id,
+      comment: comment.id,
+    });
+  }
+
+  public async removeCommentDislike(comment: IComment, user: IUser) {
+    await this.commentDislikeModel.deleteOne({
+      comment: comment.id,
+      user: user.id,
+    });
+  }
+
   public async getComments(projectId: string) {
     const comments = await this.commentModel
-      .find({ project: projectId })
-      .populate("user")
+      .aggregate([
+        { $match: { project: new mongoose.Types.ObjectId(projectId) } },
+        ...createLikeDislikeJoins(),
+        createLikeDislikeProjection(),
+      ])
       .sort({ postedDate: 1 })
-      .lean()
-      .exec()
       .then((comments) => {
-        comments.map((c) => {
-          c.id = c._id;
-          delete c._id;
-          const { _id, ...otherProps } = c.user;
-          const newObj = { id: _id, ...otherProps };
-          c.user = newObj;
+        comments.map(async (c) => {
+          if (c.likes) c.likes = c.likes.map((l: any) => l.user);
+          if (c.dislikes) c.dislikes = c.dislikes.map((l: any) => l.user);
         });
+
         let rec = (comment: IComment, threads: any) => {
           for (var thread in threads) {
             var value = threads[thread];
@@ -301,9 +342,11 @@ class ProjectController {
           }
         };
         let threads = {} as any,
-          comment;
+          comment: any;
+
         for (let i = 0; i < comments.length; i++) {
           comment = comments[i];
+
           comment["children"] = {};
           let parentId = comment.parentId;
           if (!parentId) {
@@ -319,7 +362,6 @@ class ProjectController {
           comments: threads,
         };
       });
-
     return comments;
   }
 
