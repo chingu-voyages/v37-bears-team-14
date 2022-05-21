@@ -1,7 +1,6 @@
 import { model, ObjectId, Schema } from "mongoose";
 import { IUser } from "./User";
 import { IProject } from "./Project";
-import { IComment } from "./Comment";
 
 export interface ICommentDislike {
   id: string;
