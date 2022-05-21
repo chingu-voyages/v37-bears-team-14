@@ -3,8 +3,7 @@ import { IUser } from "./User";
 import { IProject } from "./Project";
 
 export interface IComment {
-  _id?: string;
-  id?: string;
+  id: string;
   project: IProject | ObjectId;
   user: IUser;
   depth: number;

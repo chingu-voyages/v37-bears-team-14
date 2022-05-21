@@ -4,8 +4,7 @@ import { IProject } from "./Project";
 import { IComment } from "./Comment";
 
 export interface ICommentDislike {
-  _id?: string;
-  id?: string;
+  id: string;
   project: string | ObjectId | IProject;
   user: IUser | ObjectId;
   comment: string | ObjectId;
